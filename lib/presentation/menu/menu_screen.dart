@@ -46,10 +46,7 @@ class MenuScreen extends HookConsumerWidget {
 }
 
 class _MenuCard extends StatelessWidget {
-  const _MenuCard({
-    required this.menu,
-    required this.onTap,
-  });
+  const _MenuCard({required this.menu, required this.onTap});
 
   final Menu menu;
   final VoidCallback onTap;
@@ -57,52 +54,52 @@ class _MenuCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.darkSurface,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      menu.name.isEmpty ? '無題のメニュー' : menu.name,
-                      style: const TextStyle(
-                        color: AppColors.monoWhite,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Text(
-                    '${menu.exercises.length}項目',
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.darkSurface,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    menu.name.isEmpty ? '無題のメニュー' : menu.name,
                     style: const TextStyle(
-                      color: AppColors.purple,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                      color: AppColors.monoWhite,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
-              if (menu.exercises.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 4,
-                  children: menu.exercises
-                      .take(5)
-                      .map((me) => _ExerciseTag(name: me.exercise.name))
-                      .toList(),
+                ),
+                Text(
+                  '${menu.exercises.length}項目',
+                  style: const TextStyle(
+                    color: AppColors.purple,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ],
+            ),
+            if (menu.exercises.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: menu.exercises
+                    .take(5)
+                    .map((me) => _ExerciseTag(name: me.exercise.name))
+                    .toList(),
+              ),
             ],
-          ),
+          ],
         ),
+      ),
     );
   }
 }

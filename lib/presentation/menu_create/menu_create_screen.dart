@@ -28,8 +28,7 @@ class MenuCreateScreen extends HookConsumerWidget {
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (_) =>
-              ExerciseSelectionSheet(onAdd: notifier.addExercises),
+          builder: (_) => ExerciseSelectionSheet(onAdd: notifier.addExercises),
         ),
       );
     }
@@ -40,9 +39,7 @@ class MenuCreateScreen extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(menuId != null ? 'メニュー編集' : 'メニュー作成'),
-      ),
+      appBar: AppBar(title: Text(menuId != null ? 'メニュー編集' : 'メニュー作成')),
       body: Column(
         children: [
           Expanded(

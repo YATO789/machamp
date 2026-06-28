@@ -23,11 +23,14 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
     final selectedIds = useState<Set<String>>({});
 
     final filtered = allExercises.where((e) {
-      final matchesSearch = searchQuery.value.isEmpty ||
+      final matchesSearch =
+          searchQuery.value.isEmpty ||
           e.name.toLowerCase().contains(searchQuery.value.toLowerCase());
-      final matchesBodyPart = selectedBodyPart.value == _bodyParts.first ||
+      final matchesBodyPart =
+          selectedBodyPart.value == _bodyParts.first ||
           e.bodyPart == selectedBodyPart.value;
-      final matchesEquipment = selectedEquipment.value == _equipment.first ||
+      final matchesEquipment =
+          selectedEquipment.value == _equipment.first ||
           e.equipment == selectedEquipment.value;
       return matchesSearch && matchesBodyPart && matchesEquipment;
     }).toList();
@@ -149,19 +152,19 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: PrimaryButton(
-                  label: selectedIds.value.isEmpty
-                      ? '追加する'
-                      : '追加する (${selectedIds.value.length})',
-                  onPressed: selectedIds.value.isEmpty
-                      ? null
-                      : () {
-                          final selected = allExercises
-                              .where((e) => selectedIds.value.contains(e.id))
-                              .toList();
-                          onAdd(selected);
-                          Navigator.of(context).pop();
-                        },
-                ),
+                label: selectedIds.value.isEmpty
+                    ? '追加する'
+                    : '追加する (${selectedIds.value.length})',
+                onPressed: selectedIds.value.isEmpty
+                    ? null
+                    : () {
+                        final selected = allExercises
+                            .where((e) => selectedIds.value.contains(e.id))
+                            .toList();
+                        onAdd(selected);
+                        Navigator.of(context).pop();
+                      },
+              ),
             ),
           ),
         ],
@@ -195,7 +198,11 @@ class _FilterDropdown extends StatelessWidget {
         underline: const SizedBox.shrink(),
         dropdownColor: AppColors.darkSurface,
         style: const TextStyle(color: AppColors.monoWhite, fontSize: 13),
-        icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey, size: 18),
+        icon: const Icon(
+          Icons.keyboard_arrow_down,
+          color: Colors.grey,
+          size: 18,
+        ),
         items: items
             .map((item) => DropdownMenuItem(value: item, child: Text(item)))
             .toList(),
