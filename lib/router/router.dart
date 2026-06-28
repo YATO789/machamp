@@ -3,6 +3,8 @@ import 'package:machamp/core/extensions/string_extensions.dart';
 import 'package:machamp/presentation/activity_log/activity_log_screen.dart';
 import 'package:machamp/presentation/home/home_screen.dart';
 import 'package:machamp/presentation/menu/menu_screen.dart';
+import 'package:machamp/presentation/menu_create/menu_create_screen.dart';
+import 'package:machamp/presentation/menu_detail/menu_detail_screen.dart';
 import 'package:machamp/presentation/profile/profile_screen.dart';
 import 'package:machamp/router/app_navigation_bar.dart';
 
@@ -71,6 +73,22 @@ final router = GoRouter(
               ),
             ),
           ],
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/menu/create',
+      builder: (context, state) => const MenuCreateScreen(),
+    ),
+    GoRoute(
+      path: '/menu/:id',
+      builder: (context, state) =>
+          MenuDetailScreen(menuId: state.pathParameters['id']!),
+      routes: [
+        GoRoute(
+          path: 'edit',
+          builder: (context, state) =>
+              MenuCreateScreen(menuId: state.pathParameters['id']),
         ),
       ],
     ),
