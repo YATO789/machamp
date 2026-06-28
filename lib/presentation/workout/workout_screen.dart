@@ -86,12 +86,20 @@ class WorkoutScreen extends HookConsumerWidget {
                                 initialWeight: set.weight,
                                 initialReps: set.reps,
                                 isCompleted: set.isCompleted,
-                                onWeightChanged: (w) =>
-                                    vm.updateSetWeight(exerciseIndex, setIndex, w),
-                                onRepsChanged: (r) =>
-                                    vm.updateSetReps(exerciseIndex, setIndex, r),
-                                onToggleCompleted: () =>
-                                    vm.toggleSetCompleted(exerciseIndex, setIndex),
+                                onWeightChanged: (w) => vm.updateSetWeight(
+                                  exerciseIndex,
+                                  setIndex,
+                                  w,
+                                ),
+                                onRepsChanged: (r) => vm.updateSetReps(
+                                  exerciseIndex,
+                                  setIndex,
+                                  r,
+                                ),
+                                onToggleCompleted: () => vm.toggleSetCompleted(
+                                  exerciseIndex,
+                                  setIndex,
+                                ),
                               ),
                             );
                           }),
@@ -108,26 +116,26 @@ class WorkoutScreen extends HookConsumerWidget {
                 child: PrimaryButton(
                   label: '終了',
                   onPressed: () async {
-                  final confirmed = await showDialog<bool>(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: const Text('ワークアウトを終了しますか？'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(ctx).pop(false),
-                          child: const Text('キャンセル'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.of(ctx).pop(true),
-                          child: const Text('終了'),
-                        ),
-                      ],
-                    ),
-                  );
-                  if (confirmed == true && context.mounted) {
-                    context.go('/home');
-                  }
-                },
+                    final confirmed = await showDialog<bool>(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: const Text('ワークアウトを終了しますか？'),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(ctx).pop(false),
+                            child: const Text('キャンセル'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(ctx).pop(true),
+                            child: const Text('終了'),
+                          ),
+                        ],
+                      ),
+                    );
+                    if (confirmed == true && context.mounted) {
+                      context.go('/home');
+                    }
+                  },
                 ),
               ),
             ),
@@ -194,84 +202,90 @@ class _WorkoutSetRowState extends State<_WorkoutSetRow> {
     return Opacity(
       opacity: widget.isCompleted ? 0.5 : 1.0,
       child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.darkSurface,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 24,
-            child: Text(
-              '${widget.setNumber}',
-              style: TextStyle(
-                color: widget.isCurrent ? AppColors.purple : AppColors.monoWhite,
-                fontSize: 14,
-                fontWeight: widget.isCurrent
-                    ? FontWeight.w600
-                    : FontWeight.normal,
-              ),
-            ),
-          ),
-          const SizedBox(width: 8),
-          _NumberInputField(
-            controller: _weightController,
-            allowDecimal: true,
-            onChanged: (v) {
-              final w = double.tryParse(v);
-              if (w != null) widget.onWeightChanged(w);
-            },
-          ),
-          const SizedBox(width: 6),
-          const Text(
-            'kg',
-            style: TextStyle(color: AppColors.grey, fontSize: 13),
-          ),
-          const SizedBox(width: 8),
-          const Text(
-            '×',
-            style: TextStyle(color: AppColors.grey, fontSize: 13),
-          ),
-          const SizedBox(width: 8),
-          _NumberInputField(
-            controller: _repsController,
-            allowDecimal: false,
-            onChanged: (v) {
-              final r = int.tryParse(v);
-              if (r != null) widget.onRepsChanged(r);
-            },
-          ),
-          const SizedBox(width: 6),
-          const Text(
-            'rep',
-            style: TextStyle(color: AppColors.grey, fontSize: 13),
-          ),
-          const Spacer(),
-          GestureDetector(
-            onTap: widget.onToggleCompleted,
-            child: Container(
-              width: 28,
-              height: 28,
-              decoration: BoxDecoration(
-                color: widget.isCompleted ? AppColors.purple : Colors.transparent,
-                border: Border.all(
-                  color: widget.isCompleted ? AppColors.purple : Colors.white30,
-                  width: 2,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: AppColors.darkSurface,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 24,
+              child: Text(
+                '${widget.setNumber}',
+                style: TextStyle(
+                  color: widget.isCurrent
+                      ? AppColors.purple
+                      : AppColors.monoWhite,
+                  fontSize: 14,
+                  fontWeight: widget.isCurrent
+                      ? FontWeight.w600
+                      : FontWeight.normal,
                 ),
-                borderRadius: BorderRadius.circular(6),
               ),
-              child: widget.isCompleted
-                  ? const Icon(
-                      Icons.check,
-                      color: AppColors.monoWhite,
-                      size: 16,
-                    )
-                  : null,
             ),
-          ),
-        ],
-      ),
+            const SizedBox(width: 8),
+            _NumberInputField(
+              controller: _weightController,
+              allowDecimal: true,
+              onChanged: (v) {
+                final w = double.tryParse(v);
+                if (w != null) widget.onWeightChanged(w);
+              },
+            ),
+            const SizedBox(width: 6),
+            const Text(
+              'kg',
+              style: TextStyle(color: AppColors.grey, fontSize: 13),
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              '×',
+              style: TextStyle(color: AppColors.grey, fontSize: 13),
+            ),
+            const SizedBox(width: 8),
+            _NumberInputField(
+              controller: _repsController,
+              allowDecimal: false,
+              onChanged: (v) {
+                final r = int.tryParse(v);
+                if (r != null) widget.onRepsChanged(r);
+              },
+            ),
+            const SizedBox(width: 6),
+            const Text(
+              'rep',
+              style: TextStyle(color: AppColors.grey, fontSize: 13),
+            ),
+            const Spacer(),
+            GestureDetector(
+              onTap: widget.onToggleCompleted,
+              child: Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: widget.isCompleted
+                      ? AppColors.purple
+                      : Colors.transparent,
+                  border: Border.all(
+                    color: widget.isCompleted
+                        ? AppColors.purple
+                        : Colors.white30,
+                    width: 2,
+                  ),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: widget.isCompleted
+                    ? const Icon(
+                        Icons.check,
+                        color: AppColors.monoWhite,
+                        size: 16,
+                      )
+                    : null,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
