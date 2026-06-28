@@ -6,6 +6,7 @@ import 'package:machamp/presentation/menu/menu_screen.dart';
 import 'package:machamp/presentation/menu_create/menu_create_screen.dart';
 import 'package:machamp/presentation/menu_detail/menu_detail_screen.dart';
 import 'package:machamp/presentation/profile/profile_screen.dart';
+import 'package:machamp/presentation/workout/workout_screen.dart';
 import 'package:machamp/router/app_navigation_bar.dart';
 
 enum AppRoutes {
@@ -89,6 +90,11 @@ final router = GoRouter(
           path: 'edit',
           builder: (context, state) =>
               MenuCreateScreen(menuId: state.pathParameters['id']),
+        ),
+        GoRoute(
+          path: 'workout',
+          builder: (context, state) =>
+              WorkoutScreen(menuId: state.pathParameters['id']!),
         ),
       ],
     ),
