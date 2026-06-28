@@ -6,8 +6,6 @@ class MenuScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Center(
-      child: Text('メニュー'),
-    );
+    return const Center(child: Text('メニュー'));
   }
 }

@@ -6,8 +6,6 @@ class ProfileScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Center(
-      child: Text('プロフィール'),
-    );
+    return const Center(child: Text('プロフィール'));
   }
 }

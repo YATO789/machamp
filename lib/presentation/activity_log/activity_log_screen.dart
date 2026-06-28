@@ -6,8 +6,6 @@ class ActivityLogScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Center(
-      child: Text('記録'),
-    );
+    return const Center(child: Text('記録'));
   }
 }

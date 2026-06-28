@@ -6,8 +6,6 @@ class HomeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return const Center(
-      child: Text('ホーム'),
-    );
+    return const Center(child: Text('ホーム'));
   }
 }
