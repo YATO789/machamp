@@ -124,9 +124,7 @@ class WorkoutScreen extends HookConsumerWidget {
                       builder: (ctx) => AlertDialog(
                         title: const Text('ワークアウトを終了しますか？'),
                         content: hasIncomplete
-                            ? const Text(
-                                'チェックされていないセットは記録されません。',
-                              )
+                            ? const Text('チェックされていないセットは記録されません。')
                             : null,
                         actions: [
                           TextButton(

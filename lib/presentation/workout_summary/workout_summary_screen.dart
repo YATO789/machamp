@@ -12,9 +12,8 @@ class WorkoutSummaryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final completedExercises = workoutState.exercises
         .map(
-          (ex) => ex.copyWith(
-            sets: ex.sets.where((s) => s.isCompleted).toList(),
-          ),
+          (ex) =>
+              ex.copyWith(sets: ex.sets.where((s) => s.isCompleted).toList()),
         )
         .where((ex) => ex.sets.isNotEmpty)
         .toList();
@@ -29,8 +28,7 @@ class WorkoutSummaryScreen extends StatelessWidget {
     );
     final totalVolume = completedExercises.fold(
       0.0,
-      (sum, ex) =>
-          ex.sets.fold(sum, (s, set) => s + set.weight * set.reps),
+      (sum, ex) => ex.sets.fold(sum, (s, set) => s + set.weight * set.reps),
     );
 
     return PopScope(
@@ -199,10 +197,7 @@ class _StatCard extends StatelessWidget {
                 ),
                 TextSpan(
                   text: ' $unit',
-                  style: const TextStyle(
-                    color: AppColors.grey,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(color: AppColors.grey, fontSize: 14),
                 ),
               ],
             ),
