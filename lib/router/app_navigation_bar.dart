@@ -45,7 +45,11 @@ class _FloatingNavBar extends StatelessWidget {
 
     return Container(
       color: Colors.transparent,
-      padding: EdgeInsets.only(left: 16, right: 16, bottom: bottomPadding - 8),
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        bottom: (bottomPadding - 8).clamp(0.0, double.infinity),
+      ),
       child: Container(
         height: 68,
         decoration: BoxDecoration(
