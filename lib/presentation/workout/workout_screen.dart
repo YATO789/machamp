@@ -116,10 +116,18 @@ class WorkoutScreen extends HookConsumerWidget {
                 child: PrimaryButton(
                   label: '終了',
                   onPressed: () async {
+                    final hasIncomplete = state.exercises.any(
+                      (ex) => ex.sets.any((s) => !s.isCompleted),
+                    );
                     final confirmed = await showDialog<bool>(
                       context: context,
                       builder: (ctx) => AlertDialog(
                         title: const Text('ワークアウトを終了しますか？'),
+                        content: hasIncomplete
+                            ? const Text(
+                                'チェックされていないセットは記録されません。',
+                              )
+                            : null,
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.of(ctx).pop(false),
@@ -133,7 +141,17 @@ class WorkoutScreen extends HookConsumerWidget {
                       ),
                     );
                     if (confirmed == true && context.mounted) {
-                      context.go('/home');
+                      final hasCompleted = state.exercises.any(
+                        (ex) => ex.sets.any((s) => s.isCompleted),
+                      );
+                      if (hasCompleted) {
+                        await context.push(
+                          '/menu/$menuId/workout/summary',
+                          extra: state,
+                        );
+                      } else {
+                        context.go('/home');
+                      }
                     }
                   },
                 ),
