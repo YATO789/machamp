@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:machamp/core/constants/app_color.dart';
 
 class AppNavigationBar extends StatelessWidget {
   const AppNavigationBar({super.key, required this.navigationShell});
@@ -53,7 +54,7 @@ class _FloatingNavBar extends StatelessWidget {
       child: Container(
         height: 68,
         decoration: BoxDecoration(
-          color: const Color(0xFF1C1C1E),
+          color: AppColors.darkSurface,
           borderRadius: BorderRadius.circular(40),
           boxShadow: [
             BoxShadow(
@@ -99,7 +100,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isSelected ? const Color(0xFFBF5AF2) : Colors.white;
+    final color = isSelected ? AppColors.purple : AppColors.monoWhite;
 
     return GestureDetector(
       onTap: onTap,
