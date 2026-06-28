@@ -116,11 +116,7 @@ class MenuDetailScreen extends HookConsumerWidget {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: PrimaryButton(
                 label: 'ワークアウト開始',
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('ワークアウト機能は準備中です')),
-                  );
-                },
+                onPressed: () => context.push('/menu/$menuId/workout'),
               ),
             ),
           ),
