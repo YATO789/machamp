@@ -6,7 +6,7 @@ part 'env.g.dart';
 // ignore: avoid_classes_with_only_static_members
 final class Env {
   @EnviedField(varName: 'SUPABASE_URL_DEV')
-  static final String _supabaseUrlDev = _Env._supabaseUrlDev;
+  static final String supabaseUrlDev = _Env.supabaseUrlDev;
 
   // @EnviedField(varName: 'SUPABASE_URL')
   // static final String _supabaseUrlProd = _Env._supabaseUrlProd;
@@ -18,7 +18,7 @@ final class Env {
   // };
 
   @EnviedField(varName: 'SUPABASE_PUBLISHABLE_KEY_DEV')
-  static final String _supabaseAnonKeyDev = _Env._supabaseAnonKeyDev;
+  static final String supabasePublishableDev = _Env.supabasePublishableDev;
 
   // @EnviedField(varName: 'SUPABASE_ANON_KEY')
   // static final String _supabaseAnonKeyProd = _Env._supabaseAnonKeyProd;
