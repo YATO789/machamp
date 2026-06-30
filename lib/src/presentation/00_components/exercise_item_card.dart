@@ -98,8 +98,9 @@ class ExerciseItemCard extends StatelessWidget {
                           const Spacer(),
                           _CounterButton(
                             icon: Icons.remove,
-                            onPressed: () =>
-                                onSetCountChanged!(menuExercise.sets.length - 1),
+                            onPressed: () => onSetCountChanged!(
+                              menuExercise.sets.length - 1,
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -114,8 +115,9 @@ class ExerciseItemCard extends StatelessWidget {
                           ),
                           _CounterButton(
                             icon: Icons.add,
-                            onPressed: () =>
-                                onSetCountChanged!(menuExercise.sets.length + 1),
+                            onPressed: () => onSetCountChanged!(
+                              menuExercise.sets.length + 1,
+                            ),
                           ),
                         ],
                       ),
@@ -225,8 +227,9 @@ class _SetRowState extends State<_SetRow> {
   @override
   void initState() {
     super.initState();
-    _repsController =
-        TextEditingController(text: widget.exerciseSet.reps.toString());
+    _repsController = TextEditingController(
+      text: widget.exerciseSet.reps.toString(),
+    );
     _weightController = TextEditingController(
       text: _formatWeight(widget.exerciseSet.weight),
     );
@@ -289,7 +292,8 @@ class _SetRowState extends State<_SetRow> {
                   final weight = double.tryParse(v);
                   if (weight != null) {
                     widget.onChanged!(
-                        widget.exerciseSet.copyWith(weight: weight));
+                      widget.exerciseSet.copyWith(weight: weight),
+                    );
                   }
                 },
               ),
@@ -299,14 +303,20 @@ class _SetRowState extends State<_SetRow> {
               child: Text(
                 '${widget.exerciseSet.reps}',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: AppColors.monoWhite, fontSize: 14),
+                style: const TextStyle(
+                  color: AppColors.monoWhite,
+                  fontSize: 14,
+                ),
               ),
             ),
             Expanded(
               child: Text(
                 _formatWeight(widget.exerciseSet.weight),
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: AppColors.monoWhite, fontSize: 14),
+                style: const TextStyle(
+                  color: AppColors.monoWhite,
+                  fontSize: 14,
+                ),
               ),
             ),
           ],

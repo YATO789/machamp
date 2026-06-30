@@ -8,9 +8,7 @@ part 'home_view_model.g.dart';
 
 @freezed
 abstract class HomeState with _$HomeState {
-  const factory HomeState({
-    AppUser? user,
-  }) = _HomeState;
+  const factory HomeState({AppUser? user}) = _HomeState;
 }
 
 @riverpod

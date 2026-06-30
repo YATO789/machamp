@@ -51,9 +51,7 @@ class ExerciseItemHeader extends StatelessWidget {
           ),
           if (trailingAction != null) trailingAction!,
           Icon(
-            isExpanded
-                ? Icons.keyboard_arrow_up
-                : Icons.keyboard_arrow_down,
+            isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
             color: Colors.grey,
             size: 20,
           ),
