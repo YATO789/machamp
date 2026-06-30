@@ -20,6 +20,11 @@ jobs:
           flutter-version-file: .fvmrc
           cache: true
 
+      - name: Create .env file
+        run: |
+          echo "SUPABASE_URL_DEV=${{ secrets.SUPABASE_URL_DEV }}" >> .env
+          echo "SUPABASE_PUBLISHABLE_KEY_DEV=${{ secrets.SUPABASE_PUBLISHABLE_KEY_DEV }}" >> .env
+
       - name: Install dependencies
         run: flutter pub get
 
