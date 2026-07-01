@@ -7,8 +7,8 @@ import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/domain/constants/exercise_constants.dart';
 import 'package:machamp/src/domain/entity/exercise.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
-import 'package:machamp/src/presentation/menu_create/exercise_creation/exercise_creation_sheet.dart';
-import 'package:machamp/src/presentation/menu_create/exercise_selection/exercise_selection_view_model.dart';
+import 'package:machamp/src/presentation/menu_editor/exercise_creation/exercise_creation_sheet.dart';
+import 'package:machamp/src/presentation/menu_editor/exercise_selection/exercise_selection_view_model.dart';
 
 const _bodyParts = ['全ての部位', ...bodyParts];
 const _equipment = ['全ての器具', ...equipments];
