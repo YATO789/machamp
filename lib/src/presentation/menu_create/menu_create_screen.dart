@@ -7,8 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/presentation/00_components/exercise_item.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
+import 'package:machamp/src/presentation/menu_create/exercise_selection/exercise_selection_sheet.dart';
 import 'package:machamp/src/presentation/menu_create/menu_create_view_model.dart';
-import 'package:machamp/src/presentation/menu_create/widgets/exercise_selection_sheet.dart';
 
 class MenuCreateScreen extends HookConsumerWidget {
   const MenuCreateScreen({super.key, this.menuId});
@@ -17,7 +17,7 @@ class MenuCreateScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final vm = ref.watch(menuCreateViewModelProvider(menuId));
+    final state = ref.watch(menuCreateViewModelProvider(menuId));
     final notifier = ref.read(menuCreateViewModelProvider(menuId).notifier);
 
     final nameController = useTextEditingController(text: '');
@@ -83,7 +83,7 @@ class MenuCreateScreen extends HookConsumerWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      if (vm.menuExercises.isNotEmpty)
+                      if (state.menuExercises.isNotEmpty)
                         const Text(
                           '種目をタップして詳細を変更',
                           style: TextStyle(color: Colors.grey, fontSize: 12),
@@ -91,14 +91,14 @@ class MenuCreateScreen extends HookConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  ...List.generate(vm.menuExercises.length, (index) {
-                    final me = vm.menuExercises[index];
-                    final isExpanded = vm.expandedIndex == index;
+                  ...List.generate(state.menuExercises.length, (index) {
+                    final menu = state.menuExercises[index];
+                    final isExpanded = state.expandedIndex == index;
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: ExerciseItem(
-                        key: ValueKey(me.exercise.id + index.toString()),
-                        menuExercise: me,
+                        key: ValueKey(menu.exercise.id + index.toString()),
+                        menuExercise: menu,
                         isExpanded: isExpanded,
                         isEditable: true,
                         exerciseIndex: index,
@@ -114,7 +114,12 @@ class MenuCreateScreen extends HookConsumerWidget {
                     );
                   }),
                   const SizedBox(height: 4),
-                  _AddExerciseButton(onTap: openExerciseSheet),
+                  PrimaryButton(
+                    label: '種目を追加',
+                    onPressed: openExerciseSheet,
+                    variant: PrimaryButtonVariant.ghost,
+                    icon: Icons.add,
+                  ),
                   const SizedBox(height: 80),
                 ],
               ),
@@ -127,42 +132,6 @@ class MenuCreateScreen extends HookConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _AddExerciseButton extends StatelessWidget {
-  const _AddExerciseButton({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: double.infinity,
-        height: 52,
-        decoration: BoxDecoration(
-          color: AppColors.darkSurface,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.add, color: AppColors.monoWhite, size: 20),
-            SizedBox(width: 6),
-            Text(
-              '種目を追加',
-              style: TextStyle(
-                color: AppColors.monoWhite,
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
