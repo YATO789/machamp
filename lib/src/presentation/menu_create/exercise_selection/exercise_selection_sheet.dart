@@ -142,7 +142,7 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                                     width: 40,
                                     height: 40,
                                     decoration: BoxDecoration(
-                                      color: AppColors.purple.withOpacity(0.2),
+                                      color: AppColors.purple.withValues(alpha: 0.2),
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: const Icon(
