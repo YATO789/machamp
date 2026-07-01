@@ -28,7 +28,10 @@ class MenuCreateScreen extends HookConsumerWidget {
           context: context,
           isScrollControlled: true,
           backgroundColor: Colors.transparent,
-          builder: (_) => ExerciseSelectionSheet(onAdd: notifier.addExercises),
+          builder: (_) => ExerciseSelectionSheet(
+            exercises: vm.exercises,
+            onAdd: notifier.addExercises,
+          ),
         ),
       );
     }

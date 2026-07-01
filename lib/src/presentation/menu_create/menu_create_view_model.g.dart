@@ -59,7 +59,7 @@ final class MenuCreateViewModelProvider
 }
 
 String _$menuCreateViewModelHash() =>
-    r'c0c413e4e091a9edc307e5f00f052b7e46b2a5fc';
+    r'414d8ee1ddb4728f97d30115feb0e0d412952837';
 
 final class MenuCreateViewModelFamily extends $Family
     with
