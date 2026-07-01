@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MenuCreateState {
 
- List<MenuExercise> get menuExercises; int? get expandedIndex; AsyncValue<List<Exercise>> get exercises;
+ List<MenuExercise> get menuExercises; int? get expandedIndex;
 /// Create a copy of MenuCreateState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MenuCreateStateCopyWith<MenuCreateState> get copyWith => _$MenuCreateStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MenuCreateState&&const DeepCollectionEquality().equals(other.menuExercises, menuExercises)&&(identical(other.expandedIndex, expandedIndex) || other.expandedIndex == expandedIndex)&&(identical(other.exercises, exercises) || other.exercises == exercises));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MenuCreateState&&const DeepCollectionEquality().equals(other.menuExercises, menuExercises)&&(identical(other.expandedIndex, expandedIndex) || other.expandedIndex == expandedIndex));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(menuExercises),expandedIndex,exercises);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(menuExercises),expandedIndex);
 
 @override
 String toString() {
-  return 'MenuCreateState(menuExercises: $menuExercises, expandedIndex: $expandedIndex, exercises: $exercises)';
+  return 'MenuCreateState(menuExercises: $menuExercises, expandedIndex: $expandedIndex)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MenuCreateStateCopyWith<$Res>  {
   factory $MenuCreateStateCopyWith(MenuCreateState value, $Res Function(MenuCreateState) _then) = _$MenuCreateStateCopyWithImpl;
 @useResult
 $Res call({
- List<MenuExercise> menuExercises, int? expandedIndex, AsyncValue<List<Exercise>> exercises
+ List<MenuExercise> menuExercises, int? expandedIndex
 });
 
 
@@ -62,12 +62,11 @@ class _$MenuCreateStateCopyWithImpl<$Res>
 
 /// Create a copy of MenuCreateState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? menuExercises = null,Object? expandedIndex = freezed,Object? exercises = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? menuExercises = null,Object? expandedIndex = freezed,}) {
   return _then(_self.copyWith(
 menuExercises: null == menuExercises ? _self.menuExercises : menuExercises // ignore: cast_nullable_to_non_nullable
 as List<MenuExercise>,expandedIndex: freezed == expandedIndex ? _self.expandedIndex : expandedIndex // ignore: cast_nullable_to_non_nullable
-as int?,exercises: null == exercises ? _self.exercises : exercises // ignore: cast_nullable_to_non_nullable
-as AsyncValue<List<Exercise>>,
+as int?,
   ));
 }
 
@@ -152,10 +151,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<MenuExercise> menuExercises,  int? expandedIndex,  AsyncValue<List<Exercise>> exercises)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<MenuExercise> menuExercises,  int? expandedIndex)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MenuCreateState() when $default != null:
-return $default(_that.menuExercises,_that.expandedIndex,_that.exercises);case _:
+return $default(_that.menuExercises,_that.expandedIndex);case _:
   return orElse();
 
 }
@@ -173,10 +172,10 @@ return $default(_that.menuExercises,_that.expandedIndex,_that.exercises);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<MenuExercise> menuExercises,  int? expandedIndex,  AsyncValue<List<Exercise>> exercises)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<MenuExercise> menuExercises,  int? expandedIndex)  $default,) {final _that = this;
 switch (_that) {
 case _MenuCreateState():
-return $default(_that.menuExercises,_that.expandedIndex,_that.exercises);case _:
+return $default(_that.menuExercises,_that.expandedIndex);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +192,10 @@ return $default(_that.menuExercises,_that.expandedIndex,_that.exercises);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<MenuExercise> menuExercises,  int? expandedIndex,  AsyncValue<List<Exercise>> exercises)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<MenuExercise> menuExercises,  int? expandedIndex)?  $default,) {final _that = this;
 switch (_that) {
 case _MenuCreateState() when $default != null:
-return $default(_that.menuExercises,_that.expandedIndex,_that.exercises);case _:
+return $default(_that.menuExercises,_that.expandedIndex);case _:
   return null;
 
 }
@@ -208,7 +207,7 @@ return $default(_that.menuExercises,_that.expandedIndex,_that.exercises);case _:
 
 
 class _MenuCreateState implements MenuCreateState {
-  const _MenuCreateState({final  List<MenuExercise> menuExercises = const [], this.expandedIndex, this.exercises = const AsyncLoading<List<Exercise>>()}): _menuExercises = menuExercises;
+  const _MenuCreateState({final  List<MenuExercise> menuExercises = const [], this.expandedIndex}): _menuExercises = menuExercises;
   
 
  final  List<MenuExercise> _menuExercises;
@@ -219,7 +218,6 @@ class _MenuCreateState implements MenuCreateState {
 }
 
 @override final  int? expandedIndex;
-@override@JsonKey() final  AsyncValue<List<Exercise>> exercises;
 
 /// Create a copy of MenuCreateState
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +229,16 @@ _$MenuCreateStateCopyWith<_MenuCreateState> get copyWith => __$MenuCreateStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MenuCreateState&&const DeepCollectionEquality().equals(other._menuExercises, _menuExercises)&&(identical(other.expandedIndex, expandedIndex) || other.expandedIndex == expandedIndex)&&(identical(other.exercises, exercises) || other.exercises == exercises));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MenuCreateState&&const DeepCollectionEquality().equals(other._menuExercises, _menuExercises)&&(identical(other.expandedIndex, expandedIndex) || other.expandedIndex == expandedIndex));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_menuExercises),expandedIndex,exercises);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_menuExercises),expandedIndex);
 
 @override
 String toString() {
-  return 'MenuCreateState(menuExercises: $menuExercises, expandedIndex: $expandedIndex, exercises: $exercises)';
+  return 'MenuCreateState(menuExercises: $menuExercises, expandedIndex: $expandedIndex)';
 }
 
 
@@ -251,7 +249,7 @@ abstract mixin class _$MenuCreateStateCopyWith<$Res> implements $MenuCreateState
   factory _$MenuCreateStateCopyWith(_MenuCreateState value, $Res Function(_MenuCreateState) _then) = __$MenuCreateStateCopyWithImpl;
 @override @useResult
 $Res call({
- List<MenuExercise> menuExercises, int? expandedIndex, AsyncValue<List<Exercise>> exercises
+ List<MenuExercise> menuExercises, int? expandedIndex
 });
 
 
@@ -268,12 +266,11 @@ class __$MenuCreateStateCopyWithImpl<$Res>
 
 /// Create a copy of MenuCreateState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? menuExercises = null,Object? expandedIndex = freezed,Object? exercises = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? menuExercises = null,Object? expandedIndex = freezed,}) {
   return _then(_MenuCreateState(
 menuExercises: null == menuExercises ? _self._menuExercises : menuExercises // ignore: cast_nullable_to_non_nullable
 as List<MenuExercise>,expandedIndex: freezed == expandedIndex ? _self.expandedIndex : expandedIndex // ignore: cast_nullable_to_non_nullable
-as int?,exercises: null == exercises ? _self.exercises : exercises // ignore: cast_nullable_to_non_nullable
-as AsyncValue<List<Exercise>>,
+as int?,
   ));
 }
 

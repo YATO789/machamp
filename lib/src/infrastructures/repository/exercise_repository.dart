@@ -19,4 +19,19 @@ class ExerciseRepository {
 
     return data.map((e) => ExerciseDto.fromMap(e).toDomain()).toList();
   }
+
+  Future<Exercise> createExercise({
+    required String userId,
+    required String name,
+    required String bodyPart,
+    required String equipment,
+  }) async {
+    final data = await _dataSource.createExercise(
+      userId: userId,
+      name: name,
+      bodyPart: bodyPart,
+      equipment: equipment,
+    );
+    return ExerciseDto.fromMap(data).toDomain();
+  }
 }

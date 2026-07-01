@@ -20,4 +20,23 @@ class ExerciseDataSource {
         .or('user_id.is.null,user_id.eq.$userId');
     return response;
   }
+
+  Future<Map<String, dynamic>> createExercise({
+    required String userId,
+    required String name,
+    required String bodyPart,
+    required String equipment,
+  }) async {
+    final response = await _client
+        .from('exercises')
+        .insert({
+          'name': name,
+          'body_part': bodyPart,
+          'equipment': equipment,
+          'user_id': userId,
+        })
+        .select('id, name, body_part, equipment, user_id')
+        .single();
+    return response;
+  }
 }

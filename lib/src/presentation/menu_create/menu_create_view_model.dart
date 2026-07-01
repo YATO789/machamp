@@ -1,14 +1,9 @@
-import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:machamp/src/application/providers/menus_provider.dart';
 import 'package:machamp/src/domain/entity/exercise.dart';
 import 'package:machamp/src/domain/entity/exercise_set.dart';
 import 'package:machamp/src/domain/entity/menu.dart';
 import 'package:machamp/src/domain/entity/menu_exercise.dart';
-import 'package:machamp/src/infrastructures/repository/auth_repository.dart';
-import 'package:machamp/src/infrastructures/repository/exercise_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'menu_create_view_model.freezed.dart';
@@ -19,7 +14,6 @@ abstract class MenuCreateState with _$MenuCreateState {
   const factory MenuCreateState({
     @Default([]) List<MenuExercise> menuExercises,
     int? expandedIndex,
-    @Default(AsyncLoading<List<Exercise>>()) AsyncValue<List<Exercise>> exercises,
   }) = _MenuCreateState;
 }
 
@@ -31,7 +25,6 @@ class MenuCreateViewModel extends _$MenuCreateViewModel {
     final existingMenu = menuId != null
         ? menus.where((m) => m.id == menuId).firstOrNull
         : null;
-    unawaited(Future.microtask(getCurrent));
     return MenuCreateState(
       menuExercises: existingMenu != null
           ? List.from(existingMenu.exercises)
@@ -48,24 +41,6 @@ class MenuCreateViewModel extends _$MenuCreateViewModel {
         ? null
         : (current != null && current > index ? current - 1 : current);
     state = state.copyWith(menuExercises: newList, expandedIndex: newExpanded);
-  }
-
-  Future<void> getCurrent() async {
-    state = state.copyWith(exercises: const AsyncLoading());
-    try {
-      final user = ref.read(authRepositoryProvider).currentUser();
-      if (user == null) {
-        state = state.copyWith(exercises: const AsyncData([]));
-        return;
-      }
-      final result = await ref
-          .read(exerciseRepositoryProvider)
-          .fetchExercises(user.id);
-      state = state.copyWith(exercises: AsyncData(result));
-    } catch (e, st) {
-      debugPrint('getCurrent error: $e\n$st');
-      state = state.copyWith(exercises: AsyncError(e, st));
-    }
   }
 
   void updateSetCount(int exerciseIndex, int newCount) {
