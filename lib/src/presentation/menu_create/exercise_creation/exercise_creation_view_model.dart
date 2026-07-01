@@ -10,9 +10,8 @@ part 'exercise_creation_view_model.g.dart';
 
 @freezed
 abstract class ExerciseCreationState with _$ExerciseCreationState {
-  const factory ExerciseCreationState({
-    @Default(false) bool isLoading,
-  }) = _ExerciseCreationState;
+  const factory ExerciseCreationState({@Default(false) bool isLoading}) =
+      _ExerciseCreationState;
 }
 
 @riverpod
@@ -29,12 +28,14 @@ class ExerciseCreationViewModel extends _$ExerciseCreationViewModel {
     if (user == null) return null;
     state = state.copyWith(isLoading: true);
     try {
-      return await ref.read(exerciseRepositoryProvider).createExercise(
-        userId: user.id,
-        name: name,
-        bodyPart: bodyPart,
-        equipment: equipment,
-      );
+      return await ref
+          .read(exerciseRepositoryProvider)
+          .createExercise(
+            userId: user.id,
+            name: name,
+            bodyPart: bodyPart,
+            equipment: equipment,
+          );
     } catch (e, st) {
       debugPrint('ExerciseCreationViewModel error: $e\n$st');
       return null;

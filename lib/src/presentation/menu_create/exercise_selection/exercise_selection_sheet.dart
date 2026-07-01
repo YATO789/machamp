@@ -115,7 +115,8 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                 data: (_) {
                   final combined = state.combinedExercises;
                   final filtered = combined.where((e) {
-                    final matchesSearch = searchQuery.value.isEmpty ||
+                    final matchesSearch =
+                        searchQuery.value.isEmpty ||
                         e.name.toLowerCase().contains(
                           searchQuery.value.toLowerCase(),
                         );
@@ -175,8 +176,9 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                                 );
                               }
                               final exercise = filtered[index - 1];
-                              final isSelected =
-                                  state.selectedIds.contains(exercise.id);
+                              final isSelected = state.selectedIds.contains(
+                                exercise.id,
+                              );
                               return CheckboxListTile(
                                 value: isSelected,
                                 onChanged: (_) =>

@@ -29,9 +29,9 @@ class ExerciseCreationSheet extends HookConsumerWidget {
       if (exercise != null && context.mounted) {
         Navigator.of(context).pop(exercise);
       } else if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('種目の作成に失敗しました')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('種目の作成に失敗しました')));
       }
     }
 

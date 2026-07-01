@@ -79,11 +79,7 @@ class _FilledButton extends StatelessWidget {
 }
 
 class _GhostButton extends StatelessWidget {
-  const _GhostButton({
-    required this.label,
-    required this.onPressed,
-    this.icon,
-  });
+  const _GhostButton({required this.label, required this.onPressed, this.icon});
 
   final String label;
   final VoidCallback? onPressed;
@@ -114,10 +110,7 @@ class _GhostButton extends StatelessWidget {
             ],
             Text(
               label,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w500,
-              ),
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
             ),
           ],
         ),
