@@ -7,8 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/presentation/00_components/exercise_item.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
-import 'package:machamp/src/presentation/menu_create/exercise_selection/exercise_selection_sheet.dart';
-import 'package:machamp/src/presentation/menu_create/menu_create_view_model.dart';
+import 'package:machamp/src/presentation/menu_editor/exercise_selection/exercise_selection_sheet.dart';
+import 'package:machamp/src/presentation/menu_editor/menu_create_view_model.dart';
 
 class MenuCreateScreen extends HookConsumerWidget {
   const MenuCreateScreen({super.key, this.menuId});
