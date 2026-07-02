@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
@@ -15,6 +16,7 @@ class WorkoutScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(workoutViewModelProvider(menuId));
     final vm = ref.read(workoutViewModelProvider(menuId).notifier);
+    final isSaving = useState(false);
 
     return PopScope(
       canPop: false,
@@ -114,44 +116,71 @@ class WorkoutScreen extends HookConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                 child: PrimaryButton(
-                  label: '終了',
-                  onPressed: () async {
-                    final hasIncomplete = state.exercises.any(
-                      (ex) => ex.sets.any((s) => !s.isCompleted),
-                    );
-                    final confirmed = await showDialog<bool>(
-                      context: context,
-                      builder: (ctx) => AlertDialog(
-                        title: const Text('ワークアウトを終了しますか？'),
-                        content: hasIncomplete
-                            ? const Text('チェックされていないセットは記録されません。')
-                            : null,
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(ctx).pop(false),
-                            child: const Text('キャンセル'),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(ctx).pop(true),
-                            child: const Text('終了'),
-                          ),
-                        ],
-                      ),
-                    );
-                    if (confirmed == true && context.mounted) {
-                      final hasCompleted = state.exercises.any(
-                        (ex) => ex.sets.any((s) => s.isCompleted),
-                      );
-                      if (hasCompleted) {
-                        await context.push(
-                          '/menu/$menuId/workout/summary',
-                          extra: state,
-                        );
-                      } else {
-                        context.go('/home');
-                      }
-                    }
-                  },
+                  label: isSaving.value ? '保存中...' : '終了',
+                  onPressed: isSaving.value
+                      ? null
+                      : () async {
+                          final hasIncomplete = state.exercises.any(
+                            (ex) => ex.sets.any((s) => !s.isCompleted),
+                          );
+                          final confirmed = await showDialog<bool>(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              title: const Text('ワークアウトを終了しますか？'),
+                              content: hasIncomplete
+                                  ? const Text('チェックされていないセットは記録されません。')
+                                  : null,
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(ctx).pop(false),
+                                  child: const Text('キャンセル'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.of(ctx).pop(true),
+                                  child: const Text('終了'),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (confirmed != true || !context.mounted) return;
+
+                          isSaving.value = true;
+                          try {
+                            await vm.saveWorkout(menuId);
+                          } catch (e, st) {
+                            debugPrint('saveWorkout error: $e\n$st');
+                            isSaving.value = false;
+                            if (!context.mounted) return;
+                            await showDialog<void>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: const Text('保存に失敗しました'),
+                                content: Text('$e'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(ctx).pop(),
+                                    child: const Text('OK'),
+                                  ),
+                                ],
+                              ),
+                            );
+                            return;
+                          }
+                          isSaving.value = false;
+
+                          if (!context.mounted) return;
+                          final hasCompleted = state.exercises.any(
+                            (ex) => ex.sets.any((s) => s.isCompleted),
+                          );
+                          if (hasCompleted) {
+                            await context.push(
+                              '/menu/$menuId/workout/summary',
+                              extra: state,
+                            );
+                          } else {
+                            context.go('/home');
+                          }
+                        },
                 ),
               ),
             ),

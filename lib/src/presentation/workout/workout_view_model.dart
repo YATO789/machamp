@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:machamp/src/application/providers/menus_provider.dart';
 import 'package:machamp/src/domain/entity/exercise.dart';
+import 'package:machamp/src/infrastructures/repository/workout_session_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'workout_view_model.freezed.dart';
@@ -29,6 +30,7 @@ abstract class WorkoutState with _$WorkoutState {
   const factory WorkoutState({
     @Default('') String menuName,
     @Default([]) List<WorkoutExerciseState> exercises,
+    DateTime? startedAt,
   }) = _WorkoutState;
 }
 
@@ -41,6 +43,7 @@ class WorkoutViewModel extends _$WorkoutViewModel {
     if (menu == null) return const WorkoutState();
     return WorkoutState(
       menuName: menu.name,
+      startedAt: DateTime.now(),
       exercises: menu.exercises
           .map(
             (me) => WorkoutExerciseState(
@@ -90,5 +93,44 @@ class WorkoutViewModel extends _$WorkoutViewModel {
       isCompleted: !exercises[exerciseIndex].isCompleted,
     );
     state = state.copyWith(exercises: exercises);
+  }
+
+  Future<void> saveWorkout(String menuId) async {
+    final finishedAt = DateTime.now();
+    final exercisesJson = state.exercises
+        .asMap()
+        .entries
+        .expand<Map<String, dynamic>>((entry) {
+          final ex = entry.value;
+          final completedSets = ex.sets.where((s) => s.isCompleted).toList();
+          if (completedSets.isEmpty) return [];
+          return [
+            {
+              'exercise_id': ex.exercise.id,
+              'exercise_order': entry.key + 1,
+              'sets': completedSets
+                  .asMap()
+                  .entries
+                  .map(
+                    (setEntry) => {
+                      'set_order': setEntry.key + 1,
+                      'reps': setEntry.value.reps,
+                      'weight': setEntry.value.weight,
+                    },
+                  )
+                  .toList(),
+            },
+          ];
+        })
+        .toList();
+
+    await ref
+        .read(workoutSessionRepositoryProvider)
+        .saveWorkoutSession(
+          menuId: menuId,
+          startedAt: state.startedAt ?? finishedAt,
+          finishedAt: finishedAt,
+          exercisesJson: exercisesJson,
+        );
   }
 }
