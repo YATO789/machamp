@@ -62,6 +62,52 @@ CREATE UNIQUE INDEX exercise_sets_order_unique
 ON exercise_sets(menu_exercise_id, set_order);
 ```
 
+---
+
+workout_sessions
+```sql
+CREATE TABLE workout_sessions (
+  id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id     uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  menu_id     uuid REFERENCES menus(id) ON DELETE SET NULL,
+  status      text NOT NULL DEFAULT 'in_progress',
+  started_at  timestamptz NOT NULL DEFAULT now(),
+  finished_at timestamptz,
+  created_at  timestamptz NOT NULL DEFAULT now()
+);
+```
+
+workout_exercises
+```sql
+CREATE TABLE workout_exercises (
+  id                  uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  workout_session_id  uuid NOT NULL REFERENCES workout_sessions(id) ON DELETE CASCADE,
+  exercise_id         uuid NOT NULL REFERENCES exercises(id) ON DELETE RESTRICT,
+  exercise_order      integer NOT NULL,
+  created_at          timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE UNIQUE INDEX workout_exercises_order_unique
+ON workout_exercises(workout_session_id, exercise_order);
+```
+
+workout_set
+```sql
+CREATE TABLE workout_sets (
+  id                   uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  workout_exercise_id  uuid NOT NULL REFERENCES workout_exercises(id) ON DELETE CASCADE,
+  set_order            integer NOT NULL,
+  reps                 integer NOT NULL,
+  weight               numeric(6,2) NOT NULL,
+  created_at           timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE UNIQUE INDEX workout_sets_order_unique
+ON workout_sets(workout_exercise_id, set_order);
+```
+
+---
+
 ## ER図
 ```
 auth.users
