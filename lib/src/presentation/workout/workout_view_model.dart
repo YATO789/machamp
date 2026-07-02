@@ -36,8 +36,8 @@ abstract class WorkoutState with _$WorkoutState {
 class WorkoutViewModel extends _$WorkoutViewModel {
   @override
   WorkoutState build(String menuId) {
-    final menus = ref.read(menusProvider);
-    final menu = menus.where((m) => m.id == menuId).firstOrNull;
+    final menus = ref.read(menusProvider).value;
+    final menu = menus?.where((m) => m.id == menuId).firstOrNull;
     if (menu == null) return const WorkoutState();
     return WorkoutState(
       menuName: menu.name,

@@ -1,13 +1,15 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/domain/entity/menu.dart';
 import 'package:machamp/src/domain/entity/menu_exercise.dart';
 import 'package:machamp/src/infrastructures/repository/menu_repository.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-class MenusNotifier extends AsyncNotifier<List<Menu>> {
+part 'menu_view_model.g.dart';
+
+@riverpod
+class MenuViewModel extends _$MenuViewModel {
   @override
   Future<List<Menu>> build() async {
-    final repo = ref.watch(menuRepositoryProvider);
-    return repo.fetchMenus();
+    return ref.watch(menuRepositoryProvider).fetchMenus();
   }
 
   Future<void> createMenu({
@@ -44,7 +46,3 @@ class MenusNotifier extends AsyncNotifier<List<Menu>> {
     );
   }
 }
-
-final menusProvider = AsyncNotifierProvider<MenusNotifier, List<Menu>>(
-  MenusNotifier.new,
-);
