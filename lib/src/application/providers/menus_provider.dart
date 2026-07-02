@@ -14,10 +14,9 @@ class MenusNotifier extends AsyncNotifier<List<Menu>> {
     required String name,
     required List<MenuExercise> exercises,
   }) async {
-    final menu = await ref.read(menuRepositoryProvider).createMenu(
-      name: name,
-      exercises: exercises,
-    );
+    final menu = await ref
+        .read(menuRepositoryProvider)
+        .createMenu(name: name, exercises: exercises);
     state = AsyncData<List<Menu>>([...state.value ?? [], menu]);
   }
 
@@ -26,11 +25,9 @@ class MenusNotifier extends AsyncNotifier<List<Menu>> {
     required String name,
     required List<MenuExercise> exercises,
   }) async {
-    final menu = await ref.read(menuRepositoryProvider).updateMenu(
-      id: id,
-      name: name,
-      exercises: exercises,
-    );
+    final menu = await ref
+        .read(menuRepositoryProvider)
+        .updateMenu(id: id, name: name, exercises: exercises);
     state = AsyncData<List<Menu>>([
       for (final m in state.value ?? <Menu>[])
         if (m.id == id) menu else m,

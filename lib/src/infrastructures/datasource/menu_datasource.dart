@@ -30,10 +30,10 @@ class MenuDataSource {
     required String name,
     required List<Map<String, dynamic>> exercisesJson,
   }) async {
-    final menuId = await _client.rpc<String>('create_menu', params: {
-      'p_name': name,
-      'p_exercises': exercisesJson,
-    });
+    final menuId = await _client.rpc<String>(
+      'create_menu',
+      params: {'p_name': name, 'p_exercises': exercisesJson},
+    );
     return _client.from('menus').select(_menuSelect).eq('id', menuId).single();
   }
 
@@ -42,11 +42,10 @@ class MenuDataSource {
     required String name,
     required List<Map<String, dynamic>> exercisesJson,
   }) async {
-    await _client.rpc<void>('update_menu', params: {
-      'p_menu_id': id,
-      'p_name': name,
-      'p_exercises': exercisesJson,
-    });
+    await _client.rpc<void>(
+      'update_menu',
+      params: {'p_menu_id': id, 'p_name': name, 'p_exercises': exercisesJson},
+    );
     return _client.from('menus').select(_menuSelect).eq('id', id).single();
   }
 

@@ -7,10 +7,11 @@ class MenuDto {
   MenuDto.fromMap(Map<String, dynamic> map)
     : id = map['id'] as String,
       name = map['name'] as String,
-      _menuExercises = (map['menu_exercises'] as List<dynamic>)
-          .map((e) => _MenuExerciseDto.fromMap(e as Map<String, dynamic>))
-          .toList()
-        ..sort((a, b) => a.exerciseOrder.compareTo(b.exerciseOrder));
+      _menuExercises =
+          (map['menu_exercises'] as List<dynamic>)
+              .map((e) => _MenuExerciseDto.fromMap(e as Map<String, dynamic>))
+              .toList()
+            ..sort((a, b) => a.exerciseOrder.compareTo(b.exerciseOrder));
 
   final String id;
   final String name;
@@ -26,13 +27,12 @@ class MenuDto {
 class _MenuExerciseDto {
   _MenuExerciseDto.fromMap(Map<String, dynamic> map)
     : exerciseOrder = map['exercise_order'] as int,
-      exercise = _ExerciseDto.fromMap(
-        map['exercises'] as Map<String, dynamic>,
-      ),
-      sets = (map['exercise_sets'] as List<dynamic>)
-          .map((s) => _ExerciseSetDto.fromMap(s as Map<String, dynamic>))
-          .toList()
-        ..sort((a, b) => a.setOrder.compareTo(b.setOrder));
+      exercise = _ExerciseDto.fromMap(map['exercises'] as Map<String, dynamic>),
+      sets =
+          (map['exercise_sets'] as List<dynamic>)
+              .map((s) => _ExerciseSetDto.fromMap(s as Map<String, dynamic>))
+              .toList()
+            ..sort((a, b) => a.setOrder.compareTo(b.setOrder));
 
   final int exerciseOrder;
   final _ExerciseDto exercise;

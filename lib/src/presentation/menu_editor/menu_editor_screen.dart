@@ -51,9 +51,7 @@ class MenuEditorScreen extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(menuId == null ? 'メニュー作成' : 'メニュー詳細'),
-      ),
+      appBar: AppBar(title: Text(menuId == null ? 'メニュー作成' : 'メニュー詳細')),
       body: Column(
         children: [
           Expanded(
@@ -116,8 +114,9 @@ class MenuEditorScreen extends HookConsumerWidget {
                         isExpanded: isExpanded,
                         isEditable: true,
                         exerciseIndex: index,
-                        onTap: () =>
-                            notifier.setExpandedIndex(isExpanded ? null : index),
+                        onTap: () => notifier.setExpandedIndex(
+                          isExpanded ? null : index,
+                        ),
                         onDelete: () => notifier.removeExercise(index),
                         onSetCountChanged: (count) =>
                             notifier.updateSetCount(index, count),
@@ -144,8 +143,7 @@ class MenuEditorScreen extends HookConsumerWidget {
               child: menuId != null && !isDirty
                   ? PrimaryButton(
                       label: 'ワークアウト開始',
-                      onPressed: () =>
-                          context.push('/menu/$menuId/workout'),
+                      onPressed: () => context.push('/menu/$menuId/workout'),
                     )
                   : PrimaryButton(
                       label: '保存する',

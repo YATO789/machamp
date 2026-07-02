@@ -102,21 +102,22 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
     state = state.copyWith(isSaving: true);
     try {
       if (menuId != null) {
-        await ref.read(menusProvider.notifier).updateMenu(
-          id: menuId!,
-          name: name,
-          exercises: state.menuExercises,
-        );
+        await ref
+            .read(menusProvider.notifier)
+            .updateMenu(
+              id: menuId!,
+              name: name,
+              exercises: state.menuExercises,
+            );
         state = state.copyWith(
           originalName: name,
           isExercisesDirty: false,
           isSaving: false,
         );
       } else {
-        await ref.read(menusProvider.notifier).createMenu(
-          name: name,
-          exercises: state.menuExercises,
-        );
+        await ref
+            .read(menusProvider.notifier)
+            .createMenu(name: name, exercises: state.menuExercises);
         state = state.copyWith(isSaving: false);
       }
     } catch (_) {
