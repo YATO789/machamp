@@ -370,17 +370,11 @@ class _WorkoutCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: _StatChip(
-                    value: '${workout.sets} set',
-                    label: 'セット数',
-                  ),
+                  child: _StatChip(value: '${workout.sets} set', label: 'セット数'),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: _StatChip(
-                    value: '${workout.minutes} 分',
-                    label: '時間',
-                  ),
+                  child: _StatChip(value: '${workout.minutes} 分', label: '時間'),
                 ),
               ],
             ),

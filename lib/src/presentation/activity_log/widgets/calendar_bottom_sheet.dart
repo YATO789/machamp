@@ -155,8 +155,11 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
   Widget _buildGrid() {
     final firstDay = DateTime(_displayMonth.year, _displayMonth.month, 1);
     final offset = firstDay.weekday - 1;
-    final daysInMonth =
-        DateTime(_displayMonth.year, _displayMonth.month + 1, 0).day;
+    final daysInMonth = DateTime(
+      _displayMonth.year,
+      _displayMonth.month + 1,
+      0,
+    ).day;
     final rows = ((offset + daysInMonth) / 7).ceil();
 
     return Column(
