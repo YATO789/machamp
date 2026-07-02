@@ -124,11 +124,13 @@ class WorkoutViewModel extends _$WorkoutViewModel {
         })
         .toList();
 
-    await ref.read(workoutSessionRepositoryProvider).saveWorkoutSession(
-      menuId: menuId,
-      startedAt: state.startedAt ?? finishedAt,
-      finishedAt: finishedAt,
-      exercisesJson: exercisesJson,
-    );
+    await ref
+        .read(workoutSessionRepositoryProvider)
+        .saveWorkoutSession(
+          menuId: menuId,
+          startedAt: state.startedAt ?? finishedAt,
+          finishedAt: finishedAt,
+          exercisesJson: exercisesJson,
+        );
   }
 }
