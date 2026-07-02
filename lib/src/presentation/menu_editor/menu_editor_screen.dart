@@ -8,19 +8,24 @@ import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/presentation/00_components/exercise_item.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
 import 'package:machamp/src/presentation/menu_editor/exercise_selection/exercise_selection_sheet.dart';
-import 'package:machamp/src/presentation/menu_editor/menu_create_view_model.dart';
+import 'package:machamp/src/presentation/menu_editor/menu_editor_view_model.dart';
 
-class MenuCreateScreen extends HookConsumerWidget {
-  const MenuCreateScreen({super.key, this.menuId});
+class MenuEditorScreen extends HookConsumerWidget {
+  const MenuEditorScreen({super.key, this.menuId});
 
   final String? menuId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final state = ref.watch(menuCreateViewModelProvider(menuId));
-    final notifier = ref.read(menuCreateViewModelProvider(menuId).notifier);
+    final state = ref.watch(menuEditorViewModelProvider(menuId));
+    final notifier = ref.read(menuEditorViewModelProvider(menuId).notifier);
 
-    final nameController = useTextEditingController(text: '');
+    final nameController = useTextEditingController(text: state.originalName);
+    useListenable(nameController);
+
+    final isDirty =
+        nameController.text.trim() != state.originalName ||
+        state.isExercisesDirty;
 
     void openExerciseSheet() {
       unawaited(
@@ -34,12 +39,19 @@ class MenuCreateScreen extends HookConsumerWidget {
     }
 
     void save() {
-      notifier.save(nameController.text.trim());
-      if (context.mounted) context.pop();
+      if (menuId == null) {
+        unawaited(
+          notifier.save(nameController.text.trim()).then((_) {
+            if (context.mounted) context.pop();
+          }),
+        );
+      } else {
+        unawaited(notifier.save(nameController.text.trim()));
+      }
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(menuId != null ? 'メニュー編集' : 'メニュー作成')),
+      appBar: AppBar(title: Text(menuId == null ? 'メニュー作成' : 'メニュー詳細')),
       body: Column(
         children: [
           Expanded(
@@ -92,19 +104,19 @@ class MenuCreateScreen extends HookConsumerWidget {
                   ),
                   const SizedBox(height: 12),
                   ...List.generate(state.menuExercises.length, (index) {
-                    final menu = state.menuExercises[index];
+                    final me = state.menuExercises[index];
                     final isExpanded = state.expandedIndex == index;
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: ExerciseItem(
-                        key: ValueKey(menu.exercise.id + index.toString()),
-                        menuExercise: menu,
+                        key: ValueKey(me.exercise.id + index.toString()),
+                        menuExercise: me,
                         isExpanded: isExpanded,
                         isEditable: true,
                         exerciseIndex: index,
-                        onTap: () {
-                          notifier.setExpandedIndex(isExpanded ? null : index);
-                        },
+                        onTap: () => notifier.setExpandedIndex(
+                          isExpanded ? null : index,
+                        ),
                         onDelete: () => notifier.removeExercise(index),
                         onSetCountChanged: (count) =>
                             notifier.updateSetCount(index, count),
@@ -128,7 +140,15 @@ class MenuCreateScreen extends HookConsumerWidget {
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-              child: PrimaryButton(label: '保存する', onPressed: save),
+              child: menuId != null && !isDirty
+                  ? PrimaryButton(
+                      label: 'ワークアウト開始',
+                      onPressed: () => context.push('/menu/$menuId/workout'),
+                    )
+                  : PrimaryButton(
+                      label: '保存する',
+                      onPressed: state.isSaving ? null : save,
+                    ),
             ),
           ),
         ],

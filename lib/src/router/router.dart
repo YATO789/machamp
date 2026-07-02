@@ -5,8 +5,7 @@ import 'package:machamp/src/presentation/activity_log/activity_log_screen.dart';
 import 'package:machamp/src/presentation/home/home_screen.dart';
 import 'package:machamp/src/presentation/login/login_screen.dart';
 import 'package:machamp/src/presentation/menu/menu_screen.dart';
-import 'package:machamp/src/presentation/menu_editor/menu_create_screen.dart';
-import 'package:machamp/src/presentation/menu_editor/menu_detail_screen.dart';
+import 'package:machamp/src/presentation/menu_editor/menu_editor_screen.dart';
 import 'package:machamp/src/presentation/profile/profile_screen.dart';
 import 'package:machamp/src/presentation/workout/workout_screen.dart';
 import 'package:machamp/src/presentation/workout/workout_view_model.dart';
@@ -100,12 +99,12 @@ GoRouter router(Ref ref) {
       ),
       GoRoute(
         path: '/menu/create',
-        builder: (context, state) => const MenuCreateScreen(),
+        builder: (context, state) => const MenuEditorScreen(),
       ),
       GoRoute(
         path: '/menu/:id',
         builder: (context, state) =>
-            MenuDetailScreen(menuId: state.pathParameters['id']!),
+            MenuEditorScreen(menuId: state.pathParameters['id']),
         routes: [
           GoRoute(
             path: 'workout',

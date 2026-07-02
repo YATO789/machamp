@@ -1,39 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:machamp/src/application/providers/menus_provider.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/domain/entity/menu.dart';
+import 'package:machamp/src/presentation/menu/menu_view_model.dart';
 
 class MenuScreen extends HookConsumerWidget {
   const MenuScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final menus = ref.watch(menusProvider);
+    final menusAsync = ref.watch(menuViewModelProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('メニュー')),
-      body: menus.isEmpty
-          ? const Center(
-              child: Text(
-                'メニューがありません\n新規作成から追加してください',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.grey),
+      body: menusAsync.when(
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (_, __) => const Center(
+          child: Text(
+            'データを取得できませんでした',
+            style: TextStyle(color: AppColors.grey),
+          ),
+        ),
+        data: (menus) => menus.isEmpty
+            ? const Center(
+                child: Text(
+                  'メニューがありません\n新規作成から追加してください',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: AppColors.grey),
+                ),
+              )
+            : ListView.separated(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                itemCount: menus.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final menu = menus[index];
+                  return _MenuCard(
+                    menu: menu,
+                    onTap: () => context.push('/menu/${menu.id}'),
+                  );
+                },
               ),
-            )
-          : ListView.separated(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-              itemCount: menus.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final menu = menus[index];
-                return _MenuCard(
-                  menu: menu,
-                  onTap: () => context.push('/menu/${menu.id}'),
-                );
-              },
-            ),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/menu/create'),
         backgroundColor: AppColors.purple,
