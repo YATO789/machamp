@@ -564,7 +564,7 @@ $ExerciseCopyWith<$Res> get exercise {
 /// @nodoc
 mixin _$WorkoutState {
 
- String get menuName; List<WorkoutExerciseState> get exercises;
+ String get menuName; List<WorkoutExerciseState> get exercises; DateTime? get startedAt;
 /// Create a copy of WorkoutState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -575,16 +575,16 @@ $WorkoutStateCopyWith<WorkoutState> get copyWith => _$WorkoutStateCopyWithImpl<W
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkoutState&&(identical(other.menuName, menuName) || other.menuName == menuName)&&const DeepCollectionEquality().equals(other.exercises, exercises));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkoutState&&(identical(other.menuName, menuName) || other.menuName == menuName)&&const DeepCollectionEquality().equals(other.exercises, exercises)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,menuName,const DeepCollectionEquality().hash(exercises));
+int get hashCode => Object.hash(runtimeType,menuName,const DeepCollectionEquality().hash(exercises),startedAt);
 
 @override
 String toString() {
-  return 'WorkoutState(menuName: $menuName, exercises: $exercises)';
+  return 'WorkoutState(menuName: $menuName, exercises: $exercises, startedAt: $startedAt)';
 }
 
 
@@ -595,7 +595,7 @@ abstract mixin class $WorkoutStateCopyWith<$Res>  {
   factory $WorkoutStateCopyWith(WorkoutState value, $Res Function(WorkoutState) _then) = _$WorkoutStateCopyWithImpl;
 @useResult
 $Res call({
- String menuName, List<WorkoutExerciseState> exercises
+ String menuName, List<WorkoutExerciseState> exercises, DateTime? startedAt
 });
 
 
@@ -612,11 +612,12 @@ class _$WorkoutStateCopyWithImpl<$Res>
 
 /// Create a copy of WorkoutState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? menuName = null,Object? exercises = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? menuName = null,Object? exercises = null,Object? startedAt = freezed,}) {
   return _then(_self.copyWith(
 menuName: null == menuName ? _self.menuName : menuName // ignore: cast_nullable_to_non_nullable
 as String,exercises: null == exercises ? _self.exercises : exercises // ignore: cast_nullable_to_non_nullable
-as List<WorkoutExerciseState>,
+as List<WorkoutExerciseState>,startedAt: freezed == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -701,10 +702,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String menuName,  List<WorkoutExerciseState> exercises)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String menuName,  List<WorkoutExerciseState> exercises,  DateTime? startedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WorkoutState() when $default != null:
-return $default(_that.menuName,_that.exercises);case _:
+return $default(_that.menuName,_that.exercises,_that.startedAt);case _:
   return orElse();
 
 }
@@ -722,10 +723,10 @@ return $default(_that.menuName,_that.exercises);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String menuName,  List<WorkoutExerciseState> exercises)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String menuName,  List<WorkoutExerciseState> exercises,  DateTime? startedAt)  $default,) {final _that = this;
 switch (_that) {
 case _WorkoutState():
-return $default(_that.menuName,_that.exercises);case _:
+return $default(_that.menuName,_that.exercises,_that.startedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -742,10 +743,10 @@ return $default(_that.menuName,_that.exercises);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String menuName,  List<WorkoutExerciseState> exercises)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String menuName,  List<WorkoutExerciseState> exercises,  DateTime? startedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _WorkoutState() when $default != null:
-return $default(_that.menuName,_that.exercises);case _:
+return $default(_that.menuName,_that.exercises,_that.startedAt);case _:
   return null;
 
 }
@@ -757,7 +758,7 @@ return $default(_that.menuName,_that.exercises);case _:
 
 
 class _WorkoutState implements WorkoutState {
-  const _WorkoutState({this.menuName = '', final  List<WorkoutExerciseState> exercises = const []}): _exercises = exercises;
+  const _WorkoutState({this.menuName = '', final  List<WorkoutExerciseState> exercises = const [], this.startedAt}): _exercises = exercises;
   
 
 @override@JsonKey() final  String menuName;
@@ -768,6 +769,7 @@ class _WorkoutState implements WorkoutState {
   return EqualUnmodifiableListView(_exercises);
 }
 
+@override final  DateTime? startedAt;
 
 /// Create a copy of WorkoutState
 /// with the given fields replaced by the non-null parameter values.
@@ -779,16 +781,16 @@ _$WorkoutStateCopyWith<_WorkoutState> get copyWith => __$WorkoutStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkoutState&&(identical(other.menuName, menuName) || other.menuName == menuName)&&const DeepCollectionEquality().equals(other._exercises, _exercises));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkoutState&&(identical(other.menuName, menuName) || other.menuName == menuName)&&const DeepCollectionEquality().equals(other._exercises, _exercises)&&(identical(other.startedAt, startedAt) || other.startedAt == startedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,menuName,const DeepCollectionEquality().hash(_exercises));
+int get hashCode => Object.hash(runtimeType,menuName,const DeepCollectionEquality().hash(_exercises),startedAt);
 
 @override
 String toString() {
-  return 'WorkoutState(menuName: $menuName, exercises: $exercises)';
+  return 'WorkoutState(menuName: $menuName, exercises: $exercises, startedAt: $startedAt)';
 }
 
 
@@ -799,7 +801,7 @@ abstract mixin class _$WorkoutStateCopyWith<$Res> implements $WorkoutStateCopyWi
   factory _$WorkoutStateCopyWith(_WorkoutState value, $Res Function(_WorkoutState) _then) = __$WorkoutStateCopyWithImpl;
 @override @useResult
 $Res call({
- String menuName, List<WorkoutExerciseState> exercises
+ String menuName, List<WorkoutExerciseState> exercises, DateTime? startedAt
 });
 
 
@@ -816,11 +818,12 @@ class __$WorkoutStateCopyWithImpl<$Res>
 
 /// Create a copy of WorkoutState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? menuName = null,Object? exercises = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? menuName = null,Object? exercises = null,Object? startedAt = freezed,}) {
   return _then(_WorkoutState(
 menuName: null == menuName ? _self.menuName : menuName // ignore: cast_nullable_to_non_nullable
 as String,exercises: null == exercises ? _self._exercises : exercises // ignore: cast_nullable_to_non_nullable
-as List<WorkoutExerciseState>,
+as List<WorkoutExerciseState>,startedAt: freezed == startedAt ? _self.startedAt : startedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
