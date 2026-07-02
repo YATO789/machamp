@@ -104,7 +104,7 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: '/menu/:id',
         builder: (context, state) =>
-            MenuEditorScreen(menuId: state.pathParameters['id']!),
+            MenuEditorScreen(menuId: state.pathParameters['id']),
         routes: [
           GoRoute(
             path: 'workout',
