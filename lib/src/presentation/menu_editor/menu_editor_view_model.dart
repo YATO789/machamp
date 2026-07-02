@@ -2,37 +2,40 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:machamp/src/application/providers/menus_provider.dart';
 import 'package:machamp/src/domain/entity/exercise.dart';
 import 'package:machamp/src/domain/entity/exercise_set.dart';
-import 'package:machamp/src/domain/entity/menu.dart';
 import 'package:machamp/src/domain/entity/menu_exercise.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'menu_create_view_model.freezed.dart';
-part 'menu_create_view_model.g.dart';
+part 'menu_editor_view_model.freezed.dart';
+part 'menu_editor_view_model.g.dart';
 
 @freezed
-abstract class MenuCreateState with _$MenuCreateState {
-  const factory MenuCreateState({
+abstract class MenuEditorState with _$MenuEditorState {
+  const factory MenuEditorState({
+    @Default('') String originalName,
     @Default([]) List<MenuExercise> menuExercises,
     int? expandedIndex,
-  }) = _MenuCreateState;
+    @Default(false) bool isExercisesDirty,
+    @Default(false) bool isSaving,
+  }) = _MenuEditorState;
 }
 
 @riverpod
-class MenuCreateViewModel extends _$MenuCreateViewModel {
+class MenuEditorViewModel extends _$MenuEditorViewModel {
   @override
-  MenuCreateState build(String? menuId) {
-    final menus = ref.read(menusProvider);
-    final existingMenu = menuId != null
-        ? menus.where((m) => m.id == menuId).firstOrNull
+  MenuEditorState build(String? menuId) {
+    final menu = menuId != null
+        ? ref
+              .read(menusProvider)
+              .value
+              ?.where((m) => m.id == menuId)
+              .firstOrNull
         : null;
-    return MenuCreateState(
-      menuExercises: existingMenu != null
-          ? List.from(existingMenu.exercises)
-          : [],
+    return MenuEditorState(
+      originalName: menu?.name ?? '',
+      menuExercises: menu != null ? List.from(menu.exercises) : [],
     );
   }
 
-  //TODO: ビジネスロジックを移す
   void removeExercise(int index) {
     final newList = List<MenuExercise>.from(state.menuExercises)
       ..removeAt(index);
@@ -40,7 +43,11 @@ class MenuCreateViewModel extends _$MenuCreateViewModel {
     final newExpanded = current == index
         ? null
         : (current != null && current > index ? current - 1 : current);
-    state = state.copyWith(menuExercises: newList, expandedIndex: newExpanded);
+    state = state.copyWith(
+      menuExercises: newList,
+      expandedIndex: newExpanded,
+      isExercisesDirty: true,
+    );
   }
 
   void updateSetCount(int exerciseIndex, int newCount) {
@@ -61,7 +68,7 @@ class MenuCreateViewModel extends _$MenuCreateViewModel {
       newSets = currentSets.sublist(0, newCount);
     }
     newList[exerciseIndex] = me.copyWith(sets: newSets);
-    state = state.copyWith(menuExercises: newList);
+    state = state.copyWith(menuExercises: newList, isExercisesDirty: true);
   }
 
   void updateSet(int exerciseIndex, int setIndex, ExerciseSet updated) {
@@ -69,7 +76,7 @@ class MenuCreateViewModel extends _$MenuCreateViewModel {
     final me = newList[exerciseIndex];
     final newSets = List<ExerciseSet>.from(me.sets)..[setIndex] = updated;
     newList[exerciseIndex] = me.copyWith(sets: newSets);
-    state = state.copyWith(menuExercises: newList);
+    state = state.copyWith(menuExercises: newList, isExercisesDirty: true);
   }
 
   void addExercises(List<Exercise> exercises) {
@@ -83,6 +90,7 @@ class MenuCreateViewModel extends _$MenuCreateViewModel {
         .toList();
     state = state.copyWith(
       menuExercises: [...state.menuExercises, ...newItems],
+      isExercisesDirty: true,
     );
   }
 
@@ -90,29 +98,30 @@ class MenuCreateViewModel extends _$MenuCreateViewModel {
     state = state.copyWith(expandedIndex: index);
   }
 
-  void save(String name) {
-    if (menuId != null) {
-      final existingMenu = ref
-          .read(menusProvider)
-          .where((m) => m.id == menuId)
-          .firstOrNull;
-      if (existingMenu != null) {
-        ref
-            .read(menusProvider.notifier)
-            .updateMenu(
-              existingMenu.copyWith(name: name, exercises: state.menuExercises),
-            );
+  Future<void> save(String name) async {
+    state = state.copyWith(isSaving: true);
+    try {
+      if (menuId != null) {
+        await ref.read(menusProvider.notifier).updateMenu(
+          id: menuId!,
+          name: name,
+          exercises: state.menuExercises,
+        );
+        state = state.copyWith(
+          originalName: name,
+          isExercisesDirty: false,
+          isSaving: false,
+        );
+      } else {
+        await ref.read(menusProvider.notifier).createMenu(
+          name: name,
+          exercises: state.menuExercises,
+        );
+        state = state.copyWith(isSaving: false);
       }
-    } else {
-      ref
-          .read(menusProvider.notifier)
-          .addMenu(
-            Menu(
-              id: DateTime.now().millisecondsSinceEpoch.toString(),
-              name: name,
-              exercises: state.menuExercises,
-            ),
-          );
+    } catch (_) {
+      state = state.copyWith(isSaving: false);
+      rethrow;
     }
   }
 }
