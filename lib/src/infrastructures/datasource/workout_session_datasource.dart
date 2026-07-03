@@ -29,4 +29,20 @@ class WorkoutSessionDataSource {
       },
     );
   }
+
+  Future<List<Map<String, dynamic>>> fetchWorkoutSessionsByWeek({
+    required DateTime weekStart,
+    required DateTime weekEnd,
+  }) async {
+    final response = await _client
+        .from('workout_sessions')
+        .select(
+          '*, menu:menus(id, name), workout_exercises(*, exercise:exercises(id, name), workout_sets(*))',
+        )
+        .gte('finished_at', weekStart.toUtc().toIso8601String())
+        .lt('finished_at', weekEnd.toUtc().toIso8601String())
+        .not('finished_at', 'is', null)
+        .order('started_at', ascending: false);
+    return List<Map<String, dynamic>>.from(response as List);
+  }
 }
