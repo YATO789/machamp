@@ -38,6 +38,38 @@ class MenuEditorScreen extends HookConsumerWidget {
       );
     }
 
+    Future<void> confirmAndDelete() async {
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('「${state.originalName}」を削除しますか？'),
+          content: const Text('この操作は取り消せません。'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(false),
+              child: const Text('キャンセル'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(ctx).pop(true),
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: const Text('削除'),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true) return;
+      try {
+        await notifier.deleteMenu();
+        if (context.mounted) context.pop();
+      } catch (_) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('削除に失敗しました')));
+        }
+      }
+    }
+
     void save() {
       if (menuId == null) {
         unawaited(
@@ -51,7 +83,20 @@ class MenuEditorScreen extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(menuId == null ? 'メニュー作成' : 'メニュー詳細')),
+      appBar: AppBar(
+        title: Text(menuId == null ? 'メニュー作成' : 'メニュー詳細'),
+        actions: [
+          if (menuId != null)
+            PopupMenuButton<String>(
+              onSelected: (value) {
+                if (value == 'delete') unawaited(confirmAndDelete());
+              },
+              itemBuilder: (_) => const [
+                PopupMenuItem(value: 'delete', child: Text('削除')),
+              ],
+            ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MenuEditorState {
 
- String get originalName; List<MenuExercise> get menuExercises; int? get expandedIndex; bool get isExercisesDirty; bool get isSaving;
+ String get originalName; List<MenuExercise> get menuExercises; int? get expandedIndex; bool get isExercisesDirty; bool get isSaving; bool get isDeleting;
 /// Create a copy of MenuEditorState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MenuEditorStateCopyWith<MenuEditorState> get copyWith => _$MenuEditorStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MenuEditorState&&(identical(other.originalName, originalName) || other.originalName == originalName)&&const DeepCollectionEquality().equals(other.menuExercises, menuExercises)&&(identical(other.expandedIndex, expandedIndex) || other.expandedIndex == expandedIndex)&&(identical(other.isExercisesDirty, isExercisesDirty) || other.isExercisesDirty == isExercisesDirty)&&(identical(other.isSaving, isSaving) || other.isSaving == isSaving));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MenuEditorState&&(identical(other.originalName, originalName) || other.originalName == originalName)&&const DeepCollectionEquality().equals(other.menuExercises, menuExercises)&&(identical(other.expandedIndex, expandedIndex) || other.expandedIndex == expandedIndex)&&(identical(other.isExercisesDirty, isExercisesDirty) || other.isExercisesDirty == isExercisesDirty)&&(identical(other.isSaving, isSaving) || other.isSaving == isSaving)&&(identical(other.isDeleting, isDeleting) || other.isDeleting == isDeleting));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,originalName,const DeepCollectionEquality().hash(menuExercises),expandedIndex,isExercisesDirty,isSaving);
+int get hashCode => Object.hash(runtimeType,originalName,const DeepCollectionEquality().hash(menuExercises),expandedIndex,isExercisesDirty,isSaving,isDeleting);
 
 @override
 String toString() {
-  return 'MenuEditorState(originalName: $originalName, menuExercises: $menuExercises, expandedIndex: $expandedIndex, isExercisesDirty: $isExercisesDirty, isSaving: $isSaving)';
+  return 'MenuEditorState(originalName: $originalName, menuExercises: $menuExercises, expandedIndex: $expandedIndex, isExercisesDirty: $isExercisesDirty, isSaving: $isSaving, isDeleting: $isDeleting)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MenuEditorStateCopyWith<$Res>  {
   factory $MenuEditorStateCopyWith(MenuEditorState value, $Res Function(MenuEditorState) _then) = _$MenuEditorStateCopyWithImpl;
 @useResult
 $Res call({
- String originalName, List<MenuExercise> menuExercises, int? expandedIndex, bool isExercisesDirty, bool isSaving
+ String originalName, List<MenuExercise> menuExercises, int? expandedIndex, bool isExercisesDirty, bool isSaving, bool isDeleting
 });
 
 
@@ -62,13 +62,14 @@ class _$MenuEditorStateCopyWithImpl<$Res>
 
 /// Create a copy of MenuEditorState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? originalName = null,Object? menuExercises = null,Object? expandedIndex = freezed,Object? isExercisesDirty = null,Object? isSaving = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? originalName = null,Object? menuExercises = null,Object? expandedIndex = freezed,Object? isExercisesDirty = null,Object? isSaving = null,Object? isDeleting = null,}) {
   return _then(_self.copyWith(
 originalName: null == originalName ? _self.originalName : originalName // ignore: cast_nullable_to_non_nullable
 as String,menuExercises: null == menuExercises ? _self.menuExercises : menuExercises // ignore: cast_nullable_to_non_nullable
 as List<MenuExercise>,expandedIndex: freezed == expandedIndex ? _self.expandedIndex : expandedIndex // ignore: cast_nullable_to_non_nullable
 as int?,isExercisesDirty: null == isExercisesDirty ? _self.isExercisesDirty : isExercisesDirty // ignore: cast_nullable_to_non_nullable
 as bool,isSaving: null == isSaving ? _self.isSaving : isSaving // ignore: cast_nullable_to_non_nullable
+as bool,isDeleting: null == isDeleting ? _self.isDeleting : isDeleting // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String originalName,  List<MenuExercise> menuExercises,  int? expandedIndex,  bool isExercisesDirty,  bool isSaving)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String originalName,  List<MenuExercise> menuExercises,  int? expandedIndex,  bool isExercisesDirty,  bool isSaving,  bool isDeleting)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MenuEditorState() when $default != null:
-return $default(_that.originalName,_that.menuExercises,_that.expandedIndex,_that.isExercisesDirty,_that.isSaving);case _:
+return $default(_that.originalName,_that.menuExercises,_that.expandedIndex,_that.isExercisesDirty,_that.isSaving,_that.isDeleting);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.originalName,_that.menuExercises,_that.expandedIndex,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String originalName,  List<MenuExercise> menuExercises,  int? expandedIndex,  bool isExercisesDirty,  bool isSaving)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String originalName,  List<MenuExercise> menuExercises,  int? expandedIndex,  bool isExercisesDirty,  bool isSaving,  bool isDeleting)  $default,) {final _that = this;
 switch (_that) {
 case _MenuEditorState():
-return $default(_that.originalName,_that.menuExercises,_that.expandedIndex,_that.isExercisesDirty,_that.isSaving);case _:
+return $default(_that.originalName,_that.menuExercises,_that.expandedIndex,_that.isExercisesDirty,_that.isSaving,_that.isDeleting);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.originalName,_that.menuExercises,_that.expandedIndex,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String originalName,  List<MenuExercise> menuExercises,  int? expandedIndex,  bool isExercisesDirty,  bool isSaving)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String originalName,  List<MenuExercise> menuExercises,  int? expandedIndex,  bool isExercisesDirty,  bool isSaving,  bool isDeleting)?  $default,) {final _that = this;
 switch (_that) {
 case _MenuEditorState() when $default != null:
-return $default(_that.originalName,_that.menuExercises,_that.expandedIndex,_that.isExercisesDirty,_that.isSaving);case _:
+return $default(_that.originalName,_that.menuExercises,_that.expandedIndex,_that.isExercisesDirty,_that.isSaving,_that.isDeleting);case _:
   return null;
 
 }
@@ -210,7 +211,7 @@ return $default(_that.originalName,_that.menuExercises,_that.expandedIndex,_that
 
 
 class _MenuEditorState implements MenuEditorState {
-  const _MenuEditorState({this.originalName = '', final  List<MenuExercise> menuExercises = const [], this.expandedIndex, this.isExercisesDirty = false, this.isSaving = false}): _menuExercises = menuExercises;
+  const _MenuEditorState({this.originalName = '', final  List<MenuExercise> menuExercises = const [], this.expandedIndex, this.isExercisesDirty = false, this.isSaving = false, this.isDeleting = false}): _menuExercises = menuExercises;
   
 
 @override@JsonKey() final  String originalName;
@@ -224,6 +225,7 @@ class _MenuEditorState implements MenuEditorState {
 @override final  int? expandedIndex;
 @override@JsonKey() final  bool isExercisesDirty;
 @override@JsonKey() final  bool isSaving;
+@override@JsonKey() final  bool isDeleting;
 
 /// Create a copy of MenuEditorState
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +237,16 @@ _$MenuEditorStateCopyWith<_MenuEditorState> get copyWith => __$MenuEditorStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MenuEditorState&&(identical(other.originalName, originalName) || other.originalName == originalName)&&const DeepCollectionEquality().equals(other._menuExercises, _menuExercises)&&(identical(other.expandedIndex, expandedIndex) || other.expandedIndex == expandedIndex)&&(identical(other.isExercisesDirty, isExercisesDirty) || other.isExercisesDirty == isExercisesDirty)&&(identical(other.isSaving, isSaving) || other.isSaving == isSaving));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MenuEditorState&&(identical(other.originalName, originalName) || other.originalName == originalName)&&const DeepCollectionEquality().equals(other._menuExercises, _menuExercises)&&(identical(other.expandedIndex, expandedIndex) || other.expandedIndex == expandedIndex)&&(identical(other.isExercisesDirty, isExercisesDirty) || other.isExercisesDirty == isExercisesDirty)&&(identical(other.isSaving, isSaving) || other.isSaving == isSaving)&&(identical(other.isDeleting, isDeleting) || other.isDeleting == isDeleting));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,originalName,const DeepCollectionEquality().hash(_menuExercises),expandedIndex,isExercisesDirty,isSaving);
+int get hashCode => Object.hash(runtimeType,originalName,const DeepCollectionEquality().hash(_menuExercises),expandedIndex,isExercisesDirty,isSaving,isDeleting);
 
 @override
 String toString() {
-  return 'MenuEditorState(originalName: $originalName, menuExercises: $menuExercises, expandedIndex: $expandedIndex, isExercisesDirty: $isExercisesDirty, isSaving: $isSaving)';
+  return 'MenuEditorState(originalName: $originalName, menuExercises: $menuExercises, expandedIndex: $expandedIndex, isExercisesDirty: $isExercisesDirty, isSaving: $isSaving, isDeleting: $isDeleting)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$MenuEditorStateCopyWith<$Res> implements $MenuEditorState
   factory _$MenuEditorStateCopyWith(_MenuEditorState value, $Res Function(_MenuEditorState) _then) = __$MenuEditorStateCopyWithImpl;
 @override @useResult
 $Res call({
- String originalName, List<MenuExercise> menuExercises, int? expandedIndex, bool isExercisesDirty, bool isSaving
+ String originalName, List<MenuExercise> menuExercises, int? expandedIndex, bool isExercisesDirty, bool isSaving, bool isDeleting
 });
 
 
@@ -272,13 +274,14 @@ class __$MenuEditorStateCopyWithImpl<$Res>
 
 /// Create a copy of MenuEditorState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? originalName = null,Object? menuExercises = null,Object? expandedIndex = freezed,Object? isExercisesDirty = null,Object? isSaving = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? originalName = null,Object? menuExercises = null,Object? expandedIndex = freezed,Object? isExercisesDirty = null,Object? isSaving = null,Object? isDeleting = null,}) {
   return _then(_MenuEditorState(
 originalName: null == originalName ? _self.originalName : originalName // ignore: cast_nullable_to_non_nullable
 as String,menuExercises: null == menuExercises ? _self._menuExercises : menuExercises // ignore: cast_nullable_to_non_nullable
 as List<MenuExercise>,expandedIndex: freezed == expandedIndex ? _self.expandedIndex : expandedIndex // ignore: cast_nullable_to_non_nullable
 as int?,isExercisesDirty: null == isExercisesDirty ? _self.isExercisesDirty : isExercisesDirty // ignore: cast_nullable_to_non_nullable
 as bool,isSaving: null == isSaving ? _self.isSaving : isSaving // ignore: cast_nullable_to_non_nullable
+as bool,isDeleting: null == isDeleting ? _self.isDeleting : isDeleting // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
