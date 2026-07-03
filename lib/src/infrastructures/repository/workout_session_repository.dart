@@ -38,4 +38,7 @@ class WorkoutSessionRepository {
     );
     return rawList.map((m) => WorkoutHistoryDto.fromMap(m).toDomain()).toList();
   }
+
+  Future<void> deleteWorkoutSession(String id) =>
+      _dataSource.deleteWorkoutSession(id);
 }

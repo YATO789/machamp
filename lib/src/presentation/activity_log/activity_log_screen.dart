@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/domain/entity/workout_history_entry.dart';
+import 'package:machamp/src/infrastructures/repository/workout_session_repository.dart';
 import 'package:machamp/src/presentation/activity_log/activity_log_view_model.dart';
 import 'package:machamp/src/presentation/activity_log/widgets/calendar_bottom_sheet.dart';
 
@@ -223,9 +226,56 @@ class ActivityLogScreen extends HookConsumerWidget {
                           var offset = 0;
                           for (final workout in selectedWorkouts) {
                             if (index == offset) {
+                              Future<void> confirmAndDelete() async {
+                                final confirmed = await showDialog<bool>(
+                                  context: context,
+                                  builder: (ctx) => AlertDialog(
+                                    title: Text(
+                                      '「${workout.menuName ?? 'カスタムワークアウト'}」を削除しますか？',
+                                    ),
+                                    content: const Text('この操作は取り消せません。'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(ctx).pop(false),
+                                        child: const Text('キャンセル'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(ctx).pop(true),
+                                        style: TextButton.styleFrom(
+                                          foregroundColor: Colors.red,
+                                        ),
+                                        child: const Text('削除'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                if (confirmed != true) return;
+                                try {
+                                  await ref
+                                      .read(workoutSessionRepositoryProvider)
+                                      .deleteWorkoutSession(workout.id);
+                                  ref.invalidate(
+                                    activityLogProvider(weekStart.value),
+                                  );
+                                } catch (e, st) {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('削除に失敗しました'),
+                                      ),
+                                    );
+                                  }
+                                }
+                              }
+
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 12),
-                                child: _WorkoutCard(entry: workout),
+                                child: _WorkoutCard(
+                                  entry: workout,
+                                  onDelete: () => unawaited(confirmAndDelete()),
+                                ),
                               );
                             }
                             offset++;
@@ -252,8 +302,9 @@ class ActivityLogScreen extends HookConsumerWidget {
 }
 
 class _WorkoutCard extends StatelessWidget {
-  const _WorkoutCard({required this.entry});
+  const _WorkoutCard({required this.entry, this.onDelete});
   final WorkoutHistoryEntry entry;
+  final VoidCallback? onDelete;
 
   double get _volume => entry.exercises.fold(
     0.0,
@@ -296,19 +347,25 @@ class _WorkoutCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      entry.menuName ?? 'カスタムワークアウト',
-                      style: const TextStyle(
-                        color: AppColors.monoWhite,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+                Expanded(
+                  child: Text(
+                    entry.menuName ?? 'カスタムワークアウト',
+                    style: const TextStyle(
+                      color: AppColors.monoWhite,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ],
+                  ),
                 ),
+                if (onDelete != null)
+                  PopupMenuButton<String>(
+                    onSelected: (value) {
+                      if (value == 'delete') onDelete!();
+                    },
+                    itemBuilder: (_) => const [
+                      PopupMenuItem(value: 'delete', child: Text('削除')),
+                    ],
+                  ),
               ],
             ),
             const SizedBox(height: 12),
