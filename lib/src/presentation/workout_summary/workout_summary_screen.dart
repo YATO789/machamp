@@ -37,6 +37,13 @@ class WorkoutSummaryScreen extends HookWidget {
       (sum, ex) => ex.sets.fold(sum, (s, set) => s + set.weight * set.reps),
     );
 
+    final elapsed = workoutState.startedAt != null && workoutState.finishedAt != null
+        ? workoutState.finishedAt!.difference(workoutState.startedAt!)
+        : null;
+    final elapsedStr = elapsed != null
+        ? '${elapsed.inMinutes.remainder(60).toString().padLeft(2, '0')}:${elapsed.inSeconds.remainder(60).toString().padLeft(2, '0')}'
+        : '--:--';
+
     Future<void> showShareFlow() async {
       final currentUri = GoRouterState.of(context).uri.toString();
 
@@ -128,7 +135,7 @@ class WorkoutSummaryScreen extends HookWidget {
                 child: ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    _buildStatsGrid(totalVolume, totalSets, totalReps),
+                    _buildStatsGrid(totalVolume, totalSets, totalReps, elapsedStr),
                     const SizedBox(height: 24),
                     const Text(
                       '種目ログ',
@@ -220,7 +227,7 @@ class WorkoutSummaryScreen extends HookWidget {
     return v.toStringAsFixed(1);
   }
 
-  Widget _buildStatsGrid(double totalVolume, int totalSets, int totalReps) {
+  Widget _buildStatsGrid(double totalVolume, int totalSets, int totalReps, String elapsedStr) {
     return Column(
       children: [
         Row(
@@ -234,7 +241,7 @@ class WorkoutSummaryScreen extends HookWidget {
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: _StatCard(label: '所要時間', value: '---', unit: '分'),
+              child: _StatCard(label: '所要時間', value: elapsedStr, unit: ''),
             ),
           ],
         ),

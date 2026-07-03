@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -18,6 +20,24 @@ class WorkoutScreen extends HookConsumerWidget {
     final state = ref.watch(workoutViewModelProvider(menuId));
     final notifier = ref.read(workoutViewModelProvider(menuId).notifier);
     final isSaving = useState(false);
+    final elapsed = useState(Duration.zero);
+    final timerVisible = useState(true);
+
+    useEffect(() {
+      final startedAt = state.startedAt;
+      if (startedAt == null) return null;
+      elapsed.value = DateTime.now().difference(startedAt);
+      final timer = Timer.periodic(const Duration(seconds: 1), (_) {
+        elapsed.value = DateTime.now().difference(startedAt);
+      });
+      return timer.cancel;
+    }, [state.startedAt]);
+
+    String formatElapsed(Duration d) {
+      final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
+      final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
+      return '$m:$s';
+    }
 
     return PopScope(
       canPop: false,
@@ -25,6 +45,25 @@ class WorkoutScreen extends HookConsumerWidget {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(state.menuName.isEmpty ? 'ワークアウト' : state.menuName),
+          actions: [
+            GestureDetector(
+              onTap: () => timerVisible.value = !timerVisible.value,
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: Center(
+                  child: Text(
+                    timerVisible.value ? formatElapsed(elapsed.value) : '--:--',
+                    style: const TextStyle(
+                      color: AppColors.monoWhite,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontFeatures: [FontFeature.tabularFigures()],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
         body: Column(
           children: [
@@ -158,13 +197,16 @@ class WorkoutScreen extends HookConsumerWidget {
                           isSaving.value = false;
 
                           if (!context.mounted) return;
-                          final hasCompleted = state.exercises.any(
+                          final savedState = ref.read(
+                            workoutViewModelProvider(menuId),
+                          );
+                          final hasCompleted = savedState.exercises.any(
                             (ex) => ex.sets.any((s) => s.isCompleted),
                           );
                           if (hasCompleted) {
                             await context.push(
                               '/menu/$menuId/workout/summary',
-                              extra: state,
+                              extra: savedState,
                             );
                           } else {
                             context.go('/home');

@@ -31,6 +31,7 @@ abstract class WorkoutState with _$WorkoutState {
     @Default('') String menuName,
     @Default([]) List<WorkoutExerciseState> exercises,
     DateTime? startedAt,
+    DateTime? finishedAt,
   }) = _WorkoutState;
 }
 
@@ -96,6 +97,7 @@ class WorkoutViewModel extends _$WorkoutViewModel {
 
   Future<void> saveWorkout(String menuId) async {
     final finishedAt = DateTime.now();
+    state = state.copyWith(finishedAt: finishedAt);
     final exercisesJson = state.exercises
         .asMap()
         .entries
