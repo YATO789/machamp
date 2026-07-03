@@ -94,19 +94,21 @@ class WorkoutSummaryScreen extends HookWidget {
           ? totalVolume.toInt().toString()
           : totalVolume.toStringAsFixed(1);
 
-      unawaited(context.push(
-        '$currentUri/share',
-        extra: SharePreviewArgs(
-          backgroundImage: File(picked.path),
-          workoutName: workoutState.menuName.isEmpty
-              ? 'Workout'
-              : workoutState.menuName,
-          totalVolume: volumeStr,
-          totalSets: totalSets,
-          date: now,
-          durationMinutes: durationMinutes,
+      unawaited(
+        context.push(
+          '$currentUri/share',
+          extra: SharePreviewArgs(
+            backgroundImage: File(picked.path),
+            workoutName: workoutState.menuName.isEmpty
+                ? 'Workout'
+                : workoutState.menuName,
+            totalVolume: volumeStr,
+            totalSets: totalSets,
+            date: now,
+            durationMinutes: durationMinutes,
+          ),
         ),
-      ));
+      );
     }
 
     return PopScope(

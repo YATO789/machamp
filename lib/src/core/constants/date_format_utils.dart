@@ -1,6 +1,16 @@
 const _months = [
-  'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
-  'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER',
+  'JANUARY',
+  'FEBRUARY',
+  'MARCH',
+  'APRIL',
+  'MAY',
+  'JUNE',
+  'JULY',
+  'AUGUST',
+  'SEPTEMBER',
+  'OCTOBER',
+  'NOVEMBER',
+  'DECEMBER',
 ];
 
 String formatShareDate(DateTime date) =>

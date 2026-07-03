@@ -11,9 +11,8 @@ part 'share_preview_view_model.g.dart';
 
 @freezed
 abstract class SharePreviewState with _$SharePreviewState {
-  const factory SharePreviewState({
-    @Default(false) bool isSharing,
-  }) = _SharePreviewState;
+  const factory SharePreviewState({@Default(false) bool isSharing}) =
+      _SharePreviewState;
 }
 
 @riverpod
@@ -29,10 +28,9 @@ class SharePreviewViewModel extends _$SharePreviewViewModel {
       );
       await tempFile.writeAsBytes(imageBytes);
 
-      await Share.shareXFiles(
-        [XFile(tempFile.path)],
-        sharePositionOrigin: origin,
-      );
+      await Share.shareXFiles([
+        XFile(tempFile.path),
+      ], sharePositionOrigin: origin);
     } finally {
       state = state.copyWith(isSharing: false);
     }
