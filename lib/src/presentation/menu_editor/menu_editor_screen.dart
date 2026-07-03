@@ -150,7 +150,7 @@ class MenuEditorScreen extends HookConsumerWidget {
                   const SizedBox(height: 12),
                   ...List.generate(state.menuExercises.length, (index) {
                     final me = state.menuExercises[index];
-                    final isExpanded = state.expandedIndex == index;
+                    final isExpanded = state.expandedIndices.contains(index);
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 8),
                       child: ExerciseItem(
@@ -159,9 +159,7 @@ class MenuEditorScreen extends HookConsumerWidget {
                         isExpanded: isExpanded,
                         isEditable: true,
                         exerciseIndex: index,
-                        onTap: () => notifier.setExpandedIndex(
-                          isExpanded ? null : index,
-                        ),
+                        onTap: () => notifier.toggleExpandedIndex(index),
                         onDelete: () => notifier.removeExercise(index),
                         onSetCountChanged: (count) =>
                             notifier.updateSetCount(index, count),
@@ -193,6 +191,7 @@ class MenuEditorScreen extends HookConsumerWidget {
                   : PrimaryButton(
                       label: '保存する',
                       onPressed: state.isSaving ? null : save,
+                      color: const Color(0xFF30D158),
                     ),
             ),
           ),

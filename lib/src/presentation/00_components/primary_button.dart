@@ -10,12 +10,14 @@ class PrimaryButton extends StatelessWidget {
     required this.onPressed,
     this.variant = PrimaryButtonVariant.filled,
     this.icon,
+    this.color,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final PrimaryButtonVariant variant;
   final IconData? icon;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +26,7 @@ class PrimaryButton extends StatelessWidget {
         label: label,
         onPressed: onPressed,
         icon: icon,
+        color: color ?? AppColors.purple,
       ),
       PrimaryButtonVariant.ghost => _GhostButton(
         label: label,
@@ -39,11 +42,13 @@ class _FilledButton extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.icon,
+    this.color = AppColors.purple,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +58,8 @@ class _FilledButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.purple,
-          disabledBackgroundColor: AppColors.purple.withValues(alpha: 0.3),
+          backgroundColor: color,
+          disabledBackgroundColor: color.withValues(alpha: 0.3),
           foregroundColor: AppColors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

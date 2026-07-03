@@ -75,7 +75,7 @@ class ExerciseItem extends StatelessWidget {
                   if (isEditable && isExpanded)
                     IconButton(
                       icon: const Icon(
-                        Icons.delete_outline,
+                        Icons.delete,
                         color: Colors.grey,
                         size: 20,
                       ),
