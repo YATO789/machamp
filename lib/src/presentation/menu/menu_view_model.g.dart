@@ -33,7 +33,7 @@ final class MenuViewModelProvider
   MenuViewModel create() => MenuViewModel();
 }
 
-String _$menuViewModelHash() => r'd6419193ff767d8d42e8d3a5a7aa316d1a138a69';
+String _$menuViewModelHash() => r'a5cb955fdaef804aba2a33c381ead7e97c3613ba';
 
 abstract class _$MenuViewModel extends $AsyncNotifier<List<Menu>> {
   FutureOr<List<Menu>> build();
