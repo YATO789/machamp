@@ -38,7 +38,6 @@ abstract class WorkoutState with _$WorkoutState {
 class WorkoutViewModel extends _$WorkoutViewModel {
   @override
   WorkoutState build(String menuId) {
-    //TODO usecaseを作成
     final menus = ref.read(menuViewModelProvider).value;
     final menu = menus?.where((m) => m.id == menuId).firstOrNull;
     if (menu == null) return const WorkoutState();
@@ -58,7 +57,6 @@ class WorkoutViewModel extends _$WorkoutViewModel {
     );
   }
 
-  //TODO ビジネスロジックを移動
   void toggleSetCompleted(int exerciseIndex, int setIndex) {
     final exercises = [...state.exercises];
     final exercise = exercises[exerciseIndex];

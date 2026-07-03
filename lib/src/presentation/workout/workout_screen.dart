@@ -16,7 +16,7 @@ class WorkoutScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(workoutViewModelProvider(menuId));
-    final vm = ref.read(workoutViewModelProvider(menuId).notifier);
+    final notifier = ref.read(workoutViewModelProvider(menuId).notifier);
     final isSaving = useState(false);
 
     return PopScope(
@@ -45,7 +45,7 @@ class WorkoutScreen extends HookConsumerWidget {
                             children: [
                               GestureDetector(
                                 onTap: () =>
-                                    vm.toggleExerciseCompleted(exerciseIndex),
+                                    notifier.toggleExerciseCompleted(exerciseIndex),
                                 child: Container(
                                   width: 36,
                                   height: 36,
@@ -89,17 +89,17 @@ class WorkoutScreen extends HookConsumerWidget {
                                 initialWeight: set.weight,
                                 initialReps: set.reps,
                                 isCompleted: set.isCompleted,
-                                onWeightChanged: (w) => vm.updateSetWeight(
+                                onWeightChanged: (w) => notifier.updateSetWeight(
                                   exerciseIndex,
                                   setIndex,
                                   w,
                                 ),
-                                onRepsChanged: (r) => vm.updateSetReps(
+                                onRepsChanged: (r) => notifier.updateSetReps(
                                   exerciseIndex,
                                   setIndex,
                                   r,
                                 ),
-                                onToggleCompleted: () => vm.toggleSetCompleted(
+                                onToggleCompleted: () => notifier.toggleSetCompleted(
                                   exerciseIndex,
                                   setIndex,
                                 ),
@@ -155,7 +155,7 @@ class WorkoutScreen extends HookConsumerWidget {
 
                           isSaving.value = true;
                           try {
-                            await vm.saveWorkout(menuId);
+                            await notifier.saveWorkout(menuId);
                           } catch (e, st) {
                             debugPrint('saveWorkout error: $e\n$st');
                             isSaving.value = false;
