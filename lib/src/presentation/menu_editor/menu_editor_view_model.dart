@@ -16,6 +16,7 @@ abstract class MenuEditorState with _$MenuEditorState {
     int? expandedIndex,
     @Default(false) bool isExercisesDirty,
     @Default(false) bool isSaving,
+    @Default(false) bool isDeleting,
   }) = _MenuEditorState;
 }
 
@@ -97,6 +98,17 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
 
   void setExpandedIndex(int? index) {
     state = state.copyWith(expandedIndex: index);
+  }
+
+  Future<void> deleteMenu() async {
+    if (menuId == null) return;
+    state = state.copyWith(isDeleting: true);
+    try {
+      await ref.read(menuViewModelProvider.notifier).deleteMenu(menuId!);
+    } catch (_) {
+      state = state.copyWith(isDeleting: false);
+      rethrow;
+    }
   }
 
   Future<void> save(String name) async {
