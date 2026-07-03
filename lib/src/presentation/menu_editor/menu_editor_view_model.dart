@@ -25,7 +25,6 @@ abstract class MenuEditorState with _$MenuEditorState {
 class MenuEditorViewModel extends _$MenuEditorViewModel {
   @override
   MenuEditorState build(String? menuId) {
-    //TODO usecaseを作成
     final menu = menuId != null
         ? ref
               .read(menuViewModelProvider)
@@ -56,8 +55,8 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
   void updateSetCount(int exerciseIndex, int newCount) {
     if (newCount < 1 || newCount > 20) return;
     final newList = List<MenuExercise>.from(state.menuExercises);
-    final me = newList[exerciseIndex];
-    final currentSets = me.sets;
+    final menu = newList[exerciseIndex];
+    final currentSets = menu.sets;
     final List<ExerciseSet> newSets;
     if (newCount > currentSets.length) {
       newSets = [
@@ -70,15 +69,15 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
     } else {
       newSets = currentSets.sublist(0, newCount);
     }
-    newList[exerciseIndex] = me.copyWith(sets: newSets);
+    newList[exerciseIndex] = menu.copyWith(sets: newSets);
     state = state.copyWith(menuExercises: newList, isExercisesDirty: true);
   }
 
   void updateSet(int exerciseIndex, int setIndex, ExerciseSet updated) {
     final newList = List<MenuExercise>.from(state.menuExercises);
-    final me = newList[exerciseIndex];
-    final newSets = List<ExerciseSet>.from(me.sets)..[setIndex] = updated;
-    newList[exerciseIndex] = me.copyWith(sets: newSets);
+    final menu = newList[exerciseIndex];
+    final newSets = List<ExerciseSet>.from(menu.sets)..[setIndex] = updated;
+    newList[exerciseIndex] = menu.copyWith(sets: newSets);
     state = state.copyWith(menuExercises: newList, isExercisesDirty: true);
   }
 

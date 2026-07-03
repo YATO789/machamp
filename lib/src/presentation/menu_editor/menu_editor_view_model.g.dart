@@ -59,7 +59,7 @@ final class MenuEditorViewModelProvider
 }
 
 String _$menuEditorViewModelHash() =>
-    r'941f53561655987bb06e447740edf4272a098ffb';
+    r'4aadc761b9c0395a33b2c0b24924469ff207a69e';
 
 final class MenuEditorViewModelFamily extends $Family
     with
