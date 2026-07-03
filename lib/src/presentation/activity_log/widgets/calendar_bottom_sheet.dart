@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
+import 'package:machamp/src/domain/constants/date_constants.dart';
 
 class CalendarBottomSheet extends StatefulWidget {
   const CalendarBottomSheet({
@@ -39,7 +40,6 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
   late DateTime _displayMonth;
   late DateTime _selected;
 
-  static const _weekLabels = ['月', '火', '水', '木', '金', '土', '日'];
   static const _accent = AppColors.purple;
 
   @override
@@ -122,7 +122,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
-                children: _weekLabels
+                children: weekDayLabels
                     .map(
                       (label) => Expanded(
                         child: Center(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
+import 'package:machamp/src/domain/constants/date_constants.dart';
 import 'package:machamp/src/domain/entity/workout_history_entry.dart';
 import 'package:machamp/src/infrastructures/repository/workout_session_repository.dart';
 import 'package:machamp/src/presentation/activity_log/activity_log_view_model.dart';
@@ -35,8 +36,6 @@ class ActivityLogScreen extends HookConsumerWidget {
     final selectedWorkouts = workouts
         .where((w) => _dateOnly(w.startedAt) == selectedDate.value)
         .toList();
-
-    const weekDayLabels = ['月', '火', '水', '木', '金', '土', '日'];
 
     return Scaffold(
       backgroundColor: AppColors.black,
