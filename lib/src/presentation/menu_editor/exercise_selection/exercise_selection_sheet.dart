@@ -6,10 +6,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/domain/constants/exercise_constants.dart';
 import 'package:machamp/src/domain/entity/exercise.dart';
+import 'package:machamp/src/presentation/00_components/app_dropdown.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
 import 'package:machamp/src/presentation/menu_editor/exercise_creation/exercise_creation_sheet.dart';
 import 'package:machamp/src/presentation/menu_editor/exercise_selection/exercise_selection_view_model.dart';
 
+//TODO : enum化
 const _bodyParts = ['全ての部位', ...bodyParts];
 const _equipment = ['全ての器具', ...equipments];
 
@@ -21,7 +23,6 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchQuery = useState('');
-    //TODO : view model側で状態を管理する
     final selectedBodyPart = useState(_bodyParts.first);
     final selectedEquipment = useState(_equipment.first);
 
@@ -80,18 +81,22 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: _FilterDropdown(
+                      child: AppDropdown(
                         value: selectedBodyPart.value,
                         items: _bodyParts,
                         onChanged: (v) => selectedBodyPart.value = v,
+                        fontSize: 13,
+                        iconSize: 18,
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: _FilterDropdown(
+                      child: AppDropdown(
                         value: selectedEquipment.value,
                         items: _equipment,
                         onChanged: (v) => selectedEquipment.value = v,
+                        fontSize: 13,
+                        iconSize: 18,
                       ),
                     ),
                   ],
@@ -238,47 +243,6 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _FilterDropdown extends StatelessWidget {
-  const _FilterDropdown({
-    required this.value,
-    required this.items,
-    required this.onChanged,
-  });
-
-  final String value;
-  final List<String> items;
-  final ValueChanged<String> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: Colors.white10,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: DropdownButton<String>(
-        value: value,
-        isExpanded: true,
-        underline: const SizedBox.shrink(),
-        dropdownColor: AppColors.darkSurface,
-        style: const TextStyle(color: AppColors.monoWhite, fontSize: 13),
-        icon: const Icon(
-          Icons.keyboard_arrow_down,
-          color: Colors.grey,
-          size: 18,
-        ),
-        items: items
-            .map((item) => DropdownMenuItem(value: item, child: Text(item)))
-            .toList(),
-        onChanged: (v) {
-          if (v != null) onChanged(v);
-        },
       ),
     );
   }
