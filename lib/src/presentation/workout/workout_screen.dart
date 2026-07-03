@@ -67,20 +67,22 @@ class WorkoutScreen extends HookConsumerWidget {
                                 initialWeight: set.weight,
                                 initialReps: set.reps,
                                 isCompleted: set.isCompleted,
-                                onWeightChanged: (w) => notifier.updateSetWeight(
-                                  exerciseIndex,
-                                  setIndex,
-                                  w,
-                                ),
+                                onWeightChanged: (w) =>
+                                    notifier.updateSetWeight(
+                                      exerciseIndex,
+                                      setIndex,
+                                      w,
+                                    ),
                                 onRepsChanged: (r) => notifier.updateSetReps(
                                   exerciseIndex,
                                   setIndex,
                                   r,
                                 ),
-                                onToggleCompleted: () => notifier.toggleSetCompleted(
-                                  exerciseIndex,
-                                  setIndex,
-                                ),
+                                onToggleCompleted: () =>
+                                    notifier.toggleSetCompleted(
+                                      exerciseIndex,
+                                      setIndex,
+                                    ),
                               ),
                             );
                           }),

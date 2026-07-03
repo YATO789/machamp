@@ -32,7 +32,11 @@ class AppDropdown extends StatelessWidget {
         underline: const SizedBox.shrink(),
         dropdownColor: AppColors.darkSurface,
         style: TextStyle(color: AppColors.monoWhite, fontSize: fontSize),
-        icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey, size: iconSize),
+        icon: Icon(
+          Icons.keyboard_arrow_down,
+          color: Colors.grey,
+          size: iconSize,
+        ),
         items: items
             .map((item) => DropdownMenuItem(value: item, child: Text(item)))
             .toList(),

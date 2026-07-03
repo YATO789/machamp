@@ -122,11 +122,13 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
     state = state.copyWith(isSaving: true);
     try {
       if (menuId != null) {
-        await ref.read(menuRepositoryProvider).updateMenu(
-          id: menuId!,
-          name: name,
-          exercises: state.menuExercises,
-        );
+        await ref
+            .read(menuRepositoryProvider)
+            .updateMenu(
+              id: menuId!,
+              name: name,
+              exercises: state.menuExercises,
+            );
         ref.invalidate(menuViewModelProvider);
         state = state.copyWith(
           originalName: name,
@@ -134,10 +136,9 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
           isSaving: false,
         );
       } else {
-        await ref.read(menuRepositoryProvider).createMenu(
-          name: name,
-          exercises: state.menuExercises,
-        );
+        await ref
+            .read(menuRepositoryProvider)
+            .createMenu(name: name, exercises: state.menuExercises);
         ref.invalidate(menuViewModelProvider);
         state = state.copyWith(isSaving: false);
       }
