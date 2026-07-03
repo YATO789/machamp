@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:machamp/src/application/providers/menus_provider.dart';
 import 'package:machamp/src/domain/entity/exercise.dart';
 import 'package:machamp/src/infrastructures/repository/workout_session_repository.dart';
+import 'package:machamp/src/presentation/menu/menu_view_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'workout_view_model.freezed.dart';
@@ -38,7 +38,8 @@ abstract class WorkoutState with _$WorkoutState {
 class WorkoutViewModel extends _$WorkoutViewModel {
   @override
   WorkoutState build(String menuId) {
-    final menus = ref.read(menusProvider).value;
+    //TODO usecaseを作成
+    final menus = ref.read(menuViewModelProvider).value;
     final menu = menus?.where((m) => m.id == menuId).firstOrNull;
     if (menu == null) return const WorkoutState();
     return WorkoutState(

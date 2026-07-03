@@ -1,8 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:machamp/src/application/providers/menus_provider.dart';
 import 'package:machamp/src/domain/entity/exercise.dart';
 import 'package:machamp/src/domain/entity/exercise_set.dart';
 import 'package:machamp/src/domain/entity/menu_exercise.dart';
+import 'package:machamp/src/presentation/menu/menu_view_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'menu_editor_view_model.freezed.dart';
@@ -23,9 +23,10 @@ abstract class MenuEditorState with _$MenuEditorState {
 class MenuEditorViewModel extends _$MenuEditorViewModel {
   @override
   MenuEditorState build(String? menuId) {
+    //TODO usecaseを作成
     final menu = menuId != null
         ? ref
-              .read(menusProvider)
+              .read(menuViewModelProvider)
               .value
               ?.where((m) => m.id == menuId)
               .firstOrNull
@@ -103,7 +104,7 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
     try {
       if (menuId != null) {
         await ref
-            .read(menusProvider.notifier)
+            .read(menuViewModelProvider.notifier)
             .updateMenu(
               id: menuId!,
               name: name,
@@ -116,7 +117,7 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
         );
       } else {
         await ref
-            .read(menusProvider.notifier)
+            .read(menuViewModelProvider.notifier)
             .createMenu(name: name, exercises: state.menuExercises);
         state = state.copyWith(isSaving: false);
       }
