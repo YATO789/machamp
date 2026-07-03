@@ -23,6 +23,7 @@ class MenuEditorScreen extends HookConsumerWidget {
     final nameController = useTextEditingController(text: state.originalName);
     useListenable(nameController);
 
+    //メニュー名が変更されたかのフラグ
     final isDirty =
         nameController.text.trim() != state.originalName ||
         state.isExercisesDirty;

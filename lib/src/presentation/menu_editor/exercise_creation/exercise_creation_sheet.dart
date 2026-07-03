@@ -6,6 +6,7 @@ import 'package:machamp/src/domain/constants/exercise_constants.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
 import 'package:machamp/src/presentation/menu_editor/exercise_creation/exercise_creation_view_model.dart';
 
+//カスタム種目を作成するモーダル
 class ExerciseCreationSheet extends HookConsumerWidget {
   const ExerciseCreationSheet({super.key});
 
