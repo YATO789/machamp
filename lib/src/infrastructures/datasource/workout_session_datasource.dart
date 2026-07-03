@@ -45,4 +45,8 @@ class WorkoutSessionDataSource {
         .order('started_at', ascending: false);
     return List<Map<String, dynamic>>.from(response as List);
   }
+
+  Future<void> deleteWorkoutSession(String id) async {
+    await _client.from('workout_sessions').delete().eq('id', id);
+  }
 }
