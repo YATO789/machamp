@@ -1,9 +1,15 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
+import 'package:machamp/src/presentation/share_preview/share_preview_args.dart';
 import 'package:machamp/src/presentation/workout/workout_view_model.dart';
 
-class WorkoutSummaryScreen extends StatelessWidget {
+class WorkoutSummaryScreen extends HookWidget {
   const WorkoutSummaryScreen({super.key, required this.workoutState});
 
   final WorkoutState workoutState;
@@ -30,6 +36,78 @@ class WorkoutSummaryScreen extends StatelessWidget {
       0.0,
       (sum, ex) => ex.sets.fold(sum, (s, set) => s + set.weight * set.reps),
     );
+
+    Future<void> showShareFlow() async {
+      final currentUri = GoRouterState.of(context).uri.toString();
+
+      final source = await showModalBottomSheet<ImageSource>(
+        context: context,
+        backgroundColor: AppColors.darkSurface,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        ),
+        builder: (context) => SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(
+                  Icons.camera_alt,
+                  color: AppColors.monoWhite,
+                ),
+                title: const Text(
+                  'カメラ',
+                  style: TextStyle(color: AppColors.monoWhite),
+                ),
+                onTap: () => Navigator.pop(context, ImageSource.camera),
+              ),
+              ListTile(
+                leading: const Icon(
+                  Icons.photo_library,
+                  color: AppColors.monoWhite,
+                ),
+                title: const Text(
+                  'ライブラリ',
+                  style: TextStyle(color: AppColors.monoWhite),
+                ),
+                onTap: () => Navigator.pop(context, ImageSource.gallery),
+              ),
+            ],
+          ),
+        ),
+      );
+      if (source == null) return;
+
+      final picked = await ImagePicker().pickImage(
+        source: source,
+        imageQuality: 90,
+      );
+      if (picked == null || !context.mounted) return;
+
+      final now = DateTime.now();
+      final started = workoutState.startedAt;
+      final durationMinutes = started != null
+          ? now.difference(started).inMinutes
+          : 0;
+
+      final volumeStr = totalVolume % 1 == 0
+          ? totalVolume.toInt().toString()
+          : totalVolume.toStringAsFixed(1);
+
+      unawaited(context.push(
+        '$currentUri/share',
+        extra: SharePreviewArgs(
+          backgroundImage: File(picked.path),
+          workoutName: workoutState.menuName.isEmpty
+              ? 'Workout'
+              : workoutState.menuName,
+          totalVolume: volumeStr,
+          totalSets: totalSets,
+          date: now,
+          durationMinutes: durationMinutes,
+        ),
+      ));
+    }
 
     return PopScope(
       canPop: false,
@@ -80,26 +158,52 @@ class WorkoutSummaryScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                child: SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: ElevatedButton(
-                    onPressed: () => context.go('/home'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.purple,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: OutlinedButton(
+                        onPressed: showShareFlow,
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(color: AppColors.purple),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        child: const Text(
+                          'SNSにシェア',
+                          style: TextStyle(
+                            color: AppColors.purple,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
-                    child: const Text(
-                      '閉じる',
-                      style: TextStyle(
-                        color: AppColors.monoWhite,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: () => context.go('/home'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.darkSurface,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        child: const Text(
+                          '閉じる',
+                          style: TextStyle(
+                            color: AppColors.monoWhite,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ],
