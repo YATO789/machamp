@@ -337,15 +337,6 @@ class _WorkoutCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: AppColors.purple,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     entry.menuName ?? 'カスタムワークアウト',
@@ -451,15 +442,6 @@ class _ExerciseSection extends HookWidget {
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF3A3A3C),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

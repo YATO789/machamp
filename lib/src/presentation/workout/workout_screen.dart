@@ -43,28 +43,6 @@ class WorkoutScreen extends HookConsumerWidget {
                         children: [
                           Row(
                             children: [
-                              GestureDetector(
-                                onTap: () =>
-                                    notifier.toggleExerciseCompleted(exerciseIndex),
-                                child: Container(
-                                  width: 36,
-                                  height: 36,
-                                  decoration: BoxDecoration(
-                                    color: exercise.isCompleted
-                                        ? AppColors.purple
-                                        : AppColors.white10,
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                  child: exercise.isCompleted
-                                      ? const Icon(
-                                          Icons.check,
-                                          color: AppColors.monoWhite,
-                                          size: 20,
-                                        )
-                                      : null,
-                                ),
-                              ),
-                              const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
                                   exercise.exercise.name,

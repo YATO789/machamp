@@ -193,14 +193,6 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                                 activeColor: AppColors.purple,
                                 checkColor: Colors.white,
                                 side: const BorderSide(color: Colors.grey),
-                                secondary: Container(
-                                  width: 40,
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[800],
-                                    borderRadius: BorderRadius.circular(6),
-                                  ),
-                                ),
                                 title: Text(
                                   exercise.name,
                                   style: const TextStyle(
