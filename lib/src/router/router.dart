@@ -7,6 +7,8 @@ import 'package:machamp/src/presentation/login/login_screen.dart';
 import 'package:machamp/src/presentation/menu/menu_screen.dart';
 import 'package:machamp/src/presentation/menu_editor/menu_editor_screen.dart';
 import 'package:machamp/src/presentation/profile/profile_screen.dart';
+import 'package:machamp/src/presentation/share_preview/share_preview_args.dart';
+import 'package:machamp/src/presentation/share_preview/share_preview_screen.dart';
 import 'package:machamp/src/presentation/workout/workout_screen.dart';
 import 'package:machamp/src/presentation/workout/workout_view_model.dart';
 import 'package:machamp/src/presentation/workout_summary/workout_summary_screen.dart';
@@ -116,6 +118,14 @@ GoRouter router(Ref ref) {
                 builder: (context, state) => WorkoutSummaryScreen(
                   workoutState: state.extra! as WorkoutState,
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'share',
+                    builder: (context, state) => SharePreviewScreen(
+                      args: state.extra! as SharePreviewArgs,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
