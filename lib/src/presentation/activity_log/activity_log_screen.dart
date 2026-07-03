@@ -2,36 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
+import 'package:machamp/src/domain/entity/workout_history_entry.dart';
+import 'package:machamp/src/presentation/activity_log/activity_log_view_model.dart';
 import 'package:machamp/src/presentation/activity_log/widgets/calendar_bottom_sheet.dart';
-
-class _MockSet {
-  const _MockSet({required this.reps, required this.weight});
-  final int reps;
-  final double weight;
-}
-
-class _MockExercise {
-  const _MockExercise({required this.name, required this.sets});
-  final String name;
-  final List<_MockSet> sets;
-}
-
-class _MockWorkout {
-  const _MockWorkout({
-    required this.menuName,
-    required this.date,
-    required this.volume,
-    required this.sets,
-    required this.minutes,
-    this.exercises = const [],
-  });
-  final String menuName;
-  final DateTime date;
-  final double volume;
-  final int sets;
-  final int minutes;
-  final List<_MockExercise> exercises;
-}
 
 DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 
@@ -44,62 +17,20 @@ class ActivityLogScreen extends HookConsumerWidget {
     final todayOnly = _dateOnly(today);
 
     final weekStart = useState(
-      today.subtract(Duration(days: today.weekday - 1)),
+      todayOnly.subtract(Duration(days: today.weekday - 1)),
     );
     final selectedDate = useState(todayOnly);
 
-    final mockWorkouts = [
-      _MockWorkout(
-        menuName: '脚の日',
-        date: todayOnly,
-        volume: 4320,
-        sets: 9,
-        minutes: 42,
-        exercises: [
-          _MockExercise(
-            name: 'スクワット',
-            sets: [
-              _MockSet(reps: 10, weight: 60),
-              _MockSet(reps: 10, weight: 70),
-              _MockSet(reps: 10, weight: 80),
-            ],
-          ),
-          _MockExercise(
-            name: 'レッグプレス',
-            sets: [
-              _MockSet(reps: 10, weight: 0),
-              _MockSet(reps: 10, weight: 0),
-              _MockSet(reps: 10, weight: 0),
-            ],
-          ),
-        ],
-      ),
-      _MockWorkout(
-        menuName: '胸の日',
-        date: todayOnly.subtract(const Duration(days: 2)),
-        volume: 3800,
-        sets: 12,
-        minutes: 55,
-        exercises: [
-          _MockExercise(
-            name: 'ベンチプレス',
-            sets: [
-              _MockSet(reps: 10, weight: 0),
-              _MockSet(reps: 10, weight: 0),
-              _MockSet(reps: 10, weight: 0),
-            ],
-          ),
-        ],
-      ),
-    ];
+    final workoutsAsync = ref.watch(activityLogProvider(weekStart.value));
 
-    final workoutDates = mockWorkouts.map((w) => _dateOnly(w.date)).toSet();
+    final workouts = workoutsAsync.asData?.value ?? <WorkoutHistoryEntry>[];
+    final workoutDates = workouts.map((w) => _dateOnly(w.startedAt)).toSet();
     final weekDates = List.generate(
       7,
       (i) => weekStart.value.add(Duration(days: i)),
     );
-    final selectedWorkouts = mockWorkouts
-        .where((w) => _dateOnly(w.date) == selectedDate.value)
+    final selectedWorkouts = workouts
+        .where((w) => _dateOnly(w.startedAt) == selectedDate.value)
         .toList();
 
     const weekDayLabels = ['月', '火', '水', '木', '金', '土', '日'];
@@ -164,7 +95,7 @@ class ActivityLogScreen extends HookConsumerWidget {
                 ],
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4),
               child: Row(
@@ -265,42 +196,53 @@ class ActivityLogScreen extends HookConsumerWidget {
             ),
             const SizedBox(height: 8),
             Expanded(
-              child: selectedWorkouts.isEmpty
-                  ? const Center(
-                      child: Text(
-                        'この日はワークアウトがありません',
-                        style: TextStyle(color: AppColors.grey, fontSize: 14),
-                      ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                      itemCount: selectedWorkouts.fold<int>(
-                        0,
-                        (sum, w) => sum + 1 + w.exercises.length,
-                      ),
-                      itemBuilder: (context, index) {
-                        var offset = 0;
-                        for (final workout in selectedWorkouts) {
-                          if (index == offset) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 12),
-                              child: _WorkoutCard(workout: workout),
-                            );
-                          }
-                          offset++;
-                          for (final exercise in workout.exercises) {
+              child: workoutsAsync.when(
+                loading: () => const Center(
+                  child: CircularProgressIndicator(color: AppColors.purple),
+                ),
+                error: (error, __) => Center(
+                  child: Text(
+                    'エラー: $error',
+                    style: const TextStyle(color: AppColors.grey, fontSize: 14),
+                  ),
+                ),
+                data: (_) => selectedWorkouts.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'この日はワークアウトがありません',
+                          style: TextStyle(color: AppColors.grey, fontSize: 14),
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                        itemCount: selectedWorkouts.fold<int>(
+                          0,
+                          (sum, w) => sum + 1 + w.exercises.length,
+                        ),
+                        itemBuilder: (context, index) {
+                          var offset = 0;
+                          for (final workout in selectedWorkouts) {
                             if (index == offset) {
                               return Padding(
                                 padding: const EdgeInsets.only(bottom: 12),
-                                child: _ExerciseSection(exercise: exercise),
+                                child: _WorkoutCard(entry: workout),
                               );
                             }
                             offset++;
+                            for (final exercise in workout.exercises) {
+                              if (index == offset) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: _ExerciseSection(exercise: exercise),
+                                );
+                              }
+                              offset++;
+                            }
                           }
-                        }
-                        return const SizedBox.shrink();
-                      },
-                    ),
+                          return const SizedBox.shrink();
+                        },
+                      ),
+              ),
             ),
           ],
         ),
@@ -310,8 +252,18 @@ class ActivityLogScreen extends HookConsumerWidget {
 }
 
 class _WorkoutCard extends StatelessWidget {
-  const _WorkoutCard({required this.workout});
-  final _MockWorkout workout;
+  const _WorkoutCard({required this.entry});
+  final WorkoutHistoryEntry entry;
+
+  double get _volume => entry.exercises.fold(
+    0.0,
+    (sum, ex) => sum + ex.sets.fold(0.0, (s, set) => s + set.reps * set.weight),
+  );
+
+  int get _totalSets =>
+      entry.exercises.fold(0, (sum, ex) => sum + ex.sets.length);
+
+  int get _minutes => entry.finishedAt.difference(entry.startedAt).inMinutes;
 
   String _fmtVolume(double v) {
     if (v >= 1000) {
@@ -348,7 +300,7 @@ class _WorkoutCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      workout.menuName,
+                      entry.menuName ?? 'カスタムワークアウト',
                       style: const TextStyle(
                         color: AppColors.monoWhite,
                         fontSize: 16,
@@ -364,17 +316,17 @@ class _WorkoutCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: _StatChip(
-                    value: '${_fmtVolume(workout.volume)} kg',
+                    value: '${_fmtVolume(_volume)} kg',
                     label: 'ボリューム',
                   ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: _StatChip(value: '${workout.sets} set', label: 'セット数'),
+                  child: _StatChip(value: '$_totalSets set', label: 'セット数'),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: _StatChip(value: '${workout.minutes} 分', label: '時間'),
+                  child: _StatChip(value: '$_minutes 分', label: '時間'),
                 ),
               ],
             ),
@@ -422,7 +374,7 @@ class _StatChip extends StatelessWidget {
 
 class _ExerciseSection extends HookWidget {
   const _ExerciseSection({required this.exercise});
-  final _MockExercise exercise;
+  final WorkoutHistoryExercise exercise;
 
   @override
   Widget build(BuildContext context) {
@@ -457,7 +409,7 @@ class _ExerciseSection extends HookWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          exercise.name,
+                          exercise.exerciseName,
                           style: const TextStyle(
                             color: AppColors.monoWhite,
                             fontSize: 15,
