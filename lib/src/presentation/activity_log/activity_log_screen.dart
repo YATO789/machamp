@@ -259,7 +259,7 @@ class ActivityLogScreen extends HookConsumerWidget {
                                   ref.invalidate(
                                     activityLogProvider(weekStart.value),
                                   );
-                                } catch (e, st) {
+                                } catch (e) {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(
