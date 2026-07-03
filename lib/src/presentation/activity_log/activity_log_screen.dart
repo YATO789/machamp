@@ -467,7 +467,7 @@ class _ExerciseSection extends HookWidget {
                               Expanded(
                                 child: Center(
                                   child: Text(
-                                    'レップ数',
+                                    '重量(kg)',
                                     style: TextStyle(
                                       color: AppColors.grey,
                                       fontSize: 12,
@@ -479,7 +479,7 @@ class _ExerciseSection extends HookWidget {
                               Expanded(
                                 child: Center(
                                   child: Text(
-                                    '重量(kg)',
+                                    'レップ数',
                                     style: TextStyle(
                                       color: AppColors.grey,
                                       fontSize: 12,
@@ -519,7 +519,9 @@ class _ExerciseSection extends HookWidget {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        '${set.reps}',
+                                        set.weight % 1 == 0
+                                            ? '${set.weight.toInt()}'
+                                            : '${set.weight}',
                                         style: const TextStyle(
                                           color: AppColors.monoWhite,
                                           fontSize: 14,
@@ -540,9 +542,7 @@ class _ExerciseSection extends HookWidget {
                                     ),
                                     child: Center(
                                       child: Text(
-                                        set.weight % 1 == 0
-                                            ? '${set.weight.toInt()}'
-                                            : '${set.weight}',
+                                        '${set.reps}',
                                         style: const TextStyle(
                                           color: AppColors.monoWhite,
                                           fontSize: 14,

@@ -13,7 +13,7 @@ abstract class MenuEditorState with _$MenuEditorState {
   const factory MenuEditorState({
     @Default('') String originalName,
     @Default([]) List<MenuExercise> menuExercises,
-    int? expandedIndex,
+    @Default(<int>{}) Set<int> expandedIndices,
     @Default(false) bool isExercisesDirty,
     @Default(false) bool isSaving,
     @Default(false) bool isDeleting,
@@ -41,13 +41,13 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
   void removeExercise(int index) {
     final newList = List<MenuExercise>.from(state.menuExercises)
       ..removeAt(index);
-    final current = state.expandedIndex;
-    final newExpanded = current == index
-        ? null
-        : (current != null && current > index ? current - 1 : current);
+    final newExpanded = state.expandedIndices
+        .where((i) => i != index)
+        .map((i) => i > index ? i - 1 : i)
+        .toSet();
     state = state.copyWith(
       menuExercises: newList,
-      expandedIndex: newExpanded,
+      expandedIndices: newExpanded,
       isExercisesDirty: true,
     );
   }
@@ -86,7 +86,7 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
         .map(
           (e) => MenuExercise(
             exercise: e,
-            sets: List.generate(3, (_) => const ExerciseSet()),
+            sets: List.generate(1, (_) => const ExerciseSet()),
           ),
         )
         .toList();
@@ -96,8 +96,14 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
     );
   }
 
-  void setExpandedIndex(int? index) {
-    state = state.copyWith(expandedIndex: index);
+  void toggleExpandedIndex(int index) {
+    final next = Set<int>.from(state.expandedIndices);
+    if (next.contains(index)) {
+      next.remove(index);
+    } else {
+      next.add(index);
+    }
+    state = state.copyWith(expandedIndices: next);
   }
 
   Future<void> deleteMenu() async {
