@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
 import 'package:machamp/src/presentation/workout/workout_view_model.dart';
+import 'package:machamp/src/router/router.dart';
 
 class WorkoutScreen extends HookConsumerWidget {
   const WorkoutScreen({super.key, required this.menuId});
@@ -143,6 +144,14 @@ class WorkoutScreen extends HookConsumerWidget {
                             ),
                           );
                           if (confirmed != true || !context.mounted) return;
+
+                          final anyCompleted = state.exercises.any(
+                            (ex) => ex.sets.any((s) => s.isCompleted),
+                          );
+                          if (!anyCompleted) {
+                            context.go(AppRoutes.home.path);
+                            return;
+                          }
 
                           isSaving.value = true;
                           try {
