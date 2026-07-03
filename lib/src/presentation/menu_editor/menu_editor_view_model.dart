@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:machamp/src/domain/entity/exercise.dart';
 import 'package:machamp/src/domain/entity/exercise_set.dart';
 import 'package:machamp/src/domain/entity/menu_exercise.dart';
+import 'package:machamp/src/infrastructures/repository/menu_repository.dart';
 import 'package:machamp/src/presentation/menu/menu_view_model.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -110,7 +111,8 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
     if (menuId == null) return;
     state = state.copyWith(isDeleting: true);
     try {
-      await ref.read(menuViewModelProvider.notifier).deleteMenu(menuId!);
+      await ref.read(menuRepositoryProvider).deleteMenu(menuId!);
+      ref.invalidate(menuViewModelProvider);
     } catch (_) {
       state = state.copyWith(isDeleting: false);
       rethrow;
@@ -121,22 +123,23 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
     state = state.copyWith(isSaving: true);
     try {
       if (menuId != null) {
-        await ref
-            .read(menuViewModelProvider.notifier)
-            .updateMenu(
-              id: menuId!,
-              name: name,
-              exercises: state.menuExercises,
-            );
+        await ref.read(menuRepositoryProvider).updateMenu(
+          id: menuId!,
+          name: name,
+          exercises: state.menuExercises,
+        );
+        ref.invalidate(menuViewModelProvider);
         state = state.copyWith(
           originalName: name,
           isExercisesDirty: false,
           isSaving: false,
         );
       } else {
-        await ref
-            .read(menuViewModelProvider.notifier)
-            .createMenu(name: name, exercises: state.menuExercises);
+        await ref.read(menuRepositoryProvider).createMenu(
+          name: name,
+          exercises: state.menuExercises,
+        );
+        ref.invalidate(menuViewModelProvider);
         state = state.copyWith(isSaving: false);
       }
     } catch (_) {
