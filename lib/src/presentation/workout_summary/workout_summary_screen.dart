@@ -37,7 +37,8 @@ class WorkoutSummaryScreen extends HookWidget {
       (sum, ex) => ex.sets.fold(sum, (s, set) => s + set.weight * set.reps),
     );
 
-    final elapsed = workoutState.startedAt != null && workoutState.finishedAt != null
+    final elapsed =
+        workoutState.startedAt != null && workoutState.finishedAt != null
         ? workoutState.finishedAt!.difference(workoutState.startedAt!)
         : null;
     final elapsedStr = elapsed != null
@@ -135,7 +136,12 @@ class WorkoutSummaryScreen extends HookWidget {
                 child: ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    _buildStatsGrid(totalVolume, totalSets, totalReps, elapsedStr),
+                    _buildStatsGrid(
+                      totalVolume,
+                      totalSets,
+                      totalReps,
+                      elapsedStr,
+                    ),
                     const SizedBox(height: 24),
                     const Text(
                       '種目ログ',
@@ -227,7 +233,12 @@ class WorkoutSummaryScreen extends HookWidget {
     return v.toStringAsFixed(1);
   }
 
-  Widget _buildStatsGrid(double totalVolume, int totalSets, int totalReps, String elapsedStr) {
+  Widget _buildStatsGrid(
+    double totalVolume,
+    int totalSets,
+    int totalReps,
+    String elapsedStr,
+  ) {
     return Column(
       children: [
         Row(
