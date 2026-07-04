@@ -55,9 +55,10 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
+      margin: const EdgeInsets.only(bottom: 16),
+      decoration: BoxDecoration(
         color: AppColors.darkSurface,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: SafeArea(
         top: false,
