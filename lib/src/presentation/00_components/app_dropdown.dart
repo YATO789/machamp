@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 
-class AppDropdown extends StatelessWidget {
+class AppDropdown<T> extends StatelessWidget {
   const AppDropdown({
     super.key,
     required this.value,
     required this.items,
+    required this.itemLabel,
     required this.onChanged,
     this.fontSize = 15,
     this.iconSize,
   });
 
-  final String value;
-  final List<String> items;
-  final ValueChanged<String> onChanged;
+  final T value;
+  final List<T> items;
+  final String Function(T) itemLabel;
+  final ValueChanged<T> onChanged;
   final double fontSize;
   final double? iconSize;
 
@@ -26,7 +28,7 @@ class AppDropdown extends StatelessWidget {
         color: Colors.white10,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: DropdownButton<String>(
+      child: DropdownButton<T>(
         value: value,
         isExpanded: true,
         underline: const SizedBox.shrink(),
@@ -38,11 +40,14 @@ class AppDropdown extends StatelessWidget {
           size: iconSize,
         ),
         items: items
-            .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+            .map(
+              (item) => DropdownMenuItem<T>(
+                value: item,
+                child: Text(itemLabel(item)),
+              ),
+            )
             .toList(),
-        onChanged: (v) {
-          if (v != null) onChanged(v);
-        },
+        onChanged: (v) => onChanged(v as T),
       ),
     );
   }

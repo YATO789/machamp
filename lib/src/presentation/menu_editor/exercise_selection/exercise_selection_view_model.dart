@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:machamp/src/domain/entity/body_part.dart';
+import 'package:machamp/src/domain/entity/equipment.dart';
 import 'package:machamp/src/domain/entity/exercise.dart';
 import 'package:machamp/src/infrastructures/repository/auth_repository.dart';
 import 'package:machamp/src/infrastructures/repository/exercise_repository.dart';
@@ -17,6 +19,8 @@ abstract class ExerciseSelectionState with _$ExerciseSelectionState {
     AsyncValue<List<Exercise>> exercises,
     @Default([]) List<Exercise> addedExercises,
     @Default([]) List<String> selectedIds,
+    @Default([]) List<BodyPart> bodyParts,
+    @Default([]) List<Equipment> equipments,
   }) = _ExerciseSelectionState;
 }
 
@@ -46,11 +50,11 @@ extension ExerciseSelectionStateX on ExerciseSelectionState {
 class ExerciseSelectionViewModel extends _$ExerciseSelectionViewModel {
   @override
   ExerciseSelectionState build() {
-    unawaited(Future.microtask(_fetchExercises));
+    unawaited(Future.microtask(_fetchAll));
     return const ExerciseSelectionState();
   }
 
-  Future<void> _fetchExercises() async {
+  Future<void> _fetchAll() async {
     state = state.copyWith(exercises: const AsyncLoading());
     try {
       final user = ref.read(authRepositoryProvider).currentUser();
@@ -58,10 +62,18 @@ class ExerciseSelectionViewModel extends _$ExerciseSelectionViewModel {
         state = state.copyWith(exercises: const AsyncData([]));
         return;
       }
-      final result = await ref
-          .read(exerciseRepositoryProvider)
-          .fetchExercises(user.id);
-      state = state.copyWith(exercises: AsyncData(result));
+      final repo = ref.read(exerciseRepositoryProvider);
+      final exercisesFuture = repo.fetchExercises(user.id);
+      final bodyPartsFuture = repo.fetchBodyParts();
+      final equipmentsFuture = repo.fetchEquipments();
+      final exercises = await exercisesFuture;
+      final bodyParts = await bodyPartsFuture;
+      final equipments = await equipmentsFuture;
+      state = state.copyWith(
+        exercises: AsyncData(exercises),
+        bodyParts: bodyParts,
+        equipments: equipments,
+      );
     } catch (e, st) {
       debugPrint('ExerciseSelectionViewModel fetch error: $e\n$st');
       state = state.copyWith(exercises: AsyncError(e, st));
@@ -83,6 +95,6 @@ class ExerciseSelectionViewModel extends _$ExerciseSelectionViewModel {
       addedExercises: [...state.addedExercises, exercise],
       selectedIds: [...state.selectedIds, exercise.id],
     );
-    unawaited(_fetchExercises());
+    unawaited(_fetchAll());
   }
 }

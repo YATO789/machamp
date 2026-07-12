@@ -44,7 +44,7 @@ final class ExerciseSelectionViewModelProvider
 }
 
 String _$exerciseSelectionViewModelHash() =>
-    r'0ab9d76178653b1fa4c74d31edfe0cbe1543d44c';
+    r'bd6630101788816bd0cd9198c1848b30f9a96ecb';
 
 abstract class _$ExerciseSelectionViewModel
     extends $Notifier<ExerciseSelectionState> {
