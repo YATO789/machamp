@@ -48,13 +48,13 @@ class _ExerciseDto {
   _ExerciseDto.fromMap(Map<String, dynamic> map)
     : id = map['id'] as String,
       name = map['name'] as String,
-      equipment =
-          (map['equipments'] as Map<String, dynamic>)['name'] as String,
+      equipment = (map['equipments'] as Map<String, dynamic>)['name'] as String,
       bodyParts = (map['exercise_body_parts'] as List<dynamic>)
           .map(
             (e) =>
                 ((e as Map<String, dynamic>)['body_parts']
-                    as Map<String, dynamic>)['name'] as String,
+                        as Map<String, dynamic>)['name']
+                    as String,
           )
           .toList(),
       userId = map['user_id'] as String?;

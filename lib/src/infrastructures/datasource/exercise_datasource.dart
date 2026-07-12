@@ -51,11 +51,13 @@ class ExerciseDataSource {
 
     final exerciseId = inserted['id'] as String;
 
-    await _client.from('exercise_body_parts').insert(
-      bodyPartIds
-          .map((bpId) => {'exercise_id': exerciseId, 'body_part_id': bpId})
-          .toList(),
-    );
+    await _client
+        .from('exercise_body_parts')
+        .insert(
+          bodyPartIds
+              .map((bpId) => {'exercise_id': exerciseId, 'body_part_id': bpId})
+              .toList(),
+        );
 
     return _client
         .from('exercises')

@@ -19,7 +19,10 @@ class ExerciseCreationSheet extends HookConsumerWidget {
     final state = ref.watch(exerciseCreationViewModelProvider);
     final notifier = ref.read(exerciseCreationViewModelProvider.notifier);
 
-    ref.listen<ExerciseCreationState>(exerciseCreationViewModelProvider, (_, next) {
+    ref.listen<ExerciseCreationState>(exerciseCreationViewModelProvider, (
+      _,
+      next,
+    ) {
       next.equipments.whenData((equipments) {
         if (selectedEquipment.value == null && equipments.isNotEmpty) {
           selectedEquipment.value = equipments.first;
@@ -42,9 +45,9 @@ class ExerciseCreationSheet extends HookConsumerWidget {
       if (exercise != null && context.mounted) {
         Navigator.of(context).pop(exercise);
       } else if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('種目の作成に失敗しました')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('種目の作成に失敗しました')));
       }
     }
 
@@ -130,13 +133,16 @@ class ExerciseCreationSheet extends HookConsumerWidget {
                   spacing: 8,
                   runSpacing: 4,
                   children: bodyParts.map((bp) {
-                    final isSelected =
-                        selectedBodyPartIds.value.contains(bp.id);
+                    final isSelected = selectedBodyPartIds.value.contains(
+                      bp.id,
+                    );
                     return FilterChip(
                       label: Text(bp.displayName),
                       selected: isSelected,
                       onSelected: (_) {
-                        final next = Set<String>.from(selectedBodyPartIds.value);
+                        final next = Set<String>.from(
+                          selectedBodyPartIds.value,
+                        );
                         if (isSelected) {
                           next.remove(bp.id);
                         } else {
@@ -152,7 +158,9 @@ class ExerciseCreationSheet extends HookConsumerWidget {
                         fontSize: 13,
                       ),
                       side: BorderSide(
-                        color: isSelected ? AppColors.purple : Colors.transparent,
+                        color: isSelected
+                            ? AppColors.purple
+                            : Colors.transparent,
                       ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
@@ -179,7 +187,8 @@ class ExerciseCreationSheet extends HookConsumerWidget {
                   style: TextStyle(color: Colors.grey),
                 ),
                 data: (equipments) => _EquipmentDropdown(
-                  value: selectedEquipment.value ??
+                  value:
+                      selectedEquipment.value ??
                       (equipments.isNotEmpty ? equipments.first : null),
                   items: equipments,
                   onChanged: (v) => selectedEquipment.value = v,
@@ -227,10 +236,7 @@ class _EquipmentDropdown extends StatelessWidget {
         icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
         items: items
             .map(
-              (eq) => DropdownMenuItem(
-                value: eq,
-                child: Text(eq.displayName),
-              ),
+              (eq) => DropdownMenuItem(value: eq, child: Text(eq.displayName)),
             )
             .toList(),
         onChanged: (v) {

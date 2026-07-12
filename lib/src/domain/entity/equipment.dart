@@ -12,7 +12,8 @@ abstract class Equipment with _$Equipment {
 }
 
 extension EquipmentX on Equipment {
-  String get displayName => const {
+  String get displayName =>
+      const {
         'barbell': 'バーベル',
         'dumbbell': 'ダンベル',
         'machine': 'マシン',

@@ -12,7 +12,8 @@ abstract class BodyPart with _$BodyPart {
 }
 
 extension BodyPartX on BodyPart {
-  String get displayName => const {
+  String get displayName =>
+      const {
         'legs': '脚',
         'chest': '胸',
         'back': '背中',

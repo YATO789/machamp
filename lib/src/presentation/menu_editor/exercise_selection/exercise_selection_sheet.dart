@@ -243,7 +243,8 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
   }
 }
 
-String _bodyPartLabel(String name) => const {
+String _bodyPartLabel(String name) =>
+    const {
       'legs': '脚',
       'chest': '胸',
       'back': '背中',

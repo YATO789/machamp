@@ -10,6 +10,5 @@ class EquipmentDto {
   final String name;
   final int sortOrder;
 
-  Equipment toDomain() =>
-      Equipment(id: id, name: name, sortOrder: sortOrder);
+  Equipment toDomain() => Equipment(id: id, name: name, sortOrder: sortOrder);
 }

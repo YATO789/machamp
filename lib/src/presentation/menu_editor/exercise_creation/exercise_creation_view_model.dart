@@ -60,12 +60,14 @@ class ExerciseCreationViewModel extends _$ExerciseCreationViewModel {
     if (user == null) return null;
     state = state.copyWith(isLoading: true);
     try {
-      return await ref.read(exerciseRepositoryProvider).createExercise(
-        userId: user.id,
-        name: name,
-        equipmentId: equipmentId,
-        bodyPartIds: bodyPartIds,
-      );
+      return await ref
+          .read(exerciseRepositoryProvider)
+          .createExercise(
+            userId: user.id,
+            name: name,
+            equipmentId: equipmentId,
+            bodyPartIds: bodyPartIds,
+          );
     } catch (e, st) {
       debugPrint('ExerciseCreationViewModel createExercise error: $e\n$st');
       return null;
