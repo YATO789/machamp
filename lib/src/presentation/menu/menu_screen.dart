@@ -78,7 +78,9 @@ class _MenuCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    menu.name.isEmpty ? AppAssets.of(context)!.untitledMenu : menu.name,
+                    menu.name.isEmpty
+                        ? AppAssets.of(context)!.untitledMenu
+                        : menu.name,
                     style: const TextStyle(
                       color: AppColors.monoWhite,
                       fontSize: 16,

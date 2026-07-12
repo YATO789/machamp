@@ -252,7 +252,9 @@ class ActivityLogScreen extends HookConsumerWidget {
                                         TextButton(
                                           onPressed: () =>
                                               Navigator.of(ctx).pop(false),
-                                          child: Text(AppAssets.of(ctx)!.cancel),
+                                          child: Text(
+                                            AppAssets.of(ctx)!.cancel,
+                                          ),
                                         ),
                                         TextButton(
                                           onPressed: () =>
@@ -260,7 +262,9 @@ class ActivityLogScreen extends HookConsumerWidget {
                                           style: TextButton.styleFrom(
                                             foregroundColor: Colors.red,
                                           ),
-                                          child: Text(AppAssets.of(ctx)!.delete),
+                                          child: Text(
+                                            AppAssets.of(ctx)!.delete,
+                                          ),
                                         ),
                                       ],
                                     );
@@ -371,7 +375,10 @@ class _WorkoutCard extends StatelessWidget {
                       if (value == 'delete') onDelete!();
                     },
                     itemBuilder: (_) => [
-                      PopupMenuItem(value: 'delete', child: Text(AppAssets.of(context)!.delete)),
+                      PopupMenuItem(
+                        value: 'delete',
+                        child: Text(AppAssets.of(context)!.delete),
+                      ),
                     ],
                   ),
               ],
@@ -480,7 +487,9 @@ class _ExerciseSection extends HookWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          AppAssets.of(context)!.setsCount(exercise.sets.length),
+                          AppAssets.of(
+                            context,
+                          )!.setsCount(exercise.sets.length),
                           style: const TextStyle(
                             color: AppColors.grey,
                             fontSize: 12,

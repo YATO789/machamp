@@ -46,7 +46,9 @@ class WorkoutScreen extends HookConsumerWidget {
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text(
-            state.menuName.isEmpty ? AppAssets.of(context)!.workoutFallbackTitle : state.menuName,
+            state.menuName.isEmpty
+                ? AppAssets.of(context)!.workoutFallbackTitle
+                : state.menuName,
           ),
           actions: [
             GestureDetector(
@@ -139,7 +141,9 @@ class WorkoutScreen extends HookConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                 child: PrimaryButton(
-                  label: isSaving.value ? AppAssets.of(context)!.saving : AppAssets.of(context)!.end,
+                  label: isSaving.value
+                      ? AppAssets.of(context)!.saving
+                      : AppAssets.of(context)!.end,
                   onPressed: isSaving.value
                       ? null
                       : () async {
@@ -152,7 +156,9 @@ class WorkoutScreen extends HookConsumerWidget {
                               return AlertDialog(
                                 title: Text(AppAssets.of(ctx)!.endWorkoutTitle),
                                 content: hasIncomplete
-                                    ? Text(AppAssets.of(ctx)!.uncheckedSetsWarning)
+                                    ? Text(
+                                        AppAssets.of(ctx)!.uncheckedSetsWarning,
+                                      )
                                     : null,
                                 actions: [
                                   TextButton(

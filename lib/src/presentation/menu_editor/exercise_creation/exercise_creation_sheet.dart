@@ -47,9 +47,9 @@ class ExerciseCreationSheet extends HookConsumerWidget {
       if (exercise != null && context.mounted) {
         Navigator.of(context).pop(exercise);
       } else if (context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(AppAssets.of(context)!.createExerciseFailed)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppAssets.of(context)!.createExerciseFailed)),
+        );
       }
     }
 
@@ -199,7 +199,9 @@ class ExerciseCreationSheet extends HookConsumerWidget {
               ),
               const SizedBox(height: 24),
               PrimaryButton(
-                label: state.isLoading ? AppAssets.of(context)!.creating : AppAssets.of(context)!.create,
+                label: state.isLoading
+                    ? AppAssets.of(context)!.creating
+                    : AppAssets.of(context)!.create,
                 onPressed: state.isLoading ? null : submit,
               ),
             ],

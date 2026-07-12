@@ -16,9 +16,9 @@ class LoginScreen extends HookConsumerWidget {
         await notifier.signInAnonymously();
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(AppAssets.of(context)!.loginFailed(e))));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(AppAssets.of(context)!.loginFailed(e))),
+          );
         }
       }
     }

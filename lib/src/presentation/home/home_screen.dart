@@ -20,7 +20,8 @@ class HomeScreen extends HookConsumerWidget {
           Text(AppAssets.of(context)!.homeTitle),
           const SizedBox(height: 8),
           Text('ID: ...${user.id.substring(user.id.length - 8)}'),
-          if (user.isAnonymous) Chip(label: Text(AppAssets.of(context)!.anonymousUserChip)),
+          if (user.isAnonymous)
+            Chip(label: Text(AppAssets.of(context)!.anonymousUserChip)),
           ElevatedButton(
             onPressed: () async {
               await notifier.signOut();

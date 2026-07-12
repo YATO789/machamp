@@ -43,7 +43,9 @@ class MenuEditorScreen extends HookConsumerWidget {
       final confirmed = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text(AppAssets.of(ctx)!.deleteConfirmTitle(state.originalName)),
+          title: Text(
+            AppAssets.of(ctx)!.deleteConfirmTitle(state.originalName),
+          ),
           content: Text(AppAssets.of(ctx)!.irreversibleWarning),
           actions: [
             TextButton(
@@ -64,9 +66,9 @@ class MenuEditorScreen extends HookConsumerWidget {
         if (context.mounted) context.pop();
       } catch (_) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(AppAssets.of(context)!.deleteFailed)));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(AppAssets.of(context)!.deleteFailed)),
+          );
         }
       }
     }
@@ -85,7 +87,11 @@ class MenuEditorScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(menuId == null ? AppAssets.of(context)!.createMenuTitle : AppAssets.of(context)!.editMenuTitle),
+        title: Text(
+          menuId == null
+              ? AppAssets.of(context)!.createMenuTitle
+              : AppAssets.of(context)!.editMenuTitle,
+        ),
         actions: [
           if (menuId != null)
             PopupMenuButton<String>(
@@ -93,7 +99,10 @@ class MenuEditorScreen extends HookConsumerWidget {
                 if (value == 'delete') unawaited(confirmAndDelete());
               },
               itemBuilder: (_) => [
-                PopupMenuItem(value: 'delete', child: Text(AppAssets.of(context)!.delete)),
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Text(AppAssets.of(context)!.delete),
+                ),
               ],
             ),
         ],

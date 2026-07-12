@@ -17,19 +17,21 @@ extension EquipmentX on Equipment {
   String localizedDisplayName(String locale) {
     if (locale == 'en') {
       return const {
-        'barbell': 'Barbell',
-        'dumbbell': 'Dumbbell',
-        'machine': 'Machine',
-        'bodyweight': 'Bodyweight',
-        'cable': 'Cable',
-      }[name] ?? name;
+            'barbell': 'Barbell',
+            'dumbbell': 'Dumbbell',
+            'machine': 'Machine',
+            'bodyweight': 'Bodyweight',
+            'cable': 'Cable',
+          }[name] ??
+          name;
     }
     return const {
-      'barbell': 'バーベル',
-      'dumbbell': 'ダンベル',
-      'machine': 'マシン',
-      'bodyweight': '自重',
-      'cable': 'ケーブル',
-    }[name] ?? name;
+          'barbell': 'バーベル',
+          'dumbbell': 'ダンベル',
+          'machine': 'マシン',
+          'bodyweight': '自重',
+          'cable': 'ケーブル',
+        }[name] ??
+        name;
   }
 }

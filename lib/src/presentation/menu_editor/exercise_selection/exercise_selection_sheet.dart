@@ -254,20 +254,22 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
 String _bodyPartLabel(String name, String locale) {
   if (locale == 'en') {
     return const {
-      'legs': 'Legs',
-      'chest': 'Chest',
-      'back': 'Back',
-      'shoulders': 'Shoulders',
-      'arms': 'Arms',
-      'abs': 'Abs',
-    }[name] ?? name;
+          'legs': 'Legs',
+          'chest': 'Chest',
+          'back': 'Back',
+          'shoulders': 'Shoulders',
+          'arms': 'Arms',
+          'abs': 'Abs',
+        }[name] ??
+        name;
   }
   return const {
-    'legs': '脚',
-    'chest': '胸',
-    'back': '背中',
-    'shoulders': '肩',
-    'arms': '腕',
-    'abs': '腹筋',
-  }[name] ?? name;
+        'legs': '脚',
+        'chest': '胸',
+        'back': '背中',
+        'shoulders': '肩',
+        'arms': '腕',
+        'abs': '腹筋',
+      }[name] ??
+      name;
 }
