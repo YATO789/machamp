@@ -29,7 +29,7 @@ class _MenuExerciseDto {
     : exerciseOrder = map['exercise_order'] as int,
       exercise = _ExerciseDto.fromMap(map['exercises'] as Map<String, dynamic>),
       sets =
-          (map['exercise_sets'] as List<dynamic>)
+          (map['menu_exercise_sets'] as List<dynamic>)
               .map((s) => _ExerciseSetDto.fromMap(s as Map<String, dynamic>))
               .toList()
             ..sort((a, b) => a.setOrder.compareTo(b.setOrder));
@@ -48,20 +48,27 @@ class _ExerciseDto {
   _ExerciseDto.fromMap(Map<String, dynamic> map)
     : id = map['id'] as String,
       name = map['name'] as String,
-      bodyPart = map['body_part'] as String,
-      equipment = map['equipment'] as String,
+      equipment = (map['equipments'] as Map<String, dynamic>)['name'] as String,
+      bodyParts = (map['exercise_body_parts'] as List<dynamic>)
+          .map(
+            (e) =>
+                ((e as Map<String, dynamic>)['body_parts']
+                        as Map<String, dynamic>)['name']
+                    as String,
+          )
+          .toList(),
       userId = map['user_id'] as String?;
 
   final String id;
   final String name;
-  final String bodyPart;
   final String equipment;
+  final List<String> bodyParts;
   final String? userId;
 
   Exercise toDomain() => Exercise(
     id: id,
     name: name,
-    bodyPart: bodyPart,
+    bodyParts: bodyParts,
     equipment: equipment,
     isCustom: userId != null,
   );

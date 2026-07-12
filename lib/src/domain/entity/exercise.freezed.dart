@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Exercise {
 
- String get id; String get name; String get bodyPart; String get equipment; bool get isCustom;
+ String get id; String get name; List<String> get bodyParts; String get equipment; bool get isCustom;
 /// Create a copy of Exercise
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ExerciseCopyWith<Exercise> get copyWith => _$ExerciseCopyWithImpl<Exercise>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Exercise&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.bodyPart, bodyPart) || other.bodyPart == bodyPart)&&(identical(other.equipment, equipment) || other.equipment == equipment)&&(identical(other.isCustom, isCustom) || other.isCustom == isCustom));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Exercise&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other.bodyParts, bodyParts)&&(identical(other.equipment, equipment) || other.equipment == equipment)&&(identical(other.isCustom, isCustom) || other.isCustom == isCustom));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,bodyPart,equipment,isCustom);
+int get hashCode => Object.hash(runtimeType,id,name,const DeepCollectionEquality().hash(bodyParts),equipment,isCustom);
 
 @override
 String toString() {
-  return 'Exercise(id: $id, name: $name, bodyPart: $bodyPart, equipment: $equipment, isCustom: $isCustom)';
+  return 'Exercise(id: $id, name: $name, bodyParts: $bodyParts, equipment: $equipment, isCustom: $isCustom)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ExerciseCopyWith<$Res>  {
   factory $ExerciseCopyWith(Exercise value, $Res Function(Exercise) _then) = _$ExerciseCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String bodyPart, String equipment, bool isCustom
+ String id, String name, List<String> bodyParts, String equipment, bool isCustom
 });
 
 
@@ -62,12 +62,12 @@ class _$ExerciseCopyWithImpl<$Res>
 
 /// Create a copy of Exercise
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? bodyPart = null,Object? equipment = null,Object? isCustom = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? bodyParts = null,Object? equipment = null,Object? isCustom = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,bodyPart: null == bodyPart ? _self.bodyPart : bodyPart // ignore: cast_nullable_to_non_nullable
-as String,equipment: null == equipment ? _self.equipment : equipment // ignore: cast_nullable_to_non_nullable
+as String,bodyParts: null == bodyParts ? _self.bodyParts : bodyParts // ignore: cast_nullable_to_non_nullable
+as List<String>,equipment: null == equipment ? _self.equipment : equipment // ignore: cast_nullable_to_non_nullable
 as String,isCustom: null == isCustom ? _self.isCustom : isCustom // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -154,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String bodyPart,  String equipment,  bool isCustom)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  List<String> bodyParts,  String equipment,  bool isCustom)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Exercise() when $default != null:
-return $default(_that.id,_that.name,_that.bodyPart,_that.equipment,_that.isCustom);case _:
+return $default(_that.id,_that.name,_that.bodyParts,_that.equipment,_that.isCustom);case _:
   return orElse();
 
 }
@@ -175,10 +175,10 @@ return $default(_that.id,_that.name,_that.bodyPart,_that.equipment,_that.isCusto
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String bodyPart,  String equipment,  bool isCustom)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  List<String> bodyParts,  String equipment,  bool isCustom)  $default,) {final _that = this;
 switch (_that) {
 case _Exercise():
-return $default(_that.id,_that.name,_that.bodyPart,_that.equipment,_that.isCustom);case _:
+return $default(_that.id,_that.name,_that.bodyParts,_that.equipment,_that.isCustom);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +195,10 @@ return $default(_that.id,_that.name,_that.bodyPart,_that.equipment,_that.isCusto
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String bodyPart,  String equipment,  bool isCustom)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  List<String> bodyParts,  String equipment,  bool isCustom)?  $default,) {final _that = this;
 switch (_that) {
 case _Exercise() when $default != null:
-return $default(_that.id,_that.name,_that.bodyPart,_that.equipment,_that.isCustom);case _:
+return $default(_that.id,_that.name,_that.bodyParts,_that.equipment,_that.isCustom);case _:
   return null;
 
 }
@@ -210,12 +210,18 @@ return $default(_that.id,_that.name,_that.bodyPart,_that.equipment,_that.isCusto
 
 
 class _Exercise implements Exercise {
-  const _Exercise({required this.id, required this.name, required this.bodyPart, required this.equipment, this.isCustom = false});
+  const _Exercise({required this.id, required this.name, required final  List<String> bodyParts, required this.equipment, this.isCustom = false}): _bodyParts = bodyParts;
   
 
 @override final  String id;
 @override final  String name;
-@override final  String bodyPart;
+ final  List<String> _bodyParts;
+@override List<String> get bodyParts {
+  if (_bodyParts is EqualUnmodifiableListView) return _bodyParts;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_bodyParts);
+}
+
 @override final  String equipment;
 @override@JsonKey() final  bool isCustom;
 
@@ -229,16 +235,16 @@ _$ExerciseCopyWith<_Exercise> get copyWith => __$ExerciseCopyWithImpl<_Exercise>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Exercise&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.bodyPart, bodyPart) || other.bodyPart == bodyPart)&&(identical(other.equipment, equipment) || other.equipment == equipment)&&(identical(other.isCustom, isCustom) || other.isCustom == isCustom));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Exercise&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&const DeepCollectionEquality().equals(other._bodyParts, _bodyParts)&&(identical(other.equipment, equipment) || other.equipment == equipment)&&(identical(other.isCustom, isCustom) || other.isCustom == isCustom));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,bodyPart,equipment,isCustom);
+int get hashCode => Object.hash(runtimeType,id,name,const DeepCollectionEquality().hash(_bodyParts),equipment,isCustom);
 
 @override
 String toString() {
-  return 'Exercise(id: $id, name: $name, bodyPart: $bodyPart, equipment: $equipment, isCustom: $isCustom)';
+  return 'Exercise(id: $id, name: $name, bodyParts: $bodyParts, equipment: $equipment, isCustom: $isCustom)';
 }
 
 
@@ -249,7 +255,7 @@ abstract mixin class _$ExerciseCopyWith<$Res> implements $ExerciseCopyWith<$Res>
   factory _$ExerciseCopyWith(_Exercise value, $Res Function(_Exercise) _then) = __$ExerciseCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String bodyPart, String equipment, bool isCustom
+ String id, String name, List<String> bodyParts, String equipment, bool isCustom
 });
 
 
@@ -266,12 +272,12 @@ class __$ExerciseCopyWithImpl<$Res>
 
 /// Create a copy of Exercise
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? bodyPart = null,Object? equipment = null,Object? isCustom = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? bodyParts = null,Object? equipment = null,Object? isCustom = null,}) {
   return _then(_Exercise(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,bodyPart: null == bodyPart ? _self.bodyPart : bodyPart // ignore: cast_nullable_to_non_nullable
-as String,equipment: null == equipment ? _self.equipment : equipment // ignore: cast_nullable_to_non_nullable
+as String,bodyParts: null == bodyParts ? _self._bodyParts : bodyParts // ignore: cast_nullable_to_non_nullable
+as List<String>,equipment: null == equipment ? _self.equipment : equipment // ignore: cast_nullable_to_non_nullable
 as String,isCustom: null == isCustom ? _self.isCustom : isCustom // ignore: cast_nullable_to_non_nullable
 as bool,
   ));

@@ -4,16 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
-import 'package:machamp/src/domain/constants/exercise_constants.dart';
+import 'package:machamp/src/domain/entity/body_part.dart';
+import 'package:machamp/src/domain/entity/equipment.dart';
 import 'package:machamp/src/domain/entity/exercise.dart';
 import 'package:machamp/src/presentation/00_components/app_dropdown.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
 import 'package:machamp/src/presentation/menu_editor/exercise_creation/exercise_creation_sheet.dart';
 import 'package:machamp/src/presentation/menu_editor/exercise_selection/exercise_selection_view_model.dart';
-
-//TODO : enum化
-const _bodyParts = ['全ての部位', ...bodyParts];
-const _equipment = ['全ての器具', ...equipments];
 
 class ExerciseSelectionSheet extends HookConsumerWidget {
   const ExerciseSelectionSheet({super.key, required this.onAdd});
@@ -23,8 +20,8 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchQuery = useState('');
-    final selectedBodyPart = useState(_bodyParts.first);
-    final selectedEquipment = useState(_equipment.first);
+    final selectedBodyPart = useState<BodyPart?>(null);
+    final selectedEquipment = useState<Equipment?>(null);
 
     final state = ref.watch(exerciseSelectionViewModelProvider);
     final notifier = ref.read(exerciseSelectionViewModelProvider.notifier);
@@ -81,9 +78,11 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: AppDropdown(
+                      child: AppDropdown<BodyPart?>(
                         value: selectedBodyPart.value,
-                        items: _bodyParts,
+                        items: [null, ...state.bodyParts],
+                        itemLabel: (bp) =>
+                            bp == null ? '全ての部位' : bp.displayName,
                         onChanged: (v) => selectedBodyPart.value = v,
                         fontSize: 13,
                         iconSize: 18,
@@ -91,9 +90,11 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: AppDropdown(
+                      child: AppDropdown<Equipment?>(
                         value: selectedEquipment.value,
-                        items: _equipment,
+                        items: [null, ...state.equipments],
+                        itemLabel: (eq) =>
+                            eq == null ? '全ての器具' : eq.displayName,
                         onChanged: (v) => selectedEquipment.value = v,
                         fontSize: 13,
                         iconSize: 18,
@@ -125,12 +126,12 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                         e.name.toLowerCase().contains(
                           searchQuery.value.toLowerCase(),
                         );
+                    final bp = selectedBodyPart.value;
                     final matchesBodyPart =
-                        selectedBodyPart.value == _bodyParts.first ||
-                        e.bodyPart == selectedBodyPart.value;
+                        bp == null || e.bodyParts.contains(bp.name);
+                    final eq = selectedEquipment.value;
                     final matchesEquipment =
-                        selectedEquipment.value == _equipment.first ||
-                        e.equipment == selectedEquipment.value;
+                        eq == null || e.equipment == eq.name;
                     return matchesSearch && matchesBodyPart && matchesEquipment;
                   }).toList();
 
@@ -201,7 +202,9 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                                   ),
                                 ),
                                 subtitle: Text(
-                                  exercise.bodyPart,
+                                  exercise.bodyParts
+                                      .map(_bodyPartLabel)
+                                      .join(' / '),
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 12,
@@ -239,3 +242,14 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
     );
   }
 }
+
+String _bodyPartLabel(String name) =>
+    const {
+      'legs': '脚',
+      'chest': '胸',
+      'back': '背中',
+      'shoulders': '肩',
+      'arms': '腕',
+      'abs': '腹筋',
+    }[name] ??
+    name;

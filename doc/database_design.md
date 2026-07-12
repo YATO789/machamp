@@ -88,6 +88,7 @@ CREATE TABLE menus (
   id          uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id     uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   name        text NOT NULL,
+  is_public   boolean NOT NULL DEFAULT false,
   created_at  timestamptz NOT NULL DEFAULT now(),
   updated_at  timestamptz NOT NULL DEFAULT now(),
 
@@ -266,3 +267,9 @@ auth.users
 - body_parts・equipments はシステム固定のマスターテーブル（user_id なし）
 - 1種目に複数の body_part を紐づけられる（exercise_body_parts で多対多）
 - equipment は1種目につき1つ（exercises.equipment_id で単一FK）
+
+---
+
+## RLS（Row Level Security）
+
+詳細は [rls_policies.md](rls_policies.md) を参照。

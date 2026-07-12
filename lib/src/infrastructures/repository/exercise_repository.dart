@@ -1,5 +1,9 @@
+import 'package:machamp/src/domain/entity/body_part.dart';
+import 'package:machamp/src/domain/entity/equipment.dart';
 import 'package:machamp/src/domain/entity/exercise.dart';
 import 'package:machamp/src/infrastructures/datasource/exercise_datasource.dart';
+import 'package:machamp/src/infrastructures/model/body_part_dto.dart';
+import 'package:machamp/src/infrastructures/model/equipment_dto.dart';
 import 'package:machamp/src/infrastructures/model/exercise_dto.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,21 +20,30 @@ class ExerciseRepository {
 
   Future<List<Exercise>> fetchExercises(String userId) async {
     final data = await _dataSource.fetchExercises(userId);
-
     return data.map((e) => ExerciseDto.fromMap(e).toDomain()).toList();
+  }
+
+  Future<List<BodyPart>> fetchBodyParts() async {
+    final data = await _dataSource.fetchBodyParts();
+    return data.map((e) => BodyPartDto.fromMap(e).toDomain()).toList();
+  }
+
+  Future<List<Equipment>> fetchEquipments() async {
+    final data = await _dataSource.fetchEquipments();
+    return data.map((e) => EquipmentDto.fromMap(e).toDomain()).toList();
   }
 
   Future<Exercise> createExercise({
     required String userId,
     required String name,
-    required String bodyPart,
-    required String equipment,
+    required String equipmentId,
+    required List<String> bodyPartIds,
   }) async {
     final data = await _dataSource.createExercise(
       userId: userId,
       name: name,
-      bodyPart: bodyPart,
-      equipment: equipment,
+      equipmentId: equipmentId,
+      bodyPartIds: bodyPartIds,
     );
     return ExerciseDto.fromMap(data).toDomain();
   }

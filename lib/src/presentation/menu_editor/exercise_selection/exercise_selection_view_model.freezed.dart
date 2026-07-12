@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ExerciseSelectionState implements DiagnosticableTreeMixin {
 
- AsyncValue<List<Exercise>> get exercises; List<Exercise> get addedExercises; List<String> get selectedIds;
+ AsyncValue<List<Exercise>> get exercises; List<Exercise> get addedExercises; List<String> get selectedIds; List<BodyPart> get bodyParts; List<Equipment> get equipments;
 /// Create a copy of ExerciseSelectionState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,21 +26,21 @@ $ExerciseSelectionStateCopyWith<ExerciseSelectionState> get copyWith => _$Exerci
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'ExerciseSelectionState'))
-    ..add(DiagnosticsProperty('exercises', exercises))..add(DiagnosticsProperty('addedExercises', addedExercises))..add(DiagnosticsProperty('selectedIds', selectedIds));
+    ..add(DiagnosticsProperty('exercises', exercises))..add(DiagnosticsProperty('addedExercises', addedExercises))..add(DiagnosticsProperty('selectedIds', selectedIds))..add(DiagnosticsProperty('bodyParts', bodyParts))..add(DiagnosticsProperty('equipments', equipments));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseSelectionState&&(identical(other.exercises, exercises) || other.exercises == exercises)&&const DeepCollectionEquality().equals(other.addedExercises, addedExercises)&&const DeepCollectionEquality().equals(other.selectedIds, selectedIds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseSelectionState&&(identical(other.exercises, exercises) || other.exercises == exercises)&&const DeepCollectionEquality().equals(other.addedExercises, addedExercises)&&const DeepCollectionEquality().equals(other.selectedIds, selectedIds)&&const DeepCollectionEquality().equals(other.bodyParts, bodyParts)&&const DeepCollectionEquality().equals(other.equipments, equipments));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,exercises,const DeepCollectionEquality().hash(addedExercises),const DeepCollectionEquality().hash(selectedIds));
+int get hashCode => Object.hash(runtimeType,exercises,const DeepCollectionEquality().hash(addedExercises),const DeepCollectionEquality().hash(selectedIds),const DeepCollectionEquality().hash(bodyParts),const DeepCollectionEquality().hash(equipments));
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ExerciseSelectionState(exercises: $exercises, addedExercises: $addedExercises, selectedIds: $selectedIds)';
+  return 'ExerciseSelectionState(exercises: $exercises, addedExercises: $addedExercises, selectedIds: $selectedIds, bodyParts: $bodyParts, equipments: $equipments)';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $ExerciseSelectionStateCopyWith<$Res>  {
   factory $ExerciseSelectionStateCopyWith(ExerciseSelectionState value, $Res Function(ExerciseSelectionState) _then) = _$ExerciseSelectionStateCopyWithImpl;
 @useResult
 $Res call({
- AsyncValue<List<Exercise>> exercises, List<Exercise> addedExercises, List<String> selectedIds
+ AsyncValue<List<Exercise>> exercises, List<Exercise> addedExercises, List<String> selectedIds, List<BodyPart> bodyParts, List<Equipment> equipments
 });
 
 
@@ -68,12 +68,14 @@ class _$ExerciseSelectionStateCopyWithImpl<$Res>
 
 /// Create a copy of ExerciseSelectionState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? exercises = null,Object? addedExercises = null,Object? selectedIds = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? exercises = null,Object? addedExercises = null,Object? selectedIds = null,Object? bodyParts = null,Object? equipments = null,}) {
   return _then(_self.copyWith(
 exercises: null == exercises ? _self.exercises : exercises // ignore: cast_nullable_to_non_nullable
 as AsyncValue<List<Exercise>>,addedExercises: null == addedExercises ? _self.addedExercises : addedExercises // ignore: cast_nullable_to_non_nullable
 as List<Exercise>,selectedIds: null == selectedIds ? _self.selectedIds : selectedIds // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,bodyParts: null == bodyParts ? _self.bodyParts : bodyParts // ignore: cast_nullable_to_non_nullable
+as List<BodyPart>,equipments: null == equipments ? _self.equipments : equipments // ignore: cast_nullable_to_non_nullable
+as List<Equipment>,
   ));
 }
 
@@ -158,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AsyncValue<List<Exercise>> exercises,  List<Exercise> addedExercises,  List<String> selectedIds)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( AsyncValue<List<Exercise>> exercises,  List<Exercise> addedExercises,  List<String> selectedIds,  List<BodyPart> bodyParts,  List<Equipment> equipments)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ExerciseSelectionState() when $default != null:
-return $default(_that.exercises,_that.addedExercises,_that.selectedIds);case _:
+return $default(_that.exercises,_that.addedExercises,_that.selectedIds,_that.bodyParts,_that.equipments);case _:
   return orElse();
 
 }
@@ -179,10 +181,10 @@ return $default(_that.exercises,_that.addedExercises,_that.selectedIds);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AsyncValue<List<Exercise>> exercises,  List<Exercise> addedExercises,  List<String> selectedIds)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( AsyncValue<List<Exercise>> exercises,  List<Exercise> addedExercises,  List<String> selectedIds,  List<BodyPart> bodyParts,  List<Equipment> equipments)  $default,) {final _that = this;
 switch (_that) {
 case _ExerciseSelectionState():
-return $default(_that.exercises,_that.addedExercises,_that.selectedIds);case _:
+return $default(_that.exercises,_that.addedExercises,_that.selectedIds,_that.bodyParts,_that.equipments);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +201,10 @@ return $default(_that.exercises,_that.addedExercises,_that.selectedIds);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AsyncValue<List<Exercise>> exercises,  List<Exercise> addedExercises,  List<String> selectedIds)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( AsyncValue<List<Exercise>> exercises,  List<Exercise> addedExercises,  List<String> selectedIds,  List<BodyPart> bodyParts,  List<Equipment> equipments)?  $default,) {final _that = this;
 switch (_that) {
 case _ExerciseSelectionState() when $default != null:
-return $default(_that.exercises,_that.addedExercises,_that.selectedIds);case _:
+return $default(_that.exercises,_that.addedExercises,_that.selectedIds,_that.bodyParts,_that.equipments);case _:
   return null;
 
 }
@@ -214,7 +216,7 @@ return $default(_that.exercises,_that.addedExercises,_that.selectedIds);case _:
 
 
 class _ExerciseSelectionState with DiagnosticableTreeMixin implements ExerciseSelectionState {
-  const _ExerciseSelectionState({this.exercises = const AsyncLoading<List<Exercise>>(), final  List<Exercise> addedExercises = const [], final  List<String> selectedIds = const []}): _addedExercises = addedExercises,_selectedIds = selectedIds;
+  const _ExerciseSelectionState({this.exercises = const AsyncLoading<List<Exercise>>(), final  List<Exercise> addedExercises = const [], final  List<String> selectedIds = const [], final  List<BodyPart> bodyParts = const [], final  List<Equipment> equipments = const []}): _addedExercises = addedExercises,_selectedIds = selectedIds,_bodyParts = bodyParts,_equipments = equipments;
   
 
 @override@JsonKey() final  AsyncValue<List<Exercise>> exercises;
@@ -232,6 +234,20 @@ class _ExerciseSelectionState with DiagnosticableTreeMixin implements ExerciseSe
   return EqualUnmodifiableListView(_selectedIds);
 }
 
+ final  List<BodyPart> _bodyParts;
+@override@JsonKey() List<BodyPart> get bodyParts {
+  if (_bodyParts is EqualUnmodifiableListView) return _bodyParts;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_bodyParts);
+}
+
+ final  List<Equipment> _equipments;
+@override@JsonKey() List<Equipment> get equipments {
+  if (_equipments is EqualUnmodifiableListView) return _equipments;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_equipments);
+}
+
 
 /// Create a copy of ExerciseSelectionState
 /// with the given fields replaced by the non-null parameter values.
@@ -244,21 +260,21 @@ _$ExerciseSelectionStateCopyWith<_ExerciseSelectionState> get copyWith => __$Exe
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'ExerciseSelectionState'))
-    ..add(DiagnosticsProperty('exercises', exercises))..add(DiagnosticsProperty('addedExercises', addedExercises))..add(DiagnosticsProperty('selectedIds', selectedIds));
+    ..add(DiagnosticsProperty('exercises', exercises))..add(DiagnosticsProperty('addedExercises', addedExercises))..add(DiagnosticsProperty('selectedIds', selectedIds))..add(DiagnosticsProperty('bodyParts', bodyParts))..add(DiagnosticsProperty('equipments', equipments));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseSelectionState&&(identical(other.exercises, exercises) || other.exercises == exercises)&&const DeepCollectionEquality().equals(other._addedExercises, _addedExercises)&&const DeepCollectionEquality().equals(other._selectedIds, _selectedIds));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseSelectionState&&(identical(other.exercises, exercises) || other.exercises == exercises)&&const DeepCollectionEquality().equals(other._addedExercises, _addedExercises)&&const DeepCollectionEquality().equals(other._selectedIds, _selectedIds)&&const DeepCollectionEquality().equals(other._bodyParts, _bodyParts)&&const DeepCollectionEquality().equals(other._equipments, _equipments));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,exercises,const DeepCollectionEquality().hash(_addedExercises),const DeepCollectionEquality().hash(_selectedIds));
+int get hashCode => Object.hash(runtimeType,exercises,const DeepCollectionEquality().hash(_addedExercises),const DeepCollectionEquality().hash(_selectedIds),const DeepCollectionEquality().hash(_bodyParts),const DeepCollectionEquality().hash(_equipments));
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ExerciseSelectionState(exercises: $exercises, addedExercises: $addedExercises, selectedIds: $selectedIds)';
+  return 'ExerciseSelectionState(exercises: $exercises, addedExercises: $addedExercises, selectedIds: $selectedIds, bodyParts: $bodyParts, equipments: $equipments)';
 }
 
 
@@ -269,7 +285,7 @@ abstract mixin class _$ExerciseSelectionStateCopyWith<$Res> implements $Exercise
   factory _$ExerciseSelectionStateCopyWith(_ExerciseSelectionState value, $Res Function(_ExerciseSelectionState) _then) = __$ExerciseSelectionStateCopyWithImpl;
 @override @useResult
 $Res call({
- AsyncValue<List<Exercise>> exercises, List<Exercise> addedExercises, List<String> selectedIds
+ AsyncValue<List<Exercise>> exercises, List<Exercise> addedExercises, List<String> selectedIds, List<BodyPart> bodyParts, List<Equipment> equipments
 });
 
 
@@ -286,12 +302,14 @@ class __$ExerciseSelectionStateCopyWithImpl<$Res>
 
 /// Create a copy of ExerciseSelectionState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? exercises = null,Object? addedExercises = null,Object? selectedIds = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? exercises = null,Object? addedExercises = null,Object? selectedIds = null,Object? bodyParts = null,Object? equipments = null,}) {
   return _then(_ExerciseSelectionState(
 exercises: null == exercises ? _self.exercises : exercises // ignore: cast_nullable_to_non_nullable
 as AsyncValue<List<Exercise>>,addedExercises: null == addedExercises ? _self._addedExercises : addedExercises // ignore: cast_nullable_to_non_nullable
 as List<Exercise>,selectedIds: null == selectedIds ? _self._selectedIds : selectedIds // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,bodyParts: null == bodyParts ? _self._bodyParts : bodyParts // ignore: cast_nullable_to_non_nullable
+as List<BodyPart>,equipments: null == equipments ? _self._equipments : equipments // ignore: cast_nullable_to_non_nullable
+as List<Equipment>,
   ));
 }
 

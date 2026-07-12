@@ -43,7 +43,7 @@ final class ExerciseCreationViewModelProvider
 }
 
 String _$exerciseCreationViewModelHash() =>
-    r'9a706af4f8de7d1f6210157a8b0ef1a0a457a653';
+    r'468af16d70d7a2b2e556dc317dde91996c752127';
 
 abstract class _$ExerciseCreationViewModel
     extends $Notifier<ExerciseCreationState> {

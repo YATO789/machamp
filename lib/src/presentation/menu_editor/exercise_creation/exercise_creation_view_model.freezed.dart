@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ExerciseCreationState implements DiagnosticableTreeMixin {
 
- bool get isLoading;
+ bool get isLoading; AsyncValue<List<BodyPart>> get bodyParts; AsyncValue<List<Equipment>> get equipments;
 /// Create a copy of ExerciseCreationState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,21 +26,21 @@ $ExerciseCreationStateCopyWith<ExerciseCreationState> get copyWith => _$Exercise
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'ExerciseCreationState'))
-    ..add(DiagnosticsProperty('isLoading', isLoading));
+    ..add(DiagnosticsProperty('isLoading', isLoading))..add(DiagnosticsProperty('bodyParts', bodyParts))..add(DiagnosticsProperty('equipments', equipments));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseCreationState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseCreationState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.bodyParts, bodyParts) || other.bodyParts == bodyParts)&&(identical(other.equipments, equipments) || other.equipments == equipments));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading);
+int get hashCode => Object.hash(runtimeType,isLoading,bodyParts,equipments);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ExerciseCreationState(isLoading: $isLoading)';
+  return 'ExerciseCreationState(isLoading: $isLoading, bodyParts: $bodyParts, equipments: $equipments)';
 }
 
 
@@ -51,7 +51,7 @@ abstract mixin class $ExerciseCreationStateCopyWith<$Res>  {
   factory $ExerciseCreationStateCopyWith(ExerciseCreationState value, $Res Function(ExerciseCreationState) _then) = _$ExerciseCreationStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading
+ bool isLoading, AsyncValue<List<BodyPart>> bodyParts, AsyncValue<List<Equipment>> equipments
 });
 
 
@@ -68,10 +68,12 @@ class _$ExerciseCreationStateCopyWithImpl<$Res>
 
 /// Create a copy of ExerciseCreationState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? bodyParts = null,Object? equipments = null,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,bodyParts: null == bodyParts ? _self.bodyParts : bodyParts // ignore: cast_nullable_to_non_nullable
+as AsyncValue<List<BodyPart>>,equipments: null == equipments ? _self.equipments : equipments // ignore: cast_nullable_to_non_nullable
+as AsyncValue<List<Equipment>>,
   ));
 }
 
@@ -156,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  AsyncValue<List<BodyPart>> bodyParts,  AsyncValue<List<Equipment>> equipments)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ExerciseCreationState() when $default != null:
-return $default(_that.isLoading);case _:
+return $default(_that.isLoading,_that.bodyParts,_that.equipments);case _:
   return orElse();
 
 }
@@ -177,10 +179,10 @@ return $default(_that.isLoading);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  AsyncValue<List<BodyPart>> bodyParts,  AsyncValue<List<Equipment>> equipments)  $default,) {final _that = this;
 switch (_that) {
 case _ExerciseCreationState():
-return $default(_that.isLoading);case _:
+return $default(_that.isLoading,_that.bodyParts,_that.equipments);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +199,10 @@ return $default(_that.isLoading);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  AsyncValue<List<BodyPart>> bodyParts,  AsyncValue<List<Equipment>> equipments)?  $default,) {final _that = this;
 switch (_that) {
 case _ExerciseCreationState() when $default != null:
-return $default(_that.isLoading);case _:
+return $default(_that.isLoading,_that.bodyParts,_that.equipments);case _:
   return null;
 
 }
@@ -212,10 +214,12 @@ return $default(_that.isLoading);case _:
 
 
 class _ExerciseCreationState with DiagnosticableTreeMixin implements ExerciseCreationState {
-  const _ExerciseCreationState({this.isLoading = false});
+  const _ExerciseCreationState({this.isLoading = false, this.bodyParts = const AsyncLoading<List<BodyPart>>(), this.equipments = const AsyncLoading<List<Equipment>>()});
   
 
 @override@JsonKey() final  bool isLoading;
+@override@JsonKey() final  AsyncValue<List<BodyPart>> bodyParts;
+@override@JsonKey() final  AsyncValue<List<Equipment>> equipments;
 
 /// Create a copy of ExerciseCreationState
 /// with the given fields replaced by the non-null parameter values.
@@ -228,21 +232,21 @@ _$ExerciseCreationStateCopyWith<_ExerciseCreationState> get copyWith => __$Exerc
 void debugFillProperties(DiagnosticPropertiesBuilder properties) {
   properties
     ..add(DiagnosticsProperty('type', 'ExerciseCreationState'))
-    ..add(DiagnosticsProperty('isLoading', isLoading));
+    ..add(DiagnosticsProperty('isLoading', isLoading))..add(DiagnosticsProperty('bodyParts', bodyParts))..add(DiagnosticsProperty('equipments', equipments));
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseCreationState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseCreationState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.bodyParts, bodyParts) || other.bodyParts == bodyParts)&&(identical(other.equipments, equipments) || other.equipments == equipments));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading);
+int get hashCode => Object.hash(runtimeType,isLoading,bodyParts,equipments);
 
 @override
 String toString({ DiagnosticLevel minLevel = DiagnosticLevel.info }) {
-  return 'ExerciseCreationState(isLoading: $isLoading)';
+  return 'ExerciseCreationState(isLoading: $isLoading, bodyParts: $bodyParts, equipments: $equipments)';
 }
 
 
@@ -253,7 +257,7 @@ abstract mixin class _$ExerciseCreationStateCopyWith<$Res> implements $ExerciseC
   factory _$ExerciseCreationStateCopyWith(_ExerciseCreationState value, $Res Function(_ExerciseCreationState) _then) = __$ExerciseCreationStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading
+ bool isLoading, AsyncValue<List<BodyPart>> bodyParts, AsyncValue<List<Equipment>> equipments
 });
 
 
@@ -270,10 +274,12 @@ class __$ExerciseCreationStateCopyWithImpl<$Res>
 
 /// Create a copy of ExerciseCreationState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? bodyParts = null,Object? equipments = null,}) {
   return _then(_ExerciseCreationState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,bodyParts: null == bodyParts ? _self.bodyParts : bodyParts // ignore: cast_nullable_to_non_nullable
+as AsyncValue<List<BodyPart>>,equipments: null == equipments ? _self.equipments : equipments // ignore: cast_nullable_to_non_nullable
+as AsyncValue<List<Equipment>>,
   ));
 }
 

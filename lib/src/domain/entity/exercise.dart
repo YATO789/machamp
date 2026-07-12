@@ -7,7 +7,7 @@ abstract class Exercise with _$Exercise {
   const factory Exercise({
     required String id,
     required String name,
-    required String bodyPart,
+    required List<String> bodyParts,
     required String equipment,
     @Default(false) bool isCustom,
   }) = _Exercise;
