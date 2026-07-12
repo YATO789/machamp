@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/env/env.dart';
 import 'package:machamp/src/core/constants/app_theme.dart';
+import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/router/router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -21,6 +22,8 @@ class MyApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Machamp',
       theme: appTheme,
+      localizationsDelegates: AppAssets.localizationsDelegates,
+      supportedLocales: AppAssets.supportedLocales,
       routerConfig: ref.watch(routerProvider),
     );
   }

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/domain/entity/menu.dart';
+import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/menu/menu_view_model.dart';
 
 class MenuScreen extends HookConsumerWidget {
@@ -13,21 +14,21 @@ class MenuScreen extends HookConsumerWidget {
     final menusAsync = ref.watch(menuViewModelProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('メニュー')),
+      appBar: AppBar(title: Text(AppAssets.of(context)!.menuTitle)),
       body: menusAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (_, __) => const Center(
+        error: (_, __) => Center(
           child: Text(
-            'データを取得できませんでした',
-            style: TextStyle(color: AppColors.grey),
+            AppAssets.of(context)!.menuLoadFailed,
+            style: const TextStyle(color: AppColors.grey),
           ),
         ),
         data: (menus) => menus.isEmpty
-            ? const Center(
+            ? Center(
                 child: Text(
-                  'メニューがありません\n新規作成から追加してください',
+                  AppAssets.of(context)!.noMenus,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: AppColors.grey),
+                  style: const TextStyle(color: AppColors.grey),
                 ),
               )
             : ListView.separated(
@@ -48,7 +49,7 @@ class MenuScreen extends HookConsumerWidget {
         backgroundColor: AppColors.purple,
         foregroundColor: AppColors.white,
         icon: const Icon(Icons.add),
-        label: const Text('新規作成'),
+        label: Text(AppAssets.of(context)!.createNew),
       ),
     );
   }
@@ -77,7 +78,7 @@ class _MenuCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    menu.name.isEmpty ? '無題のメニュー' : menu.name,
+                    menu.name.isEmpty ? AppAssets.of(context)!.untitledMenu : menu.name,
                     style: const TextStyle(
                       color: AppColors.monoWhite,
                       fontSize: 16,
@@ -86,7 +87,7 @@ class _MenuCard extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${menu.exercises.length}項目',
+                  AppAssets.of(context)!.itemCount(menu.exercises.length),
                   style: const TextStyle(
                     color: AppColors.purple,
                     fontSize: 12,

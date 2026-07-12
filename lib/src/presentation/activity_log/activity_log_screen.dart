@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/domain/constants/date_constants.dart';
 import 'package:machamp/src/domain/entity/workout_history_entry.dart';
 import 'package:machamp/src/infrastructures/repository/workout_session_repository.dart';
+import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/activity_log/activity_log_view_model.dart';
 import 'package:machamp/src/presentation/activity_log/widgets/calendar_bottom_sheet.dart';
 
@@ -17,6 +19,7 @@ class ActivityLogScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final locale = Localizations.localeOf(context).languageCode;
     final today = DateTime.now();
     final todayOnly = _dateOnly(today);
 
@@ -37,6 +40,9 @@ class ActivityLogScreen extends HookConsumerWidget {
         .where((w) => _dateOnly(w.startedAt) == selectedDate.value)
         .toList();
 
+    final dayLabels = weekDayLabels(locale);
+    final monthYearStr = DateFormat.yMMMM(locale).format(weekStart.value);
+
     return Scaffold(
       backgroundColor: AppColors.black,
       body: SafeArea(
@@ -50,7 +56,7 @@ class ActivityLogScreen extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    '${weekStart.value.year}年${weekStart.value.month}月',
+                    monthYearStr,
                     style: const TextStyle(
                       color: AppColors.monoWhite,
                       fontSize: 17,
@@ -73,18 +79,18 @@ class ActivityLogScreen extends HookConsumerWidget {
                         color: AppColors.darkSurface,
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.calendar_month_outlined,
                             color: AppColors.monoWhite,
                             size: 15,
                           ),
-                          SizedBox(width: 6),
+                          const SizedBox(width: 6),
                           Text(
-                            'カレンダー',
-                            style: TextStyle(
+                            AppAssets.of(context)!.calendarButton,
+                            style: const TextStyle(
                               color: AppColors.monoWhite,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -140,7 +146,7 @@ class ActivityLogScreen extends HookConsumerWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      weekDayLabels[i],
+                                      dayLabels[i],
                                       style: TextStyle(
                                         color: isSelected
                                             ? AppColors.black
@@ -204,15 +210,18 @@ class ActivityLogScreen extends HookConsumerWidget {
                 ),
                 error: (error, __) => Center(
                   child: Text(
-                    'エラー: $error',
+                    AppAssets.of(context)!.errorMessage(error),
                     style: const TextStyle(color: AppColors.grey, fontSize: 14),
                   ),
                 ),
                 data: (_) => selectedWorkouts.isEmpty
-                    ? const Center(
+                    ? Center(
                         child: Text(
-                          'この日はワークアウトがありません',
-                          style: TextStyle(color: AppColors.grey, fontSize: 14),
+                          AppAssets.of(context)!.noWorkoutsOnDay,
+                          style: const TextStyle(
+                            color: AppColors.grey,
+                            fontSize: 14,
+                          ),
                         ),
                       )
                     : ListView.builder(
@@ -228,27 +237,34 @@ class ActivityLogScreen extends HookConsumerWidget {
                               Future<void> confirmAndDelete() async {
                                 final confirmed = await showDialog<bool>(
                                   context: context,
-                                  builder: (ctx) => AlertDialog(
-                                    title: Text(
-                                      '「${workout.menuName ?? 'カスタムワークアウト'}」を削除しますか？',
-                                    ),
-                                    content: const Text('この操作は取り消せません。'),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(ctx).pop(false),
-                                        child: const Text('キャンセル'),
-                                      ),
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(ctx).pop(true),
-                                        style: TextButton.styleFrom(
-                                          foregroundColor: Colors.red,
+                                  builder: (ctx) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        AppAssets.of(ctx)!.deleteConfirmTitle(
+                                          workout.menuName ??
+                                              AppAssets.of(ctx)!.customWorkout,
                                         ),
-                                        child: const Text('削除'),
                                       ),
-                                    ],
-                                  ),
+                                      content: Text(
+                                        AppAssets.of(ctx)!.irreversibleWarning,
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(ctx).pop(false),
+                                          child: Text(AppAssets.of(ctx)!.cancel),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(ctx).pop(true),
+                                          style: TextButton.styleFrom(
+                                            foregroundColor: Colors.red,
+                                          ),
+                                          child: Text(AppAssets.of(ctx)!.delete),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 );
                                 if (confirmed != true) return;
                                 try {
@@ -261,8 +277,10 @@ class ActivityLogScreen extends HookConsumerWidget {
                                 } catch (e) {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('削除に失敗しました'),
+                                      SnackBar(
+                                        content: Text(
+                                          AppAssets.of(context)!.deleteFailed,
+                                        ),
                                       ),
                                     );
                                   }
@@ -339,7 +357,7 @@ class _WorkoutCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    entry.menuName ?? 'カスタムワークアウト',
+                    entry.menuName ?? AppAssets.of(context)!.customWorkout,
                     style: const TextStyle(
                       color: AppColors.monoWhite,
                       fontSize: 16,
@@ -352,8 +370,8 @@ class _WorkoutCard extends StatelessWidget {
                     onSelected: (value) {
                       if (value == 'delete') onDelete!();
                     },
-                    itemBuilder: (_) => const [
-                      PopupMenuItem(value: 'delete', child: Text('削除')),
+                    itemBuilder: (_) => [
+                      PopupMenuItem(value: 'delete', child: Text(AppAssets.of(context)!.delete)),
                     ],
                   ),
               ],
@@ -364,16 +382,22 @@ class _WorkoutCard extends StatelessWidget {
                 Expanded(
                   child: _StatChip(
                     value: '${_fmtVolume(_volume)} kg',
-                    label: 'ボリューム',
+                    label: AppAssets.of(context)!.volumeChipLabel,
                   ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: _StatChip(value: '$_totalSets set', label: 'セット数'),
+                  child: _StatChip(
+                    value: AppAssets.of(context)!.setsCount(_totalSets),
+                    label: AppAssets.of(context)!.setsChipLabel,
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: _StatChip(value: '$_minutes 分', label: '時間'),
+                  child: _StatChip(
+                    value: AppAssets.of(context)!.minutesValue(_minutes),
+                    label: AppAssets.of(context)!.timeChipLabel,
+                  ),
                 ),
               ],
             ),
@@ -456,7 +480,7 @@ class _ExerciseSection extends HookWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${exercise.sets.length}セット',
+                          AppAssets.of(context)!.setsCount(exercise.sets.length),
                           style: const TextStyle(
                             color: AppColors.grey,
                             fontSize: 12,
@@ -490,8 +514,8 @@ class _ExerciseSection extends HookWidget {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
                           child: Row(
-                            children: const [
-                              SizedBox(
+                            children: [
+                              const SizedBox(
                                 width: 24,
                                 child: Text(
                                   'No.',
@@ -501,24 +525,24 @@ class _ExerciseSection extends HookWidget {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 12),
+                              const SizedBox(width: 12),
                               Expanded(
                                 child: Center(
                                   child: Text(
-                                    '重量(kg)',
-                                    style: TextStyle(
+                                    AppAssets.of(context)!.weightKgHeader,
+                                    style: const TextStyle(
                                       color: AppColors.grey,
                                       fontSize: 12,
                                     ),
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 8),
+                              const SizedBox(width: 8),
                               Expanded(
                                 child: Center(
                                   child: Text(
-                                    'レップ数',
-                                    style: TextStyle(
+                                    AppAssets.of(context)!.repsHeader,
+                                    style: const TextStyle(
                                       color: AppColors.grey,
                                       fontSize: 12,
                                     ),

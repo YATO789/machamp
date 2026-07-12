@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/domain/constants/date_constants.dart';
 
@@ -54,6 +55,10 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context).languageCode;
+    final monthYearStr = DateFormat.yMMMM(locale).format(_displayMonth);
+    final dayLabels = weekDayLabels(locale);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -81,7 +86,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '${_displayMonth.year}年 ${_displayMonth.month}月',
+                    monthYearStr,
                     style: const TextStyle(
                       color: AppColors.monoWhite,
                       fontSize: 20,
@@ -123,7 +128,7 @@ class _CalendarBottomSheetState extends State<CalendarBottomSheet> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
-                children: weekDayLabels
+                children: dayLabels
                     .map(
                       (label) => Expanded(
                         child: Center(

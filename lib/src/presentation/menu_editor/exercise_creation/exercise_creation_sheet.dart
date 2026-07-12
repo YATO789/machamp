@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/domain/entity/body_part.dart';
 import 'package:machamp/src/domain/entity/equipment.dart';
+import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
 import 'package:machamp/src/presentation/menu_editor/exercise_creation/exercise_creation_view_model.dart';
 
@@ -12,6 +13,7 @@ class ExerciseCreationSheet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final locale = Localizations.localeOf(context).languageCode;
     final nameController = useTextEditingController();
     final selectedBodyPartIds = useState<Set<String>>({});
     final selectedEquipment = useState<Equipment?>(null);
@@ -47,7 +49,7 @@ class ExerciseCreationSheet extends HookConsumerWidget {
       } else if (context.mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text('種目の作成に失敗しました')));
+        ).showSnackBar(SnackBar(content: Text(AppAssets.of(context)!.createExerciseFailed)));
       }
     }
 
@@ -77,10 +79,10 @@ class ExerciseCreationSheet extends HookConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Center(
+              Center(
                 child: Text(
-                  'カスタム種目を作成',
-                  style: TextStyle(
+                  AppAssets.of(context)!.createCustomExercise,
+                  style: const TextStyle(
                     color: AppColors.monoWhite,
                     fontSize: 17,
                     fontWeight: FontWeight.bold,
@@ -88,9 +90,9 @@ class ExerciseCreationSheet extends HookConsumerWidget {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                '種目名',
-                style: TextStyle(color: Colors.grey, fontSize: 13),
+              Text(
+                AppAssets.of(context)!.exerciseNameLabel,
+                style: const TextStyle(color: Colors.grey, fontSize: 13),
               ),
               const SizedBox(height: 6),
               TextField(
@@ -98,7 +100,7 @@ class ExerciseCreationSheet extends HookConsumerWidget {
                 autofocus: true,
                 style: const TextStyle(color: AppColors.monoWhite),
                 decoration: InputDecoration(
-                  hintText: '例: ケーブルクロスオーバー',
+                  hintText: AppAssets.of(context)!.exerciseNameHint,
                   hintStyle: const TextStyle(color: Colors.grey),
                   filled: true,
                   fillColor: Colors.white10,
@@ -113,9 +115,9 @@ class ExerciseCreationSheet extends HookConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                '部位（複数選択可）',
-                style: TextStyle(color: Colors.grey, fontSize: 13),
+              Text(
+                AppAssets.of(context)!.bodyPartsLabel,
+                style: const TextStyle(color: Colors.grey, fontSize: 13),
               ),
               const SizedBox(height: 8),
               state.bodyParts.when(
@@ -125,9 +127,9 @@ class ExerciseCreationSheet extends HookConsumerWidget {
                     strokeWidth: 2,
                   ),
                 ),
-                error: (_, __) => const Text(
-                  'データの取得に失敗しました',
-                  style: TextStyle(color: Colors.grey),
+                error: (_, __) => Text(
+                  AppAssets.of(context)!.fetchDataFailed,
+                  style: const TextStyle(color: Colors.grey),
                 ),
                 data: (bodyParts) => Wrap(
                   spacing: 8,
@@ -137,7 +139,7 @@ class ExerciseCreationSheet extends HookConsumerWidget {
                       bp.id,
                     );
                     return FilterChip(
-                      label: Text(bp.displayName),
+                      label: Text(bp.localizedDisplayName(locale)),
                       selected: isSelected,
                       onSelected: (_) {
                         final next = Set<String>.from(
@@ -170,9 +172,9 @@ class ExerciseCreationSheet extends HookConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                '器具',
-                style: TextStyle(color: Colors.grey, fontSize: 13),
+              Text(
+                AppAssets.of(context)!.equipmentLabel,
+                style: const TextStyle(color: Colors.grey, fontSize: 13),
               ),
               const SizedBox(height: 6),
               state.equipments.when(
@@ -182,21 +184,22 @@ class ExerciseCreationSheet extends HookConsumerWidget {
                     strokeWidth: 2,
                   ),
                 ),
-                error: (_, __) => const Text(
-                  'データの取得に失敗しました',
-                  style: TextStyle(color: Colors.grey),
+                error: (_, __) => Text(
+                  AppAssets.of(context)!.fetchDataFailed,
+                  style: const TextStyle(color: Colors.grey),
                 ),
                 data: (equipments) => _EquipmentDropdown(
                   value:
                       selectedEquipment.value ??
                       (equipments.isNotEmpty ? equipments.first : null),
                   items: equipments,
+                  locale: locale,
                   onChanged: (v) => selectedEquipment.value = v,
                 ),
               ),
               const SizedBox(height: 24),
               PrimaryButton(
-                label: state.isLoading ? '作成中...' : '作成する',
+                label: state.isLoading ? AppAssets.of(context)!.creating : AppAssets.of(context)!.create,
                 onPressed: state.isLoading ? null : submit,
               ),
             ],
@@ -211,11 +214,13 @@ class _EquipmentDropdown extends StatelessWidget {
   const _EquipmentDropdown({
     required this.value,
     required this.items,
+    required this.locale,
     required this.onChanged,
   });
 
   final Equipment? value;
   final List<Equipment> items;
+  final String locale;
   final ValueChanged<Equipment> onChanged;
 
   @override
@@ -236,7 +241,10 @@ class _EquipmentDropdown extends StatelessWidget {
         icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
         items: items
             .map(
-              (eq) => DropdownMenuItem(value: eq, child: Text(eq.displayName)),
+              (eq) => DropdownMenuItem(
+                value: eq,
+                child: Text(eq.localizedDisplayName(locale)),
+              ),
             )
             .toList(),
         onChanged: (v) {

@@ -1,0 +1,141 @@
+{
+  "@@locale": "ja",
+
+  "cancel": "キャンセル",
+  "delete": "削除",
+  "ok": "OK",
+  "close": "閉じる",
+  "end": "終了",
+  "irreversibleWarning": "この操作は取り消せません。",
+  "deleteFailed": "削除に失敗しました",
+  "saveFailed": "保存に失敗しました",
+  "fetchDataFailed": "データの取得に失敗しました",
+  "menuLoadFailed": "データを取得できませんでした",
+  "deleteConfirmTitle": "「{name}」を削除しますか？",
+  "@deleteConfirmTitle": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "homeTitle": "ホーム",
+  "anonymousUserChip": "匿名ユーザー",
+  "signOut": "ログアウト",
+
+  "signInAnonymously": "匿名でログイン",
+  "loginFailed": "ログインに失敗しました: {error}",
+  "@loginFailed": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+
+  "menuTitle": "メニュー",
+  "noMenus": "メニューがありません\n新規作成から追加してください",
+  "untitledMenu": "無題のメニュー",
+  "itemCount": "{count, plural, other{#項目}}",
+  "@itemCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "createNew": "新規作成",
+
+  "createMenuTitle": "メニュー作成",
+  "editMenuTitle": "メニュー詳細",
+  "menuNameLabel": "メニュー名",
+  "menuNameHint": "例: 脚の日、上半身プッシュ",
+  "exercisesLabel": "種目",
+  "tapExerciseToEdit": "種目をタップして詳細を変更",
+  "addExercise": "種目を追加",
+  "startWorkout": "ワークアウト開始",
+  "save": "保存する",
+
+  "workoutFallbackTitle": "ワークアウト",
+  "endWorkoutTitle": "ワークアウトを終了しますか？",
+  "uncheckedSetsWarning": "チェックされていないセットは記録されません。",
+  "saving": "保存中...",
+
+  "workoutCompleteFallback": "ワークアウト完了",
+  "totalVolumeLabel": "総ボリューム",
+  "durationLabel": "所要時間",
+  "totalSetsLabel": "総セット数",
+  "totalRepsLabel": "総レップ数",
+  "setsUnit": "{count, plural, other{セット}}",
+  "@setsUnit": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "repsUnit": "{count, plural, other{rep}}",
+  "@repsUnit": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "exerciseLogTitle": "種目ログ",
+  "noCompletedSets": "記録されたセットがありません",
+  "shareOnSns": "SNSにシェア",
+  "camera": "カメラ",
+  "photoLibrary": "ライブラリ",
+  "exerciseSetSummary": "{count}セット・最高{weight}kg×{reps}rep",
+  "@exerciseSetSummary": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "weight": {"type": "String"},
+      "reps": {"type": "int"}
+    }
+  },
+  "weightHeader": "重量",
+  "weightKgHeader": "重量(kg)",
+  "repsHeader": "レップ数",
+
+  "calendarButton": "カレンダー",
+  "noWorkoutsOnDay": "この日はワークアウトがありません",
+  "customWorkout": "カスタムワークアウト",
+  "volumeChipLabel": "ボリューム",
+  "setsChipLabel": "セット数",
+  "timeChipLabel": "時間",
+  "setsCount": "{count, plural, other{#セット}}",
+  "@setsCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "minutesValue": "{minutes}分",
+  "@minutesValue": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  "errorMessage": "エラー: {error}",
+  "@errorMessage": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+
+  "profileTitle": "プロフィール",
+
+  "createCustomExercise": "カスタム種目を作成",
+  "exerciseNameLabel": "種目名",
+  "exerciseNameHint": "例: ケーブルクロスオーバー",
+  "bodyPartsLabel": "部位（複数選択可）",
+  "equipmentLabel": "器具",
+  "creating": "作成中...",
+  "create": "作成する",
+  "createExerciseFailed": "種目の作成に失敗しました",
+
+  "addExercises": "種目を追加",
+  "searchHint": "検索",
+  "allBodyParts": "全ての部位",
+  "allEquipments": "全ての器具",
+  "addButton": "追加する",
+  "addButtonWithCount": "追加する ({count})",
+  "@addButtonWithCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "share": "シェア"
+}

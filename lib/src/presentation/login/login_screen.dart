@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/login/login_view_model.dart';
 
 class LoginScreen extends HookConsumerWidget {
@@ -17,7 +18,7 @@ class LoginScreen extends HookConsumerWidget {
         if (context.mounted) {
           ScaffoldMessenger.of(
             context,
-          ).showSnackBar(SnackBar(content: Text('ログインに失敗しました: $e')));
+          ).showSnackBar(SnackBar(content: Text(AppAssets.of(context)!.loginFailed(e))));
         }
       }
     }
@@ -32,7 +33,7 @@ class LoginScreen extends HookConsumerWidget {
                   height: 20,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Text('匿名でログイン'),
+              : Text(AppAssets.of(context)!.signInAnonymously),
         ),
       ),
     );

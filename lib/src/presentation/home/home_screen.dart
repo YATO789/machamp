@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/home/home_view_model.dart';
 
 class HomeScreen extends HookConsumerWidget {
@@ -16,15 +17,15 @@ class HomeScreen extends HookConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('ホーム'),
+          Text(AppAssets.of(context)!.homeTitle),
           const SizedBox(height: 8),
           Text('ID: ...${user.id.substring(user.id.length - 8)}'),
-          if (user.isAnonymous) const Chip(label: Text('匿名ユーザー')),
+          if (user.isAnonymous) Chip(label: Text(AppAssets.of(context)!.anonymousUserChip)),
           ElevatedButton(
             onPressed: () async {
               await notifier.signOut();
             },
-            child: const Text('ログアウト'),
+            child: Text(AppAssets.of(context)!.signOut),
           ),
         ],
       ),

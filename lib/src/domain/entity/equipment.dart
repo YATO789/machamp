@@ -12,13 +12,24 @@ abstract class Equipment with _$Equipment {
 }
 
 extension EquipmentX on Equipment {
-  String get displayName =>
-      const {
-        'barbell': 'バーベル',
-        'dumbbell': 'ダンベル',
-        'machine': 'マシン',
-        'bodyweight': '自重',
-        'cable': 'ケーブル',
-      }[name] ??
-      name;
+  String get displayName => localizedDisplayName('ja');
+
+  String localizedDisplayName(String locale) {
+    if (locale == 'en') {
+      return const {
+        'barbell': 'Barbell',
+        'dumbbell': 'Dumbbell',
+        'machine': 'Machine',
+        'bodyweight': 'Bodyweight',
+        'cable': 'Cable',
+      }[name] ?? name;
+    }
+    return const {
+      'barbell': 'バーベル',
+      'dumbbell': 'ダンベル',
+      'machine': 'マシン',
+      'bodyweight': '自重',
+      'cable': 'ケーブル',
+    }[name] ?? name;
+  }
 }
