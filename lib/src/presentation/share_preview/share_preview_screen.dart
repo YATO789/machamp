@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
+import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/share_preview/share_preview_args.dart';
 import 'package:machamp/src/presentation/share_preview/share_preview_view_model.dart';
 import 'package:machamp/src/presentation/share_preview/widgets/workout_summary_share_card.dart';
@@ -109,9 +110,9 @@ class SharePreviewScreen extends HookConsumerWidget {
                                   strokeWidth: 2,
                                 ),
                               )
-                            : const Text(
-                                'シェア',
-                                style: TextStyle(
+                            : Text(
+                                AppAssets.of(context)!.share,
+                                style: const TextStyle(
                                   color: AppColors.monoWhite,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,

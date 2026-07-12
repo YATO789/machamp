@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
+import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/00_components/exercise_item.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
 import 'package:machamp/src/presentation/menu_editor/exercise_selection/exercise_selection_sheet.dart';
@@ -23,7 +24,6 @@ class MenuEditorScreen extends HookConsumerWidget {
     final nameController = useTextEditingController(text: state.originalName);
     useListenable(nameController);
 
-    //メニュー名が変更されたかのフラグ
     final isDirty =
         nameController.text.trim() != state.originalName ||
         state.isExercisesDirty;
@@ -43,17 +43,19 @@ class MenuEditorScreen extends HookConsumerWidget {
       final confirmed = await showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text('「${state.originalName}」を削除しますか？'),
-          content: const Text('この操作は取り消せません。'),
+          title: Text(
+            AppAssets.of(ctx)!.deleteConfirmTitle(state.originalName),
+          ),
+          content: Text(AppAssets.of(ctx)!.irreversibleWarning),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(false),
-              child: const Text('キャンセル'),
+              child: Text(AppAssets.of(ctx)!.cancel),
             ),
             TextButton(
               onPressed: () => Navigator.of(ctx).pop(true),
               style: TextButton.styleFrom(foregroundColor: Colors.red),
-              child: const Text('削除'),
+              child: Text(AppAssets.of(ctx)!.delete),
             ),
           ],
         ),
@@ -64,9 +66,9 @@ class MenuEditorScreen extends HookConsumerWidget {
         if (context.mounted) context.pop();
       } catch (_) {
         if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text('削除に失敗しました')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(AppAssets.of(context)!.deleteFailed)),
+          );
         }
       }
     }
@@ -85,15 +87,22 @@ class MenuEditorScreen extends HookConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(menuId == null ? 'メニュー作成' : 'メニュー詳細'),
+        title: Text(
+          menuId == null
+              ? AppAssets.of(context)!.createMenuTitle
+              : AppAssets.of(context)!.editMenuTitle,
+        ),
         actions: [
           if (menuId != null)
             PopupMenuButton<String>(
               onSelected: (value) {
                 if (value == 'delete') unawaited(confirmAndDelete());
               },
-              itemBuilder: (_) => const [
-                PopupMenuItem(value: 'delete', child: Text('削除')),
+              itemBuilder: (_) => [
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Text(AppAssets.of(context)!.delete),
+                ),
               ],
             ),
         ],
@@ -106,9 +115,9 @@ class MenuEditorScreen extends HookConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'メニュー名',
-                    style: TextStyle(
+                  Text(
+                    AppAssets.of(context)!.menuNameLabel,
+                    style: const TextStyle(
                       color: AppColors.monoWhite,
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
@@ -119,7 +128,7 @@ class MenuEditorScreen extends HookConsumerWidget {
                     controller: nameController,
                     style: const TextStyle(color: AppColors.monoWhite),
                     decoration: InputDecoration(
-                      hintText: '例: 脚の日、上半身プッシュ',
+                      hintText: AppAssets.of(context)!.menuNameHint,
                       hintStyle: const TextStyle(color: Colors.grey),
                       filled: true,
                       fillColor: AppColors.darkSurface,
@@ -132,9 +141,9 @@ class MenuEditorScreen extends HookConsumerWidget {
                   const SizedBox(height: 24),
                   Row(
                     children: [
-                      const Text(
-                        '種目',
-                        style: TextStyle(
+                      Text(
+                        AppAssets.of(context)!.exercisesLabel,
+                        style: const TextStyle(
                           color: AppColors.monoWhite,
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
@@ -142,9 +151,12 @@ class MenuEditorScreen extends HookConsumerWidget {
                       ),
                       const SizedBox(width: 8),
                       if (state.menuExercises.isNotEmpty)
-                        const Text(
-                          '種目をタップして詳細を変更',
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                        Text(
+                          AppAssets.of(context)!.tapExerciseToEdit,
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
                         ),
                     ],
                   ),
@@ -171,7 +183,7 @@ class MenuEditorScreen extends HookConsumerWidget {
                   }),
                   const SizedBox(height: 4),
                   PrimaryButton(
-                    label: '種目を追加',
+                    label: AppAssets.of(context)!.addExercise,
                     onPressed: openExerciseSheet,
                     variant: PrimaryButtonVariant.ghost,
                     icon: Icons.add,
@@ -186,11 +198,11 @@ class MenuEditorScreen extends HookConsumerWidget {
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: menuId != null && !isDirty
                   ? PrimaryButton(
-                      label: 'ワークアウト開始',
+                      label: AppAssets.of(context)!.startWorkout,
                       onPressed: () => context.push('/menu/$menuId/workout'),
                     )
                   : PrimaryButton(
-                      label: '保存する',
+                      label: AppAssets.of(context)!.save,
                       onPressed: state.isSaving ? null : save,
                       color: const Color(0xFF30D158),
                     ),

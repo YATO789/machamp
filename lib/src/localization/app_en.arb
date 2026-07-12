@@ -1,0 +1,141 @@
+{
+  "@@locale": "en",
+
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "ok": "OK",
+  "close": "Close",
+  "end": "End",
+  "irreversibleWarning": "This action cannot be undone.",
+  "deleteFailed": "Failed to delete",
+  "saveFailed": "Failed to save",
+  "fetchDataFailed": "Failed to load data",
+  "menuLoadFailed": "Could not load data",
+  "deleteConfirmTitle": "Delete \"{name}\"?",
+  "@deleteConfirmTitle": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+
+  "homeTitle": "Home",
+  "anonymousUserChip": "Anonymous",
+  "signOut": "Sign Out",
+
+  "signInAnonymously": "Continue Anonymously",
+  "loginFailed": "Login failed: {error}",
+  "@loginFailed": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+
+  "menuTitle": "Menus",
+  "noMenus": "No menus yet\nCreate one to get started",
+  "untitledMenu": "Untitled Menu",
+  "itemCount": "{count, plural, =1{# item} other{# items}}",
+  "@itemCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "createNew": "New",
+
+  "createMenuTitle": "Create Menu",
+  "editMenuTitle": "Menu Details",
+  "menuNameLabel": "Menu Name",
+  "menuNameHint": "e.g. Leg Day, Upper Push",
+  "exercisesLabel": "Exercises",
+  "tapExerciseToEdit": "Tap an exercise to edit",
+  "addExercise": "Add Exercise",
+  "startWorkout": "Start Workout",
+  "save": "Save",
+
+  "workoutFallbackTitle": "Workout",
+  "endWorkoutTitle": "End Workout?",
+  "uncheckedSetsWarning": "Unchecked sets will not be recorded.",
+  "saving": "Saving...",
+
+  "workoutCompleteFallback": "Workout Complete",
+  "totalVolumeLabel": "Total Volume",
+  "durationLabel": "Duration",
+  "totalSetsLabel": "Total Sets",
+  "totalRepsLabel": "Total Reps",
+  "setsUnit": "{count, plural, =1{set} other{sets}}",
+  "@setsUnit": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "repsUnit": "{count, plural, =1{rep} other{reps}}",
+  "@repsUnit": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "exerciseLogTitle": "Exercise Log",
+  "noCompletedSets": "No sets recorded",
+  "shareOnSns": "Share",
+  "camera": "Camera",
+  "photoLibrary": "Photo Library",
+  "exerciseSetSummary": "{count} sets • Best {weight}kg × {reps} rep",
+  "@exerciseSetSummary": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "weight": {"type": "String"},
+      "reps": {"type": "int"}
+    }
+  },
+  "weightHeader": "Weight",
+  "weightKgHeader": "Weight (kg)",
+  "repsHeader": "Reps",
+
+  "calendarButton": "Calendar",
+  "noWorkoutsOnDay": "No workouts on this day",
+  "customWorkout": "Custom Workout",
+  "volumeChipLabel": "Volume",
+  "setsChipLabel": "Sets",
+  "timeChipLabel": "Time",
+  "setsCount": "{count, plural, =1{# set} other{# sets}}",
+  "@setsCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "minutesValue": "{minutes} min",
+  "@minutesValue": {
+    "placeholders": {
+      "minutes": {"type": "int"}
+    }
+  },
+  "errorMessage": "Error: {error}",
+  "@errorMessage": {
+    "placeholders": {
+      "error": {"type": "Object"}
+    }
+  },
+
+  "profileTitle": "Profile",
+
+  "createCustomExercise": "Create Custom Exercise",
+  "exerciseNameLabel": "Exercise Name",
+  "exerciseNameHint": "e.g. Cable Crossover",
+  "bodyPartsLabel": "Body Parts (select multiple)",
+  "equipmentLabel": "Equipment",
+  "creating": "Creating...",
+  "create": "Create",
+  "createExerciseFailed": "Failed to create exercise",
+
+  "addExercises": "Add Exercises",
+  "searchHint": "Search",
+  "allBodyParts": "All Body Parts",
+  "allEquipments": "All Equipment",
+  "addButton": "Add",
+  "addButtonWithCount": "Add ({count})",
+  "@addButtonWithCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "share": "Share"
+}

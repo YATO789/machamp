@@ -52,3 +52,7 @@ app.*.map.json
 # FVM Version Cache
 .fvm/
 !.fvm/fvm_config.json
+
+# Generated localization files
+lib/src/localization/app_assets.dart
+lib/src/localization/app_assets_*.dart

@@ -7,6 +7,7 @@ import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/domain/entity/body_part.dart';
 import 'package:machamp/src/domain/entity/equipment.dart';
 import 'package:machamp/src/domain/entity/exercise.dart';
+import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/00_components/app_dropdown.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
 import 'package:machamp/src/presentation/menu_editor/exercise_creation/exercise_creation_sheet.dart';
@@ -19,6 +20,7 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final locale = Localizations.localeOf(context).languageCode;
     final searchQuery = useState('');
     final selectedBodyPart = useState<BodyPart?>(null);
     final selectedEquipment = useState<Equipment?>(null);
@@ -44,9 +46,9 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              const Text(
-                '種目を追加',
-                style: TextStyle(
+              Text(
+                AppAssets.of(context)!.addExercises,
+                style: const TextStyle(
                   color: AppColors.monoWhite,
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -58,7 +60,7 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                 child: TextField(
                   style: const TextStyle(color: AppColors.monoWhite),
                   decoration: InputDecoration(
-                    hintText: '検索',
+                    hintText: AppAssets.of(context)!.searchHint,
                     hintStyle: const TextStyle(color: Colors.grey),
                     prefixIcon: const Icon(Icons.search, color: Colors.grey),
                     filled: true,
@@ -81,8 +83,9 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                       child: AppDropdown<BodyPart?>(
                         value: selectedBodyPart.value,
                         items: [null, ...state.bodyParts],
-                        itemLabel: (bp) =>
-                            bp == null ? '全ての部位' : bp.displayName,
+                        itemLabel: (bp) => bp == null
+                            ? AppAssets.of(context)!.allBodyParts
+                            : bp.localizedDisplayName(locale),
                         onChanged: (v) => selectedBodyPart.value = v,
                         fontSize: 13,
                         iconSize: 18,
@@ -93,8 +96,9 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                       child: AppDropdown<Equipment?>(
                         value: selectedEquipment.value,
                         items: [null, ...state.equipments],
-                        itemLabel: (eq) =>
-                            eq == null ? '全ての器具' : eq.displayName,
+                        itemLabel: (eq) => eq == null
+                            ? AppAssets.of(context)!.allEquipments
+                            : eq.localizedDisplayName(locale),
                         onChanged: (v) => selectedEquipment.value = v,
                         fontSize: 13,
                         iconSize: 18,
@@ -110,11 +114,11 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                     child: CircularProgressIndicator(color: AppColors.purple),
                   ),
                 ),
-                error: (_, __) => const Expanded(
+                error: (_, __) => Expanded(
                   child: Center(
                     child: Text(
-                      'データの取得に失敗しました',
-                      style: TextStyle(color: Colors.grey),
+                      AppAssets.of(context)!.fetchDataFailed,
+                      style: const TextStyle(color: Colors.grey),
                     ),
                   ),
                 ),
@@ -159,9 +163,9 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                                       size: 20,
                                     ),
                                   ),
-                                  title: const Text(
-                                    'カスタム種目を作成',
-                                    style: TextStyle(
+                                  title: Text(
+                                    AppAssets.of(context)!.createCustomExercise,
+                                    style: const TextStyle(
                                       color: AppColors.purple,
                                       fontSize: 15,
                                     ),
@@ -203,7 +207,9 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                                 ),
                                 subtitle: Text(
                                   exercise.bodyParts
-                                      .map(_bodyPartLabel)
+                                      .map(
+                                        (name) => _bodyPartLabel(name, locale),
+                                      )
                                       .join(' / '),
                                   style: const TextStyle(
                                     color: Colors.grey,
@@ -219,8 +225,10 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
                             padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                             child: PrimaryButton(
                               label: state.selectedIds.isEmpty
-                                  ? '追加する'
-                                  : '追加する (${state.selectedIds.length})',
+                                  ? AppAssets.of(context)!.addButton
+                                  : AppAssets.of(context)!.addButtonWithCount(
+                                      state.selectedIds.length,
+                                    ),
                               onPressed: state.selectedIds.isEmpty
                                   ? null
                                   : () {
@@ -243,13 +251,25 @@ class ExerciseSelectionSheet extends HookConsumerWidget {
   }
 }
 
-String _bodyPartLabel(String name) =>
-    const {
-      'legs': '脚',
-      'chest': '胸',
-      'back': '背中',
-      'shoulders': '肩',
-      'arms': '腕',
-      'abs': '腹筋',
-    }[name] ??
-    name;
+String _bodyPartLabel(String name, String locale) {
+  if (locale == 'en') {
+    return const {
+          'legs': 'Legs',
+          'chest': 'Chest',
+          'back': 'Back',
+          'shoulders': 'Shoulders',
+          'arms': 'Arms',
+          'abs': 'Abs',
+        }[name] ??
+        name;
+  }
+  return const {
+        'legs': '脚',
+        'chest': '胸',
+        'back': '背中',
+        'shoulders': '肩',
+        'arms': '腕',
+        'abs': '腹筋',
+      }[name] ??
+      name;
+}

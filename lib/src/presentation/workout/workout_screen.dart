@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
+import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
 import 'package:machamp/src/presentation/workout/workout_view_model.dart';
 import 'package:machamp/src/router/router.dart';
@@ -44,7 +45,11 @@ class WorkoutScreen extends HookConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: Text(state.menuName.isEmpty ? 'ワークアウト' : state.menuName),
+          title: Text(
+            state.menuName.isEmpty
+                ? AppAssets.of(context)!.workoutFallbackTitle
+                : state.menuName,
+          ),
           actions: [
             GestureDetector(
               onTap: () => timerVisible.value = !timerVisible.value,
@@ -136,7 +141,9 @@ class WorkoutScreen extends HookConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                 child: PrimaryButton(
-                  label: isSaving.value ? '保存中...' : '終了',
+                  label: isSaving.value
+                      ? AppAssets.of(context)!.saving
+                      : AppAssets.of(context)!.end,
                   onPressed: isSaving.value
                       ? null
                       : () async {
@@ -145,22 +152,28 @@ class WorkoutScreen extends HookConsumerWidget {
                           );
                           final confirmed = await showDialog<bool>(
                             context: context,
-                            builder: (ctx) => AlertDialog(
-                              title: const Text('ワークアウトを終了しますか？'),
-                              content: hasIncomplete
-                                  ? const Text('チェックされていないセットは記録されません。')
-                                  : null,
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(ctx).pop(false),
-                                  child: const Text('キャンセル'),
-                                ),
-                                TextButton(
-                                  onPressed: () => Navigator.of(ctx).pop(true),
-                                  child: const Text('終了'),
-                                ),
-                              ],
-                            ),
+                            builder: (ctx) {
+                              return AlertDialog(
+                                title: Text(AppAssets.of(ctx)!.endWorkoutTitle),
+                                content: hasIncomplete
+                                    ? Text(
+                                        AppAssets.of(ctx)!.uncheckedSetsWarning,
+                                      )
+                                    : null,
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(ctx).pop(false),
+                                    child: Text(AppAssets.of(ctx)!.cancel),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(ctx).pop(true),
+                                    child: Text(AppAssets.of(ctx)!.end),
+                                  ),
+                                ],
+                              );
+                            },
                           );
                           if (confirmed != true || !context.mounted) return;
 
@@ -181,16 +194,18 @@ class WorkoutScreen extends HookConsumerWidget {
                             if (!context.mounted) return;
                             await showDialog<void>(
                               context: context,
-                              builder: (ctx) => AlertDialog(
-                                title: const Text('保存に失敗しました'),
-                                content: Text('$e'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.of(ctx).pop(),
-                                    child: const Text('OK'),
-                                  ),
-                                ],
-                              ),
+                              builder: (ctx) {
+                                return AlertDialog(
+                                  title: Text(AppAssets.of(ctx)!.saveFailed),
+                                  content: Text('$e'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(ctx).pop(),
+                                      child: Text(AppAssets.of(ctx)!.ok),
+                                    ),
+                                  ],
+                                );
+                              },
                             );
                             return;
                           }
