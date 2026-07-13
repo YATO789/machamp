@@ -13,6 +13,7 @@ abstract class WorkoutSetState with _$WorkoutSetState {
     required double weight,
     required int reps,
     @Default(false) bool isCompleted,
+    @Default(60) int intervalSeconds,
   }) = _WorkoutSetState;
 }
 
@@ -50,7 +51,13 @@ class WorkoutViewModel extends _$WorkoutViewModel {
             (me) => WorkoutExerciseState(
               exercise: me.exercise,
               sets: me.sets
-                  .map((s) => WorkoutSetState(weight: s.weight, reps: s.reps))
+                  .map(
+                    (s) => WorkoutSetState(
+                      weight: s.weight,
+                      reps: s.reps,
+                      intervalSeconds: s.intervalSeconds,
+                    ),
+                  )
                   .toList(),
             ),
           )

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WorkoutSetState {
 
- double get weight; int get reps; bool get isCompleted;
+ double get weight; int get reps; bool get isCompleted; int get intervalSeconds;
 /// Create a copy of WorkoutSetState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $WorkoutSetStateCopyWith<WorkoutSetState> get copyWith => _$WorkoutSetStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkoutSetState&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkoutSetState&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.intervalSeconds, intervalSeconds) || other.intervalSeconds == intervalSeconds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,weight,reps,isCompleted);
+int get hashCode => Object.hash(runtimeType,weight,reps,isCompleted,intervalSeconds);
 
 @override
 String toString() {
-  return 'WorkoutSetState(weight: $weight, reps: $reps, isCompleted: $isCompleted)';
+  return 'WorkoutSetState(weight: $weight, reps: $reps, isCompleted: $isCompleted, intervalSeconds: $intervalSeconds)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $WorkoutSetStateCopyWith<$Res>  {
   factory $WorkoutSetStateCopyWith(WorkoutSetState value, $Res Function(WorkoutSetState) _then) = _$WorkoutSetStateCopyWithImpl;
 @useResult
 $Res call({
- double weight, int reps, bool isCompleted
+ double weight, int reps, bool isCompleted, int intervalSeconds
 });
 
 
@@ -62,12 +62,13 @@ class _$WorkoutSetStateCopyWithImpl<$Res>
 
 /// Create a copy of WorkoutSetState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? weight = null,Object? reps = null,Object? isCompleted = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? weight = null,Object? reps = null,Object? isCompleted = null,Object? intervalSeconds = null,}) {
   return _then(_self.copyWith(
 weight: null == weight ? _self.weight : weight // ignore: cast_nullable_to_non_nullable
 as double,reps: null == reps ? _self.reps : reps // ignore: cast_nullable_to_non_nullable
 as int,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,intervalSeconds: null == intervalSeconds ? _self.intervalSeconds : intervalSeconds // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -152,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double weight,  int reps,  bool isCompleted)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double weight,  int reps,  bool isCompleted,  int intervalSeconds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WorkoutSetState() when $default != null:
-return $default(_that.weight,_that.reps,_that.isCompleted);case _:
+return $default(_that.weight,_that.reps,_that.isCompleted,_that.intervalSeconds);case _:
   return orElse();
 
 }
@@ -173,10 +174,10 @@ return $default(_that.weight,_that.reps,_that.isCompleted);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double weight,  int reps,  bool isCompleted)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double weight,  int reps,  bool isCompleted,  int intervalSeconds)  $default,) {final _that = this;
 switch (_that) {
 case _WorkoutSetState():
-return $default(_that.weight,_that.reps,_that.isCompleted);case _:
+return $default(_that.weight,_that.reps,_that.isCompleted,_that.intervalSeconds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +194,10 @@ return $default(_that.weight,_that.reps,_that.isCompleted);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double weight,  int reps,  bool isCompleted)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double weight,  int reps,  bool isCompleted,  int intervalSeconds)?  $default,) {final _that = this;
 switch (_that) {
 case _WorkoutSetState() when $default != null:
-return $default(_that.weight,_that.reps,_that.isCompleted);case _:
+return $default(_that.weight,_that.reps,_that.isCompleted,_that.intervalSeconds);case _:
   return null;
 
 }
@@ -208,12 +209,13 @@ return $default(_that.weight,_that.reps,_that.isCompleted);case _:
 
 
 class _WorkoutSetState implements WorkoutSetState {
-  const _WorkoutSetState({required this.weight, required this.reps, this.isCompleted = false});
+  const _WorkoutSetState({required this.weight, required this.reps, this.isCompleted = false, this.intervalSeconds = 60});
   
 
 @override final  double weight;
 @override final  int reps;
 @override@JsonKey() final  bool isCompleted;
+@override@JsonKey() final  int intervalSeconds;
 
 /// Create a copy of WorkoutSetState
 /// with the given fields replaced by the non-null parameter values.
@@ -225,16 +227,16 @@ _$WorkoutSetStateCopyWith<_WorkoutSetState> get copyWith => __$WorkoutSetStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkoutSetState&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkoutSetState&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted)&&(identical(other.intervalSeconds, intervalSeconds) || other.intervalSeconds == intervalSeconds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,weight,reps,isCompleted);
+int get hashCode => Object.hash(runtimeType,weight,reps,isCompleted,intervalSeconds);
 
 @override
 String toString() {
-  return 'WorkoutSetState(weight: $weight, reps: $reps, isCompleted: $isCompleted)';
+  return 'WorkoutSetState(weight: $weight, reps: $reps, isCompleted: $isCompleted, intervalSeconds: $intervalSeconds)';
 }
 
 
@@ -245,7 +247,7 @@ abstract mixin class _$WorkoutSetStateCopyWith<$Res> implements $WorkoutSetState
   factory _$WorkoutSetStateCopyWith(_WorkoutSetState value, $Res Function(_WorkoutSetState) _then) = __$WorkoutSetStateCopyWithImpl;
 @override @useResult
 $Res call({
- double weight, int reps, bool isCompleted
+ double weight, int reps, bool isCompleted, int intervalSeconds
 });
 
 
@@ -262,12 +264,13 @@ class __$WorkoutSetStateCopyWithImpl<$Res>
 
 /// Create a copy of WorkoutSetState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? weight = null,Object? reps = null,Object? isCompleted = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? weight = null,Object? reps = null,Object? isCompleted = null,Object? intervalSeconds = null,}) {
   return _then(_WorkoutSetState(
 weight: null == weight ? _self.weight : weight // ignore: cast_nullable_to_non_nullable
 as double,reps: null == reps ? _self.reps : reps // ignore: cast_nullable_to_non_nullable
 as int,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,intervalSeconds: null == intervalSeconds ? _self.intervalSeconds : intervalSeconds // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

@@ -58,7 +58,7 @@ final class WorkoutViewModelProvider
   }
 }
 
-String _$workoutViewModelHash() => r'd383a3c0840a9a49a8717437ea7146926224abb3';
+String _$workoutViewModelHash() => r'e11bd07a96e233362e363c511eedecdd48b052db';
 
 final class WorkoutViewModelFamily extends $Family
     with
