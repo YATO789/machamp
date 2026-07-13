@@ -8,6 +8,7 @@ import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/00_components/exercise_item.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
+import 'package:machamp/src/presentation/menu/menu_view_model.dart';
 import 'package:machamp/src/presentation/menu_editor/exercise_selection/exercise_selection_sheet.dart';
 import 'package:machamp/src/presentation/menu_editor/menu_editor_view_model.dart';
 
@@ -224,7 +225,12 @@ class MenuEditorScreen extends HookConsumerWidget {
               child: menuId != null && !isDirty
                   ? PrimaryButton(
                       label: AppAssets.of(context)!.startWorkout,
-                      onPressed: () => context.push('/menu/$menuId/workout'),
+                      onPressed: () async {
+                        await ref.read(menuViewModelProvider.future);
+                        if (context.mounted) {
+                          unawaited(context.push('/menu/$menuId/workout'));
+                        }
+                      },
                     )
                   : PrimaryButton(
                       label: AppAssets.of(context)!.save,
