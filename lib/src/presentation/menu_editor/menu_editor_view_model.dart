@@ -96,6 +96,29 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
     );
   }
 
+  void reorderExercises(int oldIndex, int newIndex) {
+    final list = List<MenuExercise>.from(state.menuExercises);
+    final item = list.removeAt(oldIndex);
+    list.insert(newIndex, item);
+
+    final newExpanded = <int>{};
+    for (final i in state.expandedIndices) {
+      if (i == oldIndex) {
+        newExpanded.add(newIndex);
+      } else if (oldIndex < newIndex) {
+        newExpanded.add(i > oldIndex && i <= newIndex ? i - 1 : i);
+      } else {
+        newExpanded.add(i >= newIndex && i < oldIndex ? i + 1 : i);
+      }
+    }
+
+    state = state.copyWith(
+      menuExercises: list,
+      expandedIndices: newExpanded,
+      isExercisesDirty: true,
+    );
+  }
+
   void toggleExpandedIndex(int index) {
     final next = Set<int>.from(state.expandedIndices);
     if (next.contains(index)) {

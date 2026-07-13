@@ -33,7 +33,7 @@
   "menuTitle": "Menus",
   "noMenus": "No menus yet\nCreate one to get started",
   "untitledMenu": "Untitled Menu",
-  "itemCount": "{count, plural, =1{# item} other{# items}}",
+  "itemCount": "{count, plural, =1{{count} item} other{{count} items}}",
   "@itemCount": {
     "placeholders": {
       "count": {"type": "int"}
@@ -96,7 +96,7 @@
   "volumeChipLabel": "Volume",
   "setsChipLabel": "Sets",
   "timeChipLabel": "Time",
-  "setsCount": "{count, plural, =1{# set} other{# sets}}",
+  "setsCount": "{count, plural, =1{{count} set} other{{count} sets}}",
   "@setsCount": {
     "placeholders": {
       "count": {"type": "int"}
