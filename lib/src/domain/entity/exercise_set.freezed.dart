@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ExerciseSet {
 
- int get reps; double get weight;
+ int get reps; double get weight; int get intervalSeconds;
 /// Create a copy of ExerciseSet
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ExerciseSetCopyWith<ExerciseSet> get copyWith => _$ExerciseSetCopyWithImpl<Exer
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseSet&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.weight, weight) || other.weight == weight));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ExerciseSet&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.intervalSeconds, intervalSeconds) || other.intervalSeconds == intervalSeconds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,reps,weight);
+int get hashCode => Object.hash(runtimeType,reps,weight,intervalSeconds);
 
 @override
 String toString() {
-  return 'ExerciseSet(reps: $reps, weight: $weight)';
+  return 'ExerciseSet(reps: $reps, weight: $weight, intervalSeconds: $intervalSeconds)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ExerciseSetCopyWith<$Res>  {
   factory $ExerciseSetCopyWith(ExerciseSet value, $Res Function(ExerciseSet) _then) = _$ExerciseSetCopyWithImpl;
 @useResult
 $Res call({
- int reps, double weight
+ int reps, double weight, int intervalSeconds
 });
 
 
@@ -62,11 +62,12 @@ class _$ExerciseSetCopyWithImpl<$Res>
 
 /// Create a copy of ExerciseSet
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? reps = null,Object? weight = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? reps = null,Object? weight = null,Object? intervalSeconds = null,}) {
   return _then(_self.copyWith(
 reps: null == reps ? _self.reps : reps // ignore: cast_nullable_to_non_nullable
 as int,weight: null == weight ? _self.weight : weight // ignore: cast_nullable_to_non_nullable
-as double,
+as double,intervalSeconds: null == intervalSeconds ? _self.intervalSeconds : intervalSeconds // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -151,10 +152,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int reps,  double weight)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int reps,  double weight,  int intervalSeconds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ExerciseSet() when $default != null:
-return $default(_that.reps,_that.weight);case _:
+return $default(_that.reps,_that.weight,_that.intervalSeconds);case _:
   return orElse();
 
 }
@@ -172,10 +173,10 @@ return $default(_that.reps,_that.weight);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int reps,  double weight)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int reps,  double weight,  int intervalSeconds)  $default,) {final _that = this;
 switch (_that) {
 case _ExerciseSet():
-return $default(_that.reps,_that.weight);case _:
+return $default(_that.reps,_that.weight,_that.intervalSeconds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -192,10 +193,10 @@ return $default(_that.reps,_that.weight);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int reps,  double weight)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int reps,  double weight,  int intervalSeconds)?  $default,) {final _that = this;
 switch (_that) {
 case _ExerciseSet() when $default != null:
-return $default(_that.reps,_that.weight);case _:
+return $default(_that.reps,_that.weight,_that.intervalSeconds);case _:
   return null;
 
 }
@@ -207,11 +208,12 @@ return $default(_that.reps,_that.weight);case _:
 
 
 class _ExerciseSet implements ExerciseSet {
-  const _ExerciseSet({this.reps = 10, this.weight = 0.0});
+  const _ExerciseSet({this.reps = 10, this.weight = 0.0, this.intervalSeconds = 60});
   
 
 @override@JsonKey() final  int reps;
 @override@JsonKey() final  double weight;
+@override@JsonKey() final  int intervalSeconds;
 
 /// Create a copy of ExerciseSet
 /// with the given fields replaced by the non-null parameter values.
@@ -223,16 +225,16 @@ _$ExerciseSetCopyWith<_ExerciseSet> get copyWith => __$ExerciseSetCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseSet&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.weight, weight) || other.weight == weight));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ExerciseSet&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.intervalSeconds, intervalSeconds) || other.intervalSeconds == intervalSeconds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,reps,weight);
+int get hashCode => Object.hash(runtimeType,reps,weight,intervalSeconds);
 
 @override
 String toString() {
-  return 'ExerciseSet(reps: $reps, weight: $weight)';
+  return 'ExerciseSet(reps: $reps, weight: $weight, intervalSeconds: $intervalSeconds)';
 }
 
 
@@ -243,7 +245,7 @@ abstract mixin class _$ExerciseSetCopyWith<$Res> implements $ExerciseSetCopyWith
   factory _$ExerciseSetCopyWith(_ExerciseSet value, $Res Function(_ExerciseSet) _then) = __$ExerciseSetCopyWithImpl;
 @override @useResult
 $Res call({
- int reps, double weight
+ int reps, double weight, int intervalSeconds
 });
 
 
@@ -260,11 +262,12 @@ class __$ExerciseSetCopyWithImpl<$Res>
 
 /// Create a copy of ExerciseSet
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? reps = null,Object? weight = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? reps = null,Object? weight = null,Object? intervalSeconds = null,}) {
   return _then(_ExerciseSet(
 reps: null == reps ? _self.reps : reps // ignore: cast_nullable_to_non_nullable
 as int,weight: null == weight ? _self.weight : weight // ignore: cast_nullable_to_non_nullable
-as double,
+as double,intervalSeconds: null == intervalSeconds ? _self.intervalSeconds : intervalSeconds // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

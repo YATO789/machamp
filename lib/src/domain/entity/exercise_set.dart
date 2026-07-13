@@ -7,5 +7,6 @@ abstract class ExerciseSet with _$ExerciseSet {
   const factory ExerciseSet({
     @Default(10) int reps,
     @Default(0.0) double weight,
+    @Default(60) int intervalSeconds,
   }) = _ExerciseSet;
 }

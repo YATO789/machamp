@@ -104,7 +104,7 @@ class ExerciseItem extends StatelessWidget {
                         children: [
                           const Text(
                             'セット数',
-                            style: TextStyle(color: Colors.grey, fontSize: 13),
+                            style: TextStyle(color: Colors.white, fontSize: 13),
                           ),
                           const Spacer(),
                           _CounterButton(
@@ -200,6 +200,7 @@ class _SetRow extends StatefulWidget {
 class _SetRowState extends State<_SetRow> {
   late TextEditingController _repsController;
   late TextEditingController _weightController;
+  late TextEditingController _intervalController;
 
   @override
   void initState() {
@@ -209,6 +210,9 @@ class _SetRowState extends State<_SetRow> {
     );
     _weightController = TextEditingController(
       text: _formatWeight(widget.exerciseSet.weight),
+    );
+    _intervalController = TextEditingController(
+      text: widget.exerciseSet.intervalSeconds.toString(),
     );
   }
 
@@ -223,12 +227,17 @@ class _SetRowState extends State<_SetRow> {
     if (widget.exerciseSet.weight != currentWeight) {
       _weightController.text = _formatWeight(widget.exerciseSet.weight);
     }
+    final currentInterval = int.tryParse(_intervalController.text) ?? 0;
+    if (widget.exerciseSet.intervalSeconds != currentInterval) {
+      _intervalController.text = widget.exerciseSet.intervalSeconds.toString();
+    }
   }
 
   @override
   void dispose() {
     _repsController.dispose();
     _weightController.dispose();
+    _intervalController.dispose();
     super.dispose();
   }
 
@@ -246,9 +255,26 @@ class _SetRowState extends State<_SetRow> {
             width: 32,
             child: Text(
               '${widget.setNumber}',
-              style: const TextStyle(color: Colors.grey, fontSize: 14),
+              style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
           ),
+          Expanded(
+            child: isEditable
+                ? _NumberField(
+                    controller: _weightController,
+                    allowDecimal: true,
+                    onChanged: (v) {
+                      final weight = double.tryParse(v);
+                      if (weight != null) {
+                        widget.onChanged!(
+                          widget.exerciseSet.copyWith(weight: weight),
+                        );
+                      }
+                    },
+                  )
+                : _ReadOnlyCell(text: _formatWeight(widget.exerciseSet.weight)),
+          ),
+          const SizedBox(width: 8),
           Expanded(
             child: isEditable
                 ? _NumberField(
@@ -268,18 +294,19 @@ class _SetRowState extends State<_SetRow> {
           Expanded(
             child: isEditable
                 ? _NumberField(
-                    controller: _weightController,
-                    allowDecimal: true,
+                    controller: _intervalController,
                     onChanged: (v) {
-                      final weight = double.tryParse(v);
-                      if (weight != null) {
+                      final interval = int.tryParse(v);
+                      if (interval != null) {
                         widget.onChanged!(
-                          widget.exerciseSet.copyWith(weight: weight),
+                          widget.exerciseSet.copyWith(
+                            intervalSeconds: interval,
+                          ),
                         );
                       }
                     },
                   )
-                : _ReadOnlyCell(text: _formatWeight(widget.exerciseSet.weight)),
+                : _ReadOnlyCell(text: '${widget.exerciseSet.intervalSeconds}'),
           ),
         ],
       ),
@@ -362,21 +389,28 @@ class SetTableHeader extends StatelessWidget {
             width: 32,
             child: Text(
               'No.',
-              style: TextStyle(color: Colors.grey, fontSize: 12),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              'レップ数',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(color: Colors.white, fontSize: 12),
             ),
           ),
           Expanded(
             child: Text(
               '重量(kg)',
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              'レップ数',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              'インターバル(秒)',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 12),
             ),
           ),
         ],

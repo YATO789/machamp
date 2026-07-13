@@ -52,12 +52,13 @@ BEGIN
     v_set_order := 1;
     FOR v_set_row IN SELECT * FROM jsonb_array_elements(v_exercise_row->'sets')
     LOOP
-      INSERT INTO menu_exercise_sets (menu_exercise_id, set_order, reps, weight)
+      INSERT INTO menu_exercise_sets (menu_exercise_id, set_order, reps, weight, interval_seconds)
       VALUES (
         v_menu_ex_id,
         v_set_order,
         (v_set_row->>'reps')::integer,
-        (v_set_row->>'weight')::numeric
+        (v_set_row->>'weight')::numeric,
+        (v_set_row->>'interval_seconds')::integer
       );
       v_set_order := v_set_order + 1;
     END LOOP;
@@ -77,8 +78,8 @@ $$;
   {
     "exercise_id": "uuid",
     "sets": [
-      { "reps": 10, "weight": 60.0 },
-      { "reps": 8,  "weight": 65.0 }
+      { "reps": 10, "weight": 60.0, "interval_seconds": 60 },
+      { "reps": 8,  "weight": 65.0, "interval_seconds": 90 }
     ]
   }
 ]
@@ -132,12 +133,13 @@ BEGIN
     v_set_order := 1;
     FOR v_set_row IN SELECT * FROM jsonb_array_elements(v_exercise_row->'sets')
     LOOP
-      INSERT INTO menu_exercise_sets (menu_exercise_id, set_order, reps, weight)
+      INSERT INTO menu_exercise_sets (menu_exercise_id, set_order, reps, weight, interval_seconds)
       VALUES (
         v_menu_ex_id,
         v_set_order,
         (v_set_row->>'reps')::integer,
-        (v_set_row->>'weight')::numeric
+        (v_set_row->>'weight')::numeric,
+        (v_set_row->>'interval_seconds')::integer
       );
       v_set_order := v_set_order + 1;
     END LOOP;
