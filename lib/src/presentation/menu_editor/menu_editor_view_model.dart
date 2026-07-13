@@ -59,12 +59,12 @@ class MenuEditorViewModel extends _$MenuEditorViewModel {
     final currentSets = menu.sets;
     final List<ExerciseSet> newSets;
     if (newCount > currentSets.length) {
+      final lastSet = currentSets.isNotEmpty
+          ? currentSets.last
+          : const ExerciseSet();
       newSets = [
         ...currentSets,
-        ...List.generate(
-          newCount - currentSets.length,
-          (_) => const ExerciseSet(),
-        ),
+        ...List.generate(newCount - currentSets.length, (_) => lastSet),
       ];
     } else {
       newSets = currentSets.sublist(0, newCount);
