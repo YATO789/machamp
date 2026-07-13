@@ -33,7 +33,7 @@
   "menuTitle": "メニュー",
   "noMenus": "メニューがありません\n新規作成から追加してください",
   "untitledMenu": "無題のメニュー",
-  "itemCount": "{count, plural, other{#項目}}",
+  "itemCount": "{count}項目",
   "@itemCount": {
     "placeholders": {
       "count": {"type": "int"}
@@ -96,7 +96,7 @@
   "volumeChipLabel": "ボリューム",
   "setsChipLabel": "セット数",
   "timeChipLabel": "時間",
-  "setsCount": "{count, plural, other{#セット}}",
+  "setsCount": "{count}セット",
   "@setsCount": {
     "placeholders": {
       "count": {"type": "int"}
