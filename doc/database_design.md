@@ -135,8 +135,13 @@ CREATE TABLE menu_exercise_sets (
   set_order         integer NOT NULL CHECK (set_order > 0),
   reps              integer NOT NULL DEFAULT 10 CHECK (reps > 0),
   weight            numeric(6,2) NOT NULL DEFAULT 0 CHECK (weight >= 0),
+  interval_seconds  integer NOT NULL DEFAULT 60 CHECK (interval_seconds >= 0),
   created_at        timestamptz NOT NULL DEFAULT now()
 );
+
+-- マイグレーション（既存テーブルへの追加）
+ALTER TABLE menu_exercise_sets
+  ADD COLUMN interval_seconds integer NOT NULL DEFAULT 60 CHECK (interval_seconds >= 0);
 
 CREATE UNIQUE INDEX exercise_sets_order_unique ON menu_exercise_sets(menu_exercise_id, set_order);
 
