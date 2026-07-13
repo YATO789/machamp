@@ -173,9 +173,13 @@ class MenuEditorScreen extends HookConsumerWidget {
                         shadowColor: Colors.black54,
                         child: child,
                       ),
-                      children: List.generate(state.menuExercises.length, (index) {
+                      children: List.generate(state.menuExercises.length, (
+                        index,
+                      ) {
                         final me = state.menuExercises[index];
-                        final isExpanded = state.expandedIndices.contains(index);
+                        final isExpanded = state.expandedIndices.contains(
+                          index,
+                        );
                         return Padding(
                           key: ValueKey(me.exercise.id + index.toString()),
                           padding: const EdgeInsets.only(bottom: 8),
