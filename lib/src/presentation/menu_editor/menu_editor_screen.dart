@@ -161,26 +161,47 @@ class MenuEditorScreen extends HookConsumerWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  ...List.generate(state.menuExercises.length, (index) {
-                    final me = state.menuExercises[index];
-                    final isExpanded = state.expandedIndices.contains(index);
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: ExerciseItem(
-                        key: ValueKey(me.exercise.id + index.toString()),
-                        menuExercise: me,
-                        isExpanded: isExpanded,
-                        isEditable: true,
-                        exerciseIndex: index,
-                        onTap: () => notifier.toggleExpandedIndex(index),
-                        onDelete: () => notifier.removeExercise(index),
-                        onSetCountChanged: (count) =>
-                            notifier.updateSetCount(index, count),
-                        onSetChanged: (setIdx, updated) =>
-                            notifier.updateSet(index, setIdx, updated),
+                  if (state.menuExercises.isNotEmpty)
+                    ReorderableListView(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      buildDefaultDragHandles: false,
+                      onReorderItem: notifier.reorderExercises,
+                      proxyDecorator: (child, index, animation) => Material(
+                        elevation: 8,
+                        color: Colors.transparent,
+                        shadowColor: Colors.black54,
+                        child: child,
                       ),
-                    );
-                  }),
+                      children: List.generate(state.menuExercises.length, (index) {
+                        final me = state.menuExercises[index];
+                        final isExpanded = state.expandedIndices.contains(index);
+                        return Padding(
+                          key: ValueKey(me.exercise.id + index.toString()),
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: ExerciseItem(
+                            menuExercise: me,
+                            isExpanded: isExpanded,
+                            isEditable: true,
+                            exerciseIndex: index,
+                            onTap: () => notifier.toggleExpandedIndex(index),
+                            onDelete: () => notifier.removeExercise(index),
+                            onSetCountChanged: (count) =>
+                                notifier.updateSetCount(index, count),
+                            onSetChanged: (setIdx, updated) =>
+                                notifier.updateSet(index, setIdx, updated),
+                            leading: ReorderableDragStartListener(
+                              index: index,
+                              child: const Icon(
+                                Icons.drag_handle,
+                                color: Colors.grey,
+                                size: 20,
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
                   const SizedBox(height: 4),
                   PrimaryButton(
                     label: AppAssets.of(context)!.addExercise,

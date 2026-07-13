@@ -15,6 +15,7 @@ class ExerciseItem extends StatelessWidget {
     this.onDelete,
     this.onSetCountChanged,
     this.onSetChanged,
+    this.leading,
   });
 
   final MenuExercise menuExercise;
@@ -25,6 +26,7 @@ class ExerciseItem extends StatelessWidget {
   final VoidCallback? onDelete;
   final ValueChanged<int>? onSetCountChanged;
   final void Function(int setIndex, ExerciseSet updated)? onSetChanged;
+  final Widget? leading;
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +43,15 @@ class ExerciseItem extends StatelessWidget {
               padding: const EdgeInsets.all(12),
               child: Row(
                 children: [
+                  if (leading != null)
+                    GestureDetector(
+                      onTap: () {},
+                      behavior: HitTestBehavior.opaque,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: leading,
+                      ),
+                    ),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
