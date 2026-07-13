@@ -133,7 +133,9 @@ class WorkoutScreen extends HookConsumerWidget {
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              ...List.generate(exercise.sets.length, (setIndex) {
+                              ...List.generate(exercise.sets.length, (
+                                setIndex,
+                              ) {
                                 final set = exercise.sets[setIndex];
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 8),
@@ -151,11 +153,12 @@ class WorkoutScreen extends HookConsumerWidget {
                                           setIndex,
                                           w,
                                         ),
-                                    onRepsChanged: (r) => notifier.updateSetReps(
-                                      exerciseIndex,
-                                      setIndex,
-                                      r,
-                                    ),
+                                    onRepsChanged: (r) =>
+                                        notifier.updateSetReps(
+                                          exerciseIndex,
+                                          setIndex,
+                                          r,
+                                        ),
                                     onToggleCompleted: () {
                                       if (!set.isCompleted &&
                                           set.intervalSeconds > 0) {
@@ -239,7 +242,9 @@ class WorkoutScreen extends HookConsumerWidget {
                                   context: context,
                                   builder: (ctx) {
                                     return AlertDialog(
-                                      title: Text(AppAssets.of(ctx)!.saveFailed),
+                                      title: Text(
+                                        AppAssets.of(ctx)!.saveFailed,
+                                      ),
                                       content: Text('$e'),
                                       actions: [
                                         TextButton(
@@ -432,10 +437,13 @@ class _WorkoutSetRowState extends State<_WorkoutSetRow> {
               child: Text(
                 '${widget.setNumber}',
                 style: TextStyle(
-                  color: widget.isCurrent ? AppColors.purple : AppColors.monoWhite,
+                  color: widget.isCurrent
+                      ? AppColors.purple
+                      : AppColors.monoWhite,
                   fontSize: 14,
-                  fontWeight:
-                      widget.isCurrent ? FontWeight.w600 : FontWeight.normal,
+                  fontWeight: widget.isCurrent
+                      ? FontWeight.w600
+                      : FontWeight.normal,
                 ),
               ),
             ),

@@ -306,9 +306,7 @@ class _SetRowState extends State<_SetRow> {
                       }
                     },
                   )
-                : _ReadOnlyCell(
-                    text: '${widget.exerciseSet.intervalSeconds}',
-                  ),
+                : _ReadOnlyCell(text: '${widget.exerciseSet.intervalSeconds}'),
           ),
         ],
       ),

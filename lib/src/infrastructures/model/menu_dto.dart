@@ -86,9 +86,6 @@ class _ExerciseSetDto {
   final double weight;
   final int intervalSeconds;
 
-  ExerciseSet toDomain() => ExerciseSet(
-    reps: reps,
-    weight: weight,
-    intervalSeconds: intervalSeconds,
-  );
+  ExerciseSet toDomain() =>
+      ExerciseSet(reps: reps, weight: weight, intervalSeconds: intervalSeconds);
 }
