@@ -137,5 +137,9 @@
       "count": {"type": "int"}
     }
   },
-  "share": "シェア"
+  "share": "シェア",
+
+  "settingsTitle": "設定",
+  "helpTitle": "ヘルプ",
+  "profileDetailTitle": "プロフィール"
 }

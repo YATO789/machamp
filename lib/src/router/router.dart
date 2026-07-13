@@ -2,11 +2,14 @@ import 'package:go_router/go_router.dart';
 import 'package:machamp/src/core/extensions/string_extensions.dart';
 import 'package:machamp/src/infrastructures/repository/auth_repository.dart';
 import 'package:machamp/src/presentation/activity_log/activity_log_screen.dart';
+import 'package:machamp/src/presentation/help/help_screen.dart';
 import 'package:machamp/src/presentation/home/home_screen.dart';
 import 'package:machamp/src/presentation/login/login_screen.dart';
 import 'package:machamp/src/presentation/menu/menu_screen.dart';
 import 'package:machamp/src/presentation/menu_editor/menu_editor_screen.dart';
+import 'package:machamp/src/presentation/profile/profile_detail_screen.dart';
 import 'package:machamp/src/presentation/profile/profile_screen.dart';
+import 'package:machamp/src/presentation/settings/settings_screen.dart';
 import 'package:machamp/src/presentation/share_preview/share_preview_args.dart';
 import 'package:machamp/src/presentation/share_preview/share_preview_screen.dart';
 import 'package:machamp/src/presentation/workout/workout_screen.dart';
@@ -94,6 +97,20 @@ GoRouter router(Ref ref) {
                   key: state.pageKey,
                   child: const ProfileScreen(),
                 ),
+                routes: [
+                  GoRoute(
+                    path: 'profile_detail',
+                    builder: (context, state) => const ProfileDetailScreen(),
+                  ),
+                  GoRoute(
+                    path: 'settings',
+                    builder: (context, state) => const SettingsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'help',
+                    builder: (context, state) => const HelpScreen(),
+                  ),
+                ],
               ),
             ],
           ),
