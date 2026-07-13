@@ -7,8 +7,6 @@ class HomeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Center(
-      child: Text(AppAssets.of(context)!.homeTitle),
-    );
+    return Center(child: Text(AppAssets.of(context)!.homeTitle));
   }
 }

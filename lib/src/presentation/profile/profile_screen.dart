@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:machamp/src/infrastructures/repository/auth_repository.dart';
 import 'package:machamp/src/localization/app_assets.dart';
-import 'package:machamp/src/presentation/profile/profile_view_model.dart';
 
 class ProfileScreen extends HookConsumerWidget {
   const ProfileScreen({super.key});
@@ -10,7 +10,6 @@ class ProfileScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppAssets.of(context)!;
-    final notifier = ref.read(profileViewModelProvider.notifier);
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.profileTitle)),
@@ -35,7 +34,18 @@ class ProfileScreen extends HookConsumerWidget {
           ListTile(
             title: Text(l10n.signOut),
             textColor: Theme.of(context).colorScheme.error,
-            onTap: () async => notifier.signOut(),
+            onTap: () async {
+              try {
+                await ref.read(authRepositoryProvider).signOut();
+                if (context.mounted) context.go('/login');
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(e.toString())));
+                }
+              }
+            },
           ),
         ],
       ),

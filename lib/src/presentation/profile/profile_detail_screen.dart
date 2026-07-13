@@ -16,8 +16,11 @@ class ProfileDetailScreen extends HookConsumerWidget {
       body: user == null
           ? const SizedBox.shrink()
           : Center(
-            child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -29,7 +32,7 @@ class ProfileDetailScreen extends HookConsumerWidget {
                   ],
                 ),
               ),
-          ),
+            ),
     );
   }
 }
