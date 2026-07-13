@@ -200,6 +200,7 @@ class _SetRow extends StatefulWidget {
 class _SetRowState extends State<_SetRow> {
   late TextEditingController _repsController;
   late TextEditingController _weightController;
+  late TextEditingController _intervalController;
 
   @override
   void initState() {
@@ -209,6 +210,9 @@ class _SetRowState extends State<_SetRow> {
     );
     _weightController = TextEditingController(
       text: _formatWeight(widget.exerciseSet.weight),
+    );
+    _intervalController = TextEditingController(
+      text: widget.exerciseSet.intervalSeconds.toString(),
     );
   }
 
@@ -223,12 +227,17 @@ class _SetRowState extends State<_SetRow> {
     if (widget.exerciseSet.weight != currentWeight) {
       _weightController.text = _formatWeight(widget.exerciseSet.weight);
     }
+    final currentInterval = int.tryParse(_intervalController.text) ?? 0;
+    if (widget.exerciseSet.intervalSeconds != currentInterval) {
+      _intervalController.text = widget.exerciseSet.intervalSeconds.toString();
+    }
   }
 
   @override
   void dispose() {
     _repsController.dispose();
     _weightController.dispose();
+    _intervalController.dispose();
     super.dispose();
   }
 
@@ -280,6 +289,26 @@ class _SetRowState extends State<_SetRow> {
                     },
                   )
                 : _ReadOnlyCell(text: '${widget.exerciseSet.reps}'),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: isEditable
+                ? _NumberField(
+                    controller: _intervalController,
+                    onChanged: (v) {
+                      final interval = int.tryParse(v);
+                      if (interval != null) {
+                        widget.onChanged!(
+                          widget.exerciseSet.copyWith(
+                            intervalSeconds: interval,
+                          ),
+                        );
+                      }
+                    },
+                  )
+                : _ReadOnlyCell(
+                    text: '${widget.exerciseSet.intervalSeconds}',
+                  ),
           ),
         ],
       ),
@@ -375,6 +404,13 @@ class SetTableHeader extends StatelessWidget {
           Expanded(
             child: Text(
               'レップ数',
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              'インターバル(秒)',
               textAlign: TextAlign.center,
               style: TextStyle(color: Colors.white, fontSize: 12),
             ),

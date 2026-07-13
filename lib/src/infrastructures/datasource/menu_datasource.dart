@@ -18,7 +18,7 @@ class MenuDataSource {
     menu_exercises (
       exercise_order,
       exercises (id, name, user_id, equipments(name), exercise_body_parts(body_parts(name))),
-      menu_exercise_sets (set_order, reps, weight)
+      menu_exercise_sets (set_order, reps, weight, interval_seconds)
     )
   ''';
 

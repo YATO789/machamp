@@ -78,11 +78,17 @@ class _ExerciseSetDto {
   _ExerciseSetDto.fromMap(Map<String, dynamic> map)
     : setOrder = map['set_order'] as int,
       reps = map['reps'] as int,
-      weight = (map['weight'] as num).toDouble();
+      weight = (map['weight'] as num).toDouble(),
+      intervalSeconds = map['interval_seconds'] as int;
 
   final int setOrder;
   final int reps;
   final double weight;
+  final int intervalSeconds;
 
-  ExerciseSet toDomain() => ExerciseSet(reps: reps, weight: weight);
+  ExerciseSet toDomain() => ExerciseSet(
+    reps: reps,
+    weight: weight,
+    intervalSeconds: intervalSeconds,
+  );
 }

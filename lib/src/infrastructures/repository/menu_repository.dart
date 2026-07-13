@@ -54,7 +54,11 @@ class MenuRepository {
           (me) => {
             'exercise_id': me.exercise.id,
             'sets': me.sets
-                .map((s) => {'reps': s.reps, 'weight': s.weight})
+                .map((s) => {
+                  'reps': s.reps,
+                  'weight': s.weight,
+                  'interval_seconds': s.intervalSeconds,
+                })
                 .toList(),
           },
         )
