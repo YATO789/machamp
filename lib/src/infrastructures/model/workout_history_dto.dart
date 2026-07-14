@@ -56,11 +56,17 @@ class _WorkoutSetDto {
   _WorkoutSetDto.fromMap(Map<String, dynamic> map)
     : setOrder = map['set_order'] as int,
       reps = map['reps'] as int,
-      weight = (map['weight'] as num).toDouble();
+      weight = (map['weight'] as num).toDouble(),
+      intervalSeconds = (map['interval_seconds'] as int?) ?? 0;
 
   final int setOrder;
   final int reps;
   final double weight;
+  final int intervalSeconds;
 
-  WorkoutHistorySet toDomain() => WorkoutHistorySet(reps: reps, weight: weight);
+  WorkoutHistorySet toDomain() => WorkoutHistorySet(
+    reps: reps,
+    weight: weight,
+    intervalSeconds: intervalSeconds,
+  );
 }

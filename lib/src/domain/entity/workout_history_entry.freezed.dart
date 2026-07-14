@@ -555,7 +555,7 @@ as List<WorkoutHistorySet>,
 /// @nodoc
 mixin _$WorkoutHistorySet {
 
- int get reps; double get weight;
+ int get reps; double get weight; int get intervalSeconds;
 /// Create a copy of WorkoutHistorySet
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -566,16 +566,16 @@ $WorkoutHistorySetCopyWith<WorkoutHistorySet> get copyWith => _$WorkoutHistorySe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkoutHistorySet&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.weight, weight) || other.weight == weight));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkoutHistorySet&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.intervalSeconds, intervalSeconds) || other.intervalSeconds == intervalSeconds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,reps,weight);
+int get hashCode => Object.hash(runtimeType,reps,weight,intervalSeconds);
 
 @override
 String toString() {
-  return 'WorkoutHistorySet(reps: $reps, weight: $weight)';
+  return 'WorkoutHistorySet(reps: $reps, weight: $weight, intervalSeconds: $intervalSeconds)';
 }
 
 
@@ -586,7 +586,7 @@ abstract mixin class $WorkoutHistorySetCopyWith<$Res>  {
   factory $WorkoutHistorySetCopyWith(WorkoutHistorySet value, $Res Function(WorkoutHistorySet) _then) = _$WorkoutHistorySetCopyWithImpl;
 @useResult
 $Res call({
- int reps, double weight
+ int reps, double weight, int intervalSeconds
 });
 
 
@@ -603,11 +603,12 @@ class _$WorkoutHistorySetCopyWithImpl<$Res>
 
 /// Create a copy of WorkoutHistorySet
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? reps = null,Object? weight = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? reps = null,Object? weight = null,Object? intervalSeconds = null,}) {
   return _then(_self.copyWith(
 reps: null == reps ? _self.reps : reps // ignore: cast_nullable_to_non_nullable
 as int,weight: null == weight ? _self.weight : weight // ignore: cast_nullable_to_non_nullable
-as double,
+as double,intervalSeconds: null == intervalSeconds ? _self.intervalSeconds : intervalSeconds // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -692,10 +693,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int reps,  double weight)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int reps,  double weight,  int intervalSeconds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WorkoutHistorySet() when $default != null:
-return $default(_that.reps,_that.weight);case _:
+return $default(_that.reps,_that.weight,_that.intervalSeconds);case _:
   return orElse();
 
 }
@@ -713,10 +714,10 @@ return $default(_that.reps,_that.weight);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int reps,  double weight)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int reps,  double weight,  int intervalSeconds)  $default,) {final _that = this;
 switch (_that) {
 case _WorkoutHistorySet():
-return $default(_that.reps,_that.weight);case _:
+return $default(_that.reps,_that.weight,_that.intervalSeconds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -733,10 +734,10 @@ return $default(_that.reps,_that.weight);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int reps,  double weight)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int reps,  double weight,  int intervalSeconds)?  $default,) {final _that = this;
 switch (_that) {
 case _WorkoutHistorySet() when $default != null:
-return $default(_that.reps,_that.weight);case _:
+return $default(_that.reps,_that.weight,_that.intervalSeconds);case _:
   return null;
 
 }
@@ -748,11 +749,12 @@ return $default(_that.reps,_that.weight);case _:
 
 
 class _WorkoutHistorySet implements WorkoutHistorySet {
-  const _WorkoutHistorySet({required this.reps, required this.weight});
+  const _WorkoutHistorySet({required this.reps, required this.weight, required this.intervalSeconds});
   
 
 @override final  int reps;
 @override final  double weight;
+@override final  int intervalSeconds;
 
 /// Create a copy of WorkoutHistorySet
 /// with the given fields replaced by the non-null parameter values.
@@ -764,16 +766,16 @@ _$WorkoutHistorySetCopyWith<_WorkoutHistorySet> get copyWith => __$WorkoutHistor
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkoutHistorySet&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.weight, weight) || other.weight == weight));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkoutHistorySet&&(identical(other.reps, reps) || other.reps == reps)&&(identical(other.weight, weight) || other.weight == weight)&&(identical(other.intervalSeconds, intervalSeconds) || other.intervalSeconds == intervalSeconds));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,reps,weight);
+int get hashCode => Object.hash(runtimeType,reps,weight,intervalSeconds);
 
 @override
 String toString() {
-  return 'WorkoutHistorySet(reps: $reps, weight: $weight)';
+  return 'WorkoutHistorySet(reps: $reps, weight: $weight, intervalSeconds: $intervalSeconds)';
 }
 
 
@@ -784,7 +786,7 @@ abstract mixin class _$WorkoutHistorySetCopyWith<$Res> implements $WorkoutHistor
   factory _$WorkoutHistorySetCopyWith(_WorkoutHistorySet value, $Res Function(_WorkoutHistorySet) _then) = __$WorkoutHistorySetCopyWithImpl;
 @override @useResult
 $Res call({
- int reps, double weight
+ int reps, double weight, int intervalSeconds
 });
 
 
@@ -801,11 +803,12 @@ class __$WorkoutHistorySetCopyWithImpl<$Res>
 
 /// Create a copy of WorkoutHistorySet
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? reps = null,Object? weight = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? reps = null,Object? weight = null,Object? intervalSeconds = null,}) {
   return _then(_WorkoutHistorySet(
 reps: null == reps ? _self.reps : reps // ignore: cast_nullable_to_non_nullable
 as int,weight: null == weight ? _self.weight : weight // ignore: cast_nullable_to_non_nullable
-as double,
+as double,intervalSeconds: null == intervalSeconds ? _self.intervalSeconds : intervalSeconds // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
