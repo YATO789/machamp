@@ -14,6 +14,14 @@ import 'package:machamp/src/presentation/activity_log/widgets/calendar_bottom_sh
 
 DateTime _dateOnly(DateTime d) => DateTime(d.year, d.month, d.day);
 
+String _fmtInterval(int seconds) {
+  final m = seconds ~/ 60;
+  final s = seconds % 60;
+  return '$m:${s.toString().padLeft(2, '0')}';
+}
+
+String _fmtWeight(double w) => w % 1 == 0 ? '${w.toInt()}' : w.toString();
+
 class ActivityLogScreen extends HookConsumerWidget {
   const ActivityLogScreen({super.key});
 
@@ -226,91 +234,70 @@ class ActivityLogScreen extends HookConsumerWidget {
                       )
                     : ListView.builder(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                        itemCount: selectedWorkouts.fold<int>(
-                          0,
-                          (sum, w) => sum + 1 + w.exercises.length,
-                        ),
+                        itemCount: selectedWorkouts.length,
                         itemBuilder: (context, index) {
-                          var offset = 0;
-                          for (final workout in selectedWorkouts) {
-                            if (index == offset) {
-                              Future<void> confirmAndDelete() async {
-                                final confirmed = await showDialog<bool>(
-                                  context: context,
-                                  builder: (ctx) {
-                                    return AlertDialog(
-                                      title: Text(
-                                        AppAssets.of(ctx)!.deleteConfirmTitle(
-                                          workout.menuName ??
-                                              AppAssets.of(ctx)!.customWorkout,
-                                        ),
-                                      ),
-                                      content: Text(
-                                        AppAssets.of(ctx)!.irreversibleWarning,
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(ctx).pop(false),
-                                          child: Text(
-                                            AppAssets.of(ctx)!.cancel,
-                                          ),
-                                        ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(ctx).pop(true),
-                                          style: TextButton.styleFrom(
-                                            foregroundColor: Colors.red,
-                                          ),
-                                          child: Text(
-                                            AppAssets.of(ctx)!.delete,
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                                if (confirmed != true) return;
-                                try {
-                                  await ref
-                                      .read(workoutSessionRepositoryProvider)
-                                      .deleteWorkoutSession(workout.id);
-                                  ref.invalidate(
-                                    activityLogProvider(weekStart.value),
-                                  );
-                                } catch (e) {
-                                  if (context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                          AppAssets.of(context)!.deleteFailed,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                }
-                              }
+                          final workout = selectedWorkouts[index];
 
-                              return Padding(
-                                padding: const EdgeInsets.only(bottom: 12),
-                                child: _WorkoutCard(
-                                  entry: workout,
-                                  onDelete: () => unawaited(confirmAndDelete()),
-                                ),
+                          Future<void> confirmAndDelete() async {
+                            final confirmed = await showDialog<bool>(
+                              context: context,
+                              builder: (ctx) {
+                                return AlertDialog(
+                                  title: Text(
+                                    AppAssets.of(ctx)!.deleteConfirmTitle(
+                                      workout.menuName ??
+                                          AppAssets.of(ctx)!.customWorkout,
+                                    ),
+                                  ),
+                                  content: Text(
+                                    AppAssets.of(ctx)!.irreversibleWarning,
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(ctx).pop(false),
+                                      child: Text(AppAssets.of(ctx)!.cancel),
+                                    ),
+                                    TextButton(
+                                      onPressed: () =>
+                                          Navigator.of(ctx).pop(true),
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: Colors.red,
+                                      ),
+                                      child: Text(AppAssets.of(ctx)!.delete),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            if (confirmed != true) return;
+                            try {
+                              await ref
+                                  .read(workoutSessionRepositoryProvider)
+                                  .deleteWorkoutSession(workout.id);
+                              ref.invalidate(
+                                activityLogProvider(weekStart.value),
                               );
-                            }
-                            offset++;
-                            for (final exercise in workout.exercises) {
-                              if (index == offset) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
-                                  child: _ExerciseSection(exercise: exercise),
+                            } catch (e) {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      AppAssets.of(context)!.deleteFailed,
+                                    ),
+                                  ),
                                 );
                               }
-                              offset++;
                             }
                           }
-                          return const SizedBox.shrink();
+
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: _WorkoutCard(
+                              entry: workout,
+                              onDelete: () => unawaited(confirmAndDelete()),
+                            ),
+                          );
                         },
                       ),
               ),
@@ -347,21 +334,27 @@ class _WorkoutCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppAssets.of(context)!;
+    final timeStr = DateFormat('HH:mm').format(entry.startedAt);
+    final statsLine =
+        '${_fmtVolume(_volume)} kg  ·  ${l.setsCount(_totalSets)}  ·  ${l.minutesValue(_minutes)}';
+
     return Container(
       decoration: BoxDecoration(
         color: AppColors.darkSurface,
         borderRadius: BorderRadius.circular(16),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 8, 6),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
                   child: Text(
-                    entry.menuName ?? AppAssets.of(context)!.customWorkout,
+                    entry.menuName ?? l.customWorkout,
                     style: const TextStyle(
                       color: AppColors.monoWhite,
                       fontSize: 16,
@@ -369,271 +362,116 @@ class _WorkoutCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                Text(
+                  timeStr,
+                  style: const TextStyle(color: AppColors.grey, fontSize: 13),
+                ),
                 if (onDelete != null)
                   PopupMenuButton<String>(
                     onSelected: (value) {
                       if (value == 'delete') onDelete!();
                     },
                     itemBuilder: (_) => [
-                      PopupMenuItem(
-                        value: 'delete',
-                        child: Text(AppAssets.of(context)!.delete),
-                      ),
+                      PopupMenuItem(value: 'delete', child: Text(l.delete)),
                     ],
                   ),
               ],
             ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: _StatChip(
-                    value: '${_fmtVolume(_volume)} kg',
-                    label: AppAssets.of(context)!.volumeChipLabel,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _StatChip(
-                    value: AppAssets.of(context)!.setsCount(_totalSets),
-                    label: AppAssets.of(context)!.setsChipLabel,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: _StatChip(
-                    value: AppAssets.of(context)!.minutesValue(_minutes),
-                    label: AppAssets.of(context)!.timeChipLabel,
-                  ),
-                ),
-              ],
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: Text(
+              statsLine,
+              style: const TextStyle(color: AppColors.grey, fontSize: 13),
             ),
-          ],
-        ),
+          ),
+          ...entry.exercises.mapIndexed(
+            (i, exercise) =>
+                _ExerciseSection(exercise: exercise, isFirst: i == 0),
+          ),
+          const SizedBox(height: 14),
+        ],
       ),
     );
   }
 }
 
-class _StatChip extends StatelessWidget {
-  const _StatChip({required this.value, required this.label});
-  final String value;
-  final String label;
+class _ExerciseSection extends StatelessWidget {
+  const _ExerciseSection({required this.exercise, required this.isFirst});
+  final WorkoutHistoryExercise exercise;
+  final bool isFirst;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-      decoration: BoxDecoration(
-        color: AppColors.black,
-        borderRadius: BorderRadius.circular(10),
-      ),
+    final hasInterval = exercise.sets.any((s) => s.intervalSeconds > 0);
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(16, isFirst ? 0 : 14, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            value,
+            exercise.exerciseName,
             style: const TextStyle(
               color: AppColors.monoWhite,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 2),
-          Text(
-            label,
-            style: const TextStyle(color: AppColors.grey, fontSize: 11),
-          ),
+          const SizedBox(height: 6),
+          ...exercise.sets.asMap().entries.map((entry) {
+            final i = entry.key;
+            final set = entry.value;
+            final weightReps = '${_fmtWeight(set.weight)} kg × ${set.reps}';
+            final intervalStr = hasInterval && set.intervalSeconds > 0
+                ? '   ${_fmtInterval(set.intervalSeconds)}'
+                : '';
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 20,
+                    child: Text(
+                      '${i + 1}',
+                      style: const TextStyle(
+                        color: AppColors.grey,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    weightReps,
+                    style: const TextStyle(
+                      color: AppColors.monoWhite,
+                      fontSize: 14,
+                    ),
+                  ),
+                  if (intervalStr.isNotEmpty)
+                    Text(
+                      intervalStr,
+                      style: const TextStyle(
+                        color: AppColors.grey,
+                        fontSize: 13,
+                      ),
+                    ),
+                ],
+              ),
+            );
+          }),
         ],
       ),
     );
   }
 }
 
-class _ExerciseSection extends HookWidget {
-  const _ExerciseSection({required this.exercise});
-  final WorkoutHistoryExercise exercise;
-
-  @override
-  Widget build(BuildContext context) {
-    final isExpanded = useState(false);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.darkSurface,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () => isExpanded.value = !isExpanded.value,
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          exercise.exerciseName,
-                          style: const TextStyle(
-                            color: AppColors.monoWhite,
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          AppAssets.of(
-                            context,
-                          )!.setsCount(exercise.sets.length),
-                          style: const TextStyle(
-                            color: AppColors.grey,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  AnimatedRotation(
-                    turns: isExpanded.value ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: const Icon(
-                      Icons.keyboard_arrow_down,
-                      color: AppColors.grey,
-                      size: 22,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          ClipRect(
-            child: AnimatedSize(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-              alignment: Alignment.topCenter,
-              child: isExpanded.value
-                  ? Column(
-                      children: [
-                        Container(height: 1, color: const Color(0xFF2C2C2E)),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(12, 8, 12, 6),
-                          child: Row(
-                            children: [
-                              const SizedBox(
-                                width: 24,
-                                child: Text(
-                                  'No.',
-                                  style: TextStyle(
-                                    color: AppColors.grey,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    AppAssets.of(context)!.weightKgHeader,
-                                    style: const TextStyle(
-                                      color: AppColors.grey,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Center(
-                                  child: Text(
-                                    AppAssets.of(context)!.repsHeader,
-                                    style: const TextStyle(
-                                      color: AppColors.grey,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        ...exercise.sets.asMap().entries.map((entry) {
-                          final i = entry.key;
-                          final set = entry.value;
-                          return Padding(
-                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 24,
-                                  child: Text(
-                                    '${i + 1}',
-                                    style: const TextStyle(
-                                      color: AppColors.grey,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.black,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        set.weight % 1 == 0
-                                            ? '${set.weight.toInt()}'
-                                            : '${set.weight}',
-                                        style: const TextStyle(
-                                          color: AppColors.monoWhite,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 10,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: AppColors.black,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        '${set.reps}',
-                                        style: const TextStyle(
-                                          color: AppColors.monoWhite,
-                                          fontSize: 14,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }),
-                        const SizedBox(height: 4),
-                      ],
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          ),
-        ],
-      ),
-    );
+extension<T> on Iterable<T> {
+  Iterable<R> mapIndexed<R>(R Function(int index, T item) f) sync* {
+    var i = 0;
+    for (final item in this) {
+      yield f(i++, item);
+    }
   }
 }
