@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
+import 'package:machamp/src/presentation/activity_log/activity_log_view_model.dart';
 import 'package:machamp/src/presentation/workout/workout_view_model.dart';
 import 'package:machamp/src/router/router.dart';
 
@@ -234,6 +235,7 @@ class WorkoutScreen extends HookConsumerWidget {
                               isSaving.value = true;
                               try {
                                 await notifier.saveWorkout(menuId);
+                                ref.invalidate(activityLogProvider);
                               } catch (e, st) {
                                 debugPrint('saveWorkout error: $e\n$st');
                                 isSaving.value = false;
