@@ -89,6 +89,7 @@
   "weightHeader": "Weight",
   "weightKgHeader": "Weight (kg)",
   "repsHeader": "Reps",
+  "intervalHeader": "Rest",
 
   "calendarButton": "Calendar",
   "noWorkoutsOnDay": "No workouts on this day",

@@ -23,6 +23,9 @@ abstract class WorkoutHistoryExercise with _$WorkoutHistoryExercise {
 
 @freezed
 abstract class WorkoutHistorySet with _$WorkoutHistorySet {
-  const factory WorkoutHistorySet({required int reps, required double weight}) =
-      _WorkoutHistorySet;
+  const factory WorkoutHistorySet({
+    required int reps,
+    required double weight,
+    required int intervalSeconds,
+  }) = _WorkoutHistorySet;
 }

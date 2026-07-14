@@ -89,6 +89,7 @@
   "weightHeader": "重量",
   "weightKgHeader": "重量(kg)",
   "repsHeader": "レップ数",
+  "intervalHeader": "インターバル",
 
   "calendarButton": "カレンダー",
   "noWorkoutsOnDay": "この日はワークアウトがありません",
