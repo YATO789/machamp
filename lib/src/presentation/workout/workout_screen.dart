@@ -118,255 +118,261 @@ class WorkoutScreen extends HookConsumerWidget {
           onTap: () => FocusScope.of(context).unfocus(),
           behavior: HitTestBehavior.opaque,
           child: Stack(
-          children: [
-            Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: state.exercises.length,
-                    itemBuilder: (context, exerciseIndex) {
-                      final exercise = state.exercises[exerciseIndex];
-                      return Opacity(
-                        opacity: exercise.isCompleted ? 0.5 : 1.0,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 24),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      exercise.exercise.name,
-                                      style: const TextStyle(
-                                        color: AppColors.monoWhite,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w600,
+            children: [
+              Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: state.exercises.length,
+                      itemBuilder: (context, exerciseIndex) {
+                        final exercise = state.exercises[exerciseIndex];
+                        return Opacity(
+                          opacity: exercise.isCompleted ? 0.5 : 1.0,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 24),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        exercise.exercise.name,
+                                        style: const TextStyle(
+                                          color: AppColors.monoWhite,
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Container(
-                                decoration: BoxDecoration(
-                                  //color: AppColors.darkSurface,
-                                  borderRadius: BorderRadius.circular(10),
+                                  ],
                                 ),
-                                child: Column(
-                                  children: List.generate(
-                                    exercise.sets.length,
-                                    (setIndex) {
-                                      final set = exercise.sets[setIndex];
-                                      return _WorkoutSetRow(
-                                        key: ValueKey(
-                                          '$exerciseIndex-$setIndex',
-                                        ),
-                                        setNumber: setIndex + 1,
-                                        isCurrent: false,
-                                        initialWeight: set.weight,
-                                        initialReps: set.reps,
-                                        isCompleted: set.isCompleted,
-                                        isIntervalActive: isIntervalActive,
-                                        onWeightChanged: (w) =>
-                                            notifier.updateSetWeight(
+                                const SizedBox(height: 8),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    //color: AppColors.darkSurface,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Column(
+                                    children: List.generate(
+                                      exercise.sets.length,
+                                      (setIndex) {
+                                        final set = exercise.sets[setIndex];
+                                        return _WorkoutSetRow(
+                                          key: ValueKey(
+                                            '$exerciseIndex-$setIndex',
+                                          ),
+                                          setNumber: setIndex + 1,
+                                          isCurrent: false,
+                                          initialWeight: set.weight,
+                                          initialReps: set.reps,
+                                          isCompleted: set.isCompleted,
+                                          isIntervalActive: isIntervalActive,
+                                          onWeightChanged: (w) =>
+                                              notifier.updateSetWeight(
+                                                exerciseIndex,
+                                                setIndex,
+                                                w,
+                                              ),
+                                          onRepsChanged: (r) =>
+                                              notifier.updateSetReps(
+                                                exerciseIndex,
+                                                setIndex,
+                                                r,
+                                              ),
+                                          onToggleCompleted: () {
+                                            if (!set.isCompleted &&
+                                                set.intervalSeconds > 0) {
+                                              startIntervalTimer(
+                                                set.intervalSeconds,
+                                              );
+                                            }
+                                            notifier.toggleSetCompleted(
                                               exerciseIndex,
                                               setIndex,
-                                              w,
-                                            ),
-                                        onRepsChanged: (r) =>
-                                            notifier.updateSetReps(
-                                              exerciseIndex,
-                                              setIndex,
-                                              r,
-                                            ),
-                                        onToggleCompleted: () {
-                                          if (!set.isCompleted &&
-                                              set.intervalSeconds > 0) {
-                                            startIntervalTimer(
-                                              set.intervalSeconds,
                                             );
-                                          }
-                                          notifier.toggleSetCompleted(
-                                            exerciseIndex,
-                                            setIndex,
-                                          );
-                                        },
-                                      );
-                                    },
+                                          },
+                                        );
+                                      },
+                                    ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap: exercise.sets.length > 1
-                                          ? () => notifier.removeSet(
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: exercise.sets.length > 1
+                                            ? () => notifier.removeSet(
                                                 exerciseIndex,
                                               )
-                                          : null,
-                                      child: Text(
-                                        '-セット消去',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: exercise.sets.length > 1
-                                              ? AppColors.monoWhite
-                                              : AppColors.monoWhite.withValues(alpha: 0.3),
-                                          fontSize: 14,
+                                            : null,
+                                        child: Text(
+                                          '-セット消去',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: exercise.sets.length > 1
+                                                ? AppColors.monoWhite
+                                                : AppColors.monoWhite
+                                                      .withValues(alpha: 0.3),
+                                            fontSize: 14,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: GestureDetector(
-                                      onTap: exercise.sets.length < 10
-                                          ? () => notifier.addSet(exerciseIndex)
-                                          : null,
-                                      child: Text(
-                                        '+セット追加',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          color: exercise.sets.length < 10
-                                              ? AppColors.monoWhite
-                                              : AppColors.monoWhite.withValues(alpha: 0.3),
-                                          fontSize: 14,
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: exercise.sets.length < 10
+                                            ? () =>
+                                                  notifier.addSet(exerciseIndex)
+                                            : null,
+                                        child: Text(
+                                          '+セット追加',
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: exercise.sets.length < 10
+                                                ? AppColors.monoWhite
+                                                : AppColors.monoWhite
+                                                      .withValues(alpha: 0.3),
+                                            fontSize: 14,
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
-                ),
-                SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                    child: PrimaryButton(
-                      label: isSaving.value
-                          ? AppAssets.of(context)!.saving
-                          : AppAssets.of(context)!.end,
-                      onPressed: isSaving.value
-                          ? null
-                          : () async {
-                              final hasIncomplete = state.exercises.any(
-                                (ex) => ex.sets.any((s) => !s.isCompleted),
-                              );
-                              final confirmed = await showDialog<bool>(
-                                context: context,
-                                builder: (ctx) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      AppAssets.of(ctx)!.endWorkoutTitle,
-                                    ),
-                                    content: hasIncomplete
-                                        ? Text(
-                                            AppAssets.of(
-                                              ctx,
-                                            )!.uncheckedSetsWarning,
-                                          )
-                                        : null,
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(ctx).pop(false),
-                                        child: Text(AppAssets.of(ctx)!.cancel),
-                                      ),
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.of(ctx).pop(true),
-                                        child: Text(AppAssets.of(ctx)!.end),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                              if (confirmed != true || !context.mounted) return;
-
-                              final anyCompleted = state.exercises.any(
-                                (ex) => ex.sets.any((s) => s.isCompleted),
-                              );
-                              if (!anyCompleted) {
-                                context.go(AppRoutes.home.path);
-                                return;
-                              }
-
-                              isSaving.value = true;
-                              try {
-                                await notifier.saveWorkout(menuId);
-                                ref.invalidate(activityLogProvider);
-                              } catch (e, st) {
-                                debugPrint('saveWorkout error: $e\n$st');
-                                isSaving.value = false;
-                                if (!context.mounted) return;
-                                await showDialog<void>(
+                  SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                      child: PrimaryButton(
+                        label: isSaving.value
+                            ? AppAssets.of(context)!.saving
+                            : AppAssets.of(context)!.end,
+                        onPressed: isSaving.value
+                            ? null
+                            : () async {
+                                final hasIncomplete = state.exercises.any(
+                                  (ex) => ex.sets.any((s) => !s.isCompleted),
+                                );
+                                final confirmed = await showDialog<bool>(
                                   context: context,
                                   builder: (ctx) {
                                     return AlertDialog(
                                       title: Text(
-                                        AppAssets.of(ctx)!.saveFailed,
+                                        AppAssets.of(ctx)!.endWorkoutTitle,
                                       ),
-                                      content: Text('$e'),
+                                      content: hasIncomplete
+                                          ? Text(
+                                              AppAssets.of(
+                                                ctx,
+                                              )!.uncheckedSetsWarning,
+                                            )
+                                          : null,
                                       actions: [
                                         TextButton(
                                           onPressed: () =>
-                                              Navigator.of(ctx).pop(),
-                                          child: Text(AppAssets.of(ctx)!.ok),
+                                              Navigator.of(ctx).pop(false),
+                                          child: Text(
+                                            AppAssets.of(ctx)!.cancel,
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(ctx).pop(true),
+                                          child: Text(AppAssets.of(ctx)!.end),
                                         ),
                                       ],
                                     );
                                   },
                                 );
-                                return;
-                              }
-                              isSaving.value = false;
+                                if (confirmed != true || !context.mounted)
+                                  return;
 
-                              if (!context.mounted) return;
-                              final savedState = ref.read(
-                                workoutViewModelProvider(menuId),
-                              );
-                              final hasCompleted = savedState.exercises.any(
-                                (ex) => ex.sets.any((s) => s.isCompleted),
-                              );
-                              if (hasCompleted) {
-                                await context.push(
-                                  '/menu/$menuId/workout/summary',
-                                  extra: savedState,
+                                final anyCompleted = state.exercises.any(
+                                  (ex) => ex.sets.any((s) => s.isCompleted),
                                 );
-                              } else {
-                                context.go('/home');
-                              }
-                            },
+                                if (!anyCompleted) {
+                                  context.go(AppRoutes.home.path);
+                                  return;
+                                }
+
+                                isSaving.value = true;
+                                try {
+                                  await notifier.saveWorkout(menuId);
+                                  ref.invalidate(activityLogProvider);
+                                } catch (e, st) {
+                                  debugPrint('saveWorkout error: $e\n$st');
+                                  isSaving.value = false;
+                                  if (!context.mounted) return;
+                                  await showDialog<void>(
+                                    context: context,
+                                    builder: (ctx) {
+                                      return AlertDialog(
+                                        title: Text(
+                                          AppAssets.of(ctx)!.saveFailed,
+                                        ),
+                                        content: Text('$e'),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.of(ctx).pop(),
+                                            child: Text(AppAssets.of(ctx)!.ok),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                  return;
+                                }
+                                isSaving.value = false;
+
+                                if (!context.mounted) return;
+                                final savedState = ref.read(
+                                  workoutViewModelProvider(menuId),
+                                );
+                                final hasCompleted = savedState.exercises.any(
+                                  (ex) => ex.sets.any((s) => s.isCompleted),
+                                );
+                                if (hasCompleted) {
+                                  await context.push(
+                                    '/menu/$menuId/workout/summary',
+                                    extra: savedState,
+                                  );
+                                } else {
+                                  context.go('/home');
+                                }
+                              },
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: AnimatedSlide(
-                offset: isIntervalActive ? Offset.zero : const Offset(0, 1),
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-                child: _IntervalTimerBar(
-                  remaining: intervalRemaining.value ?? 0,
-                  total: intervalTotal.value,
-                  onDismiss: dismissTimer,
-                  onAdjust: adjustIntervalTimer,
+                ],
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: AnimatedSlide(
+                  offset: isIntervalActive ? Offset.zero : const Offset(0, 1),
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                  child: _IntervalTimerBar(
+                    remaining: intervalRemaining.value ?? 0,
+                    total: intervalTotal.value,
+                    onDismiss: dismissTimer,
+                    onAdjust: adjustIntervalTimer,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
         ),
       ),
     );
@@ -419,10 +425,7 @@ class _IntervalTimerBar extends StatelessWidget {
                     onPressed: () => onAdjust(-10),
                     child: const Text(
                       '-10秒',
-                      style: TextStyle(
-                        color: AppColors.grey,
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(color: AppColors.grey, fontSize: 16),
                     ),
                   ),
                   Expanded(
@@ -442,10 +445,7 @@ class _IntervalTimerBar extends StatelessWidget {
                     onPressed: () => onAdjust(10),
                     child: const Text(
                       '+10秒',
-                      style: TextStyle(
-                        color: AppColors.grey,
-                        fontSize: 16,
-                      ),
+                      style: TextStyle(color: AppColors.grey, fontSize: 16),
                     ),
                   ),
                 ],
@@ -630,41 +630,38 @@ class _NumberInputField extends StatelessWidget {
           ),
         ),
         child: TextField(
-        controller: controller,
-        textAlign: TextAlign.center,
-        style: const TextStyle(color: AppColors.monoWhite, fontSize: 14),
-        keyboardType: allowDecimal
-            ? const TextInputType.numberWithOptions(decimal: true)
-            : TextInputType.number,
-        inputFormatters: [
-          if (allowDecimal)
-            FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))
-          else
-            FilteringTextInputFormatter.digitsOnly,
-        ],
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: AppColors.white10,
-          contentPadding: const EdgeInsets.symmetric(vertical: 8),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(6),
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(6),
-            borderSide: const BorderSide(
-              color: AppColors.purple,
-              width: 1.5,
+          controller: controller,
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: AppColors.monoWhite, fontSize: 14),
+          keyboardType: allowDecimal
+              ? const TextInputType.numberWithOptions(decimal: true)
+              : TextInputType.number,
+          inputFormatters: [
+            if (allowDecimal)
+              FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))
+            else
+              FilteringTextInputFormatter.digitsOnly,
+          ],
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: AppColors.white10,
+            contentPadding: const EdgeInsets.symmetric(vertical: 8),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: const BorderSide(color: AppColors.purple, width: 1.5),
             ),
           ),
-        ),
-        onTap: () {
-          controller.selection = TextSelection(
-            baseOffset: 0,
-            extentOffset: controller.text.length,
-          );
-        },
-        onChanged: onChanged,
+          onTap: () {
+            controller.selection = TextSelection(
+              baseOffset: 0,
+              extentOffset: controller.text.length,
+            );
+          },
+          onChanged: onChanged,
         ),
       ),
     );
