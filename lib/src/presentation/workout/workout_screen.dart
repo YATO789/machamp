@@ -648,6 +648,12 @@ class _NumberInputField extends StatelessWidget {
             ),
           ),
         ),
+        onTap: () {
+          controller.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: controller.text.length,
+          );
+        },
         onChanged: onChanged,
       ),
     );
