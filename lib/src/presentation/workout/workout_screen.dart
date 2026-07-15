@@ -640,6 +640,13 @@ class _NumberInputField extends StatelessWidget {
             borderRadius: BorderRadius.circular(6),
             borderSide: BorderSide.none,
           ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(6),
+            borderSide: const BorderSide(
+              color: AppColors.purple,
+              width: 1.5,
+            ),
+          ),
         ),
         onChanged: onChanged,
       ),
