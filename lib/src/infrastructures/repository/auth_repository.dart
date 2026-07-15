@@ -29,6 +29,13 @@ class AuthRepository {
     return AppUser(id: user.id, isAnonymous: user.isAnonymous);
   }
 
+  Future<AppUser> signInWithGoogle() async {
+    final response = await _dataSource.signInWithGoogle();
+    final user = response.user;
+    if (user == null) throw Exception('signInWithGoogle: user is null');
+    return AppUser(id: user.id, isAnonymous: user.isAnonymous);
+  }
+
   AppUser? currentUser() {
     final user = _dataSource.currentUser();
     if (user == null) return null;

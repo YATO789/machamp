@@ -23,4 +23,13 @@ class LoginViewModel extends _$LoginViewModel {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  Future<void> signInWithGoogle() async {
+    state = state.copyWith(isLoading: true);
+    try {
+      await ref.read(authRepositoryProvider).signInWithGoogle();
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
 }

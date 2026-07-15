@@ -1,3 +1,4 @@
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:machamp/src/infrastructures/provider/supabase_client_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -15,6 +16,21 @@ class AuthDataSource {
 
   Future<AuthResponse> signInAnonymously() {
     return _client.auth.signInAnonymously();
+  }
+
+  Future<AuthResponse> signInWithGoogle() async {
+    final account = await GoogleSignIn.instance.authenticate();
+    final idToken = account.authentication.idToken;
+    if (idToken == null) {
+      throw const GoogleSignInException(
+        code: GoogleSignInExceptionCode.unknownError,
+        description: 'signInWithGoogle: idToken is null',
+      );
+    }
+    return _client.auth.signInWithIdToken(
+      provider: OAuthProvider.google,
+      idToken: idToken,
+    );
   }
 
   User? currentUser() {

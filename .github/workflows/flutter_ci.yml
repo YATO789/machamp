@@ -24,6 +24,8 @@ jobs:
         run: |
           echo "SUPABASE_URL_DEV=${{ secrets.SUPABASE_URL_DEV }}" >> .env
           echo "SUPABASE_PUBLISHABLE_KEY_DEV=${{ secrets.SUPABASE_PUBLISHABLE_KEY_DEV }}" >> .env
+          echo "IOS_CLIENT_ID_DEV=${{ secrets.IOS_CLIENT_ID_DEV }}" >> .env
+          echo "WEB_CLIENT_ID_DEV=${{ secrets.WEB_CLIENT_ID_DEV }}" >> .env
 
       - name: Install dependencies
         run: flutter pub get
