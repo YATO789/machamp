@@ -64,6 +64,18 @@ class WorkoutScreen extends HookConsumerWidget {
       intervalRemaining.value = null;
     }
 
+    void adjustIntervalTimer(int delta) {
+      final rem = intervalRemaining.value;
+      if (rem == null) return;
+      final newRem = rem + delta;
+      if (newRem <= 0) {
+        dismissTimer();
+        return;
+      }
+      intervalRemaining.value = newRem;
+      intervalTotal.value = intervalTotal.value + delta;
+    }
+
     String formatElapsed(Duration d) {
       final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
       final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
@@ -346,6 +358,7 @@ class WorkoutScreen extends HookConsumerWidget {
                   remaining: intervalRemaining.value ?? 0,
                   total: intervalTotal.value,
                   onDismiss: dismissTimer,
+                  onAdjust: adjustIntervalTimer,
                 ),
               ),
             ),
@@ -361,11 +374,13 @@ class _IntervalTimerBar extends StatelessWidget {
     required this.remaining,
     required this.total,
     required this.onDismiss,
+    required this.onAdjust,
   });
 
   final int remaining;
   final int total;
   final VoidCallback onDismiss;
+  final void Function(int delta) onAdjust;
 
   @override
   Widget build(BuildContext context) {
@@ -378,25 +393,56 @@ class _IntervalTimerBar extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 8, 16),
+          padding: const EdgeInsets.fromLTRB(16, 8, 8, 16),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    '$m:$s',
-                    style: const TextStyle(
-                      color: AppColors.monoWhite,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
-                      fontFeatures: [FontFeature.tabularFigures()],
-                    ),
-                  ),
-                  const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.close, color: AppColors.grey),
                     onPressed: onDismiss,
+                    iconSize: 20,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  TextButton(
+                    onPressed: () => onAdjust(-10),
+                    child: const Text(
+                      '-10秒',
+                      style: TextStyle(
+                        color: AppColors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        '$m:$s',
+                        style: const TextStyle(
+                          color: AppColors.monoWhite,
+                          fontSize: 36,
+                          fontWeight: FontWeight.w700,
+                          fontFeatures: [FontFeature.tabularFigures()],
+                        ),
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => onAdjust(10),
+                    child: const Text(
+                      '+10秒',
+                      style: TextStyle(
+                        color: AppColors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
                   ),
                 ],
               ),
