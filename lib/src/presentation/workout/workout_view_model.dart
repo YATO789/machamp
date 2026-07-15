@@ -94,6 +94,32 @@ class WorkoutViewModel extends _$WorkoutViewModel {
     state = state.copyWith(exercises: exercises);
   }
 
+  void addSet(int exerciseIndex) {
+    final exercises = [...state.exercises];
+    final exercise = exercises[exerciseIndex];
+    if (exercise.sets.length >= 10) return;
+    final last = exercise.sets.last;
+    final sets = List<WorkoutSetState>.from(exercise.sets)
+      ..add(
+        WorkoutSetState(
+          weight: last.weight,
+          reps: last.reps,
+          intervalSeconds: last.intervalSeconds,
+        ),
+      );
+    exercises[exerciseIndex] = exercise.copyWith(sets: sets);
+    state = state.copyWith(exercises: exercises);
+  }
+
+  void removeSet(int exerciseIndex) {
+    final exercises = [...state.exercises];
+    final exercise = exercises[exerciseIndex];
+    if (exercise.sets.length <= 1) return;
+    final sets = List<WorkoutSetState>.from(exercise.sets)..removeLast();
+    exercises[exerciseIndex] = exercise.copyWith(sets: sets);
+    state = state.copyWith(exercises: exercises);
+  }
+
   void toggleExerciseCompleted(int exerciseIndex) {
     final exercises = [...state.exercises];
     exercises[exerciseIndex] = exercises[exerciseIndex].copyWith(
