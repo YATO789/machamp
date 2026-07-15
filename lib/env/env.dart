@@ -28,4 +28,10 @@ final class Env {
   //   Flavor.dev => _supabaseAnonKeyDev,
   //   Flavor.prod => _supabaseAnonKeyProd,
   // };
+
+  @EnviedField(varName: 'IOS_CLIENT_ID_DEV')
+  static final String iosClientIdDev = _Env.iosClientIdDev;
+
+  @EnviedField(varName: 'WEB_CLIENT_ID_DEV')
+  static final String webClientIdDev = _Env.webClientIdDev;
 }

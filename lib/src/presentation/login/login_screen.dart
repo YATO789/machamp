@@ -23,17 +23,39 @@ class LoginScreen extends HookConsumerWidget {
       }
     }
 
+    Future<void> signInWithGoogle() async {
+      try {
+        await notifier.signInWithGoogle();
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(AppAssets.of(context)!.loginFailed(e))),
+          );
+        }
+      }
+    }
+
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          onPressed: state.isLoading ? null : signInAnonymously,
-          child: state.isLoading
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : Text(AppAssets.of(context)!.signInAnonymously),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ElevatedButton(
+              onPressed: state.isLoading ? null : signInWithGoogle,
+              child: Text(AppAssets.of(context)!.signInWithGoogle),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: state.isLoading ? null : signInAnonymously,
+              child: state.isLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : Text(AppAssets.of(context)!.signInAnonymously),
+            ),
+          ],
         ),
       ),
     );

@@ -23,6 +23,7 @@
   "signOut": "Sign Out",
 
   "signInAnonymously": "Continue Anonymously",
+  "signInWithGoogle": "Sign in with Google",
   "loginFailed": "Login failed: {error}",
   "@loginFailed": {
     "placeholders": {

@@ -23,6 +23,7 @@
   "signOut": "ログアウト",
 
   "signInAnonymously": "匿名でログイン",
+  "signInWithGoogle": "Googleでログイン",
   "loginFailed": "ログインに失敗しました: {error}",
   "@loginFailed": {
     "placeholders": {

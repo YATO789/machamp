@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/env/env.dart';
 import 'package:machamp/src/core/constants/app_theme.dart';
@@ -10,6 +11,10 @@ Future<void> main() async {
   await Supabase.initialize(
     url: Env.supabaseUrlDev,
     publishableKey: Env.supabasePublishableDev,
+  );
+  await GoogleSignIn.instance.initialize(
+    clientId: Env.iosClientIdDev,
+    serverClientId: Env.webClientIdDev,
   );
   runApp(const ProviderScope(child: MyApp()));
 }
