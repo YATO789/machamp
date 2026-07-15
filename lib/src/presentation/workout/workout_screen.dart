@@ -114,7 +114,10 @@ class WorkoutScreen extends HookConsumerWidget {
             ),
           ],
         ),
-        body: Stack(
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          behavior: HitTestBehavior.opaque,
+          child: Stack(
           children: [
             Column(
               children: [
@@ -363,6 +366,7 @@ class WorkoutScreen extends HookConsumerWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );
@@ -619,7 +623,13 @@ class _NumberInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 60,
-      child: TextField(
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          textSelectionTheme: const TextSelectionThemeData(
+            selectionColor: Colors.transparent,
+          ),
+        ),
+        child: TextField(
         controller: controller,
         textAlign: TextAlign.center,
         style: const TextStyle(color: AppColors.monoWhite, fontSize: 14),
@@ -655,6 +665,7 @@ class _NumberInputField extends StatelessWidget {
           );
         },
         onChanged: onChanged,
+        ),
       ),
     );
   }
