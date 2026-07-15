@@ -293,8 +293,9 @@ class WorkoutScreen extends HookConsumerWidget {
                                     );
                                   },
                                 );
-                                if (confirmed != true || !context.mounted)
+                                if (confirmed != true || !context.mounted) {
                                   return;
+                                }
 
                                 final anyCompleted = state.exercises.any(
                                   (ex) => ex.sets.any((s) => s.isCompleted),
