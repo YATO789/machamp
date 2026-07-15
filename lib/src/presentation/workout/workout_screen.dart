@@ -134,45 +134,55 @@ class WorkoutScreen extends HookConsumerWidget {
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              ...List.generate(exercise.sets.length, (
-                                setIndex,
-                              ) {
-                                final set = exercise.sets[setIndex];
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 8),
-                                  child: _WorkoutSetRow(
-                                    key: ValueKey('$exerciseIndex-$setIndex'),
-                                    setNumber: setIndex + 1,
-                                    isCurrent: false,
-                                    initialWeight: set.weight,
-                                    initialReps: set.reps,
-                                    isCompleted: set.isCompleted,
-                                    isIntervalActive: isIntervalActive,
-                                    onWeightChanged: (w) =>
-                                        notifier.updateSetWeight(
-                                          exerciseIndex,
-                                          setIndex,
-                                          w,
+                              Container(
+                                decoration: BoxDecoration(
+                                 // color: AppColors.darkSurface,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  children: List.generate(
+                                    exercise.sets.length,
+                                    (setIndex) {
+                                      final set = exercise.sets[setIndex];
+                                      return _WorkoutSetRow(
+                                        key: ValueKey(
+                                          '$exerciseIndex-$setIndex',
                                         ),
-                                    onRepsChanged: (r) =>
-                                        notifier.updateSetReps(
-                                          exerciseIndex,
-                                          setIndex,
-                                          r,
-                                        ),
-                                    onToggleCompleted: () {
-                                      if (!set.isCompleted &&
-                                          set.intervalSeconds > 0) {
-                                        startIntervalTimer(set.intervalSeconds);
-                                      }
-                                      notifier.toggleSetCompleted(
-                                        exerciseIndex,
-                                        setIndex,
+                                        setNumber: setIndex + 1,
+                                        isCurrent: false,
+                                        initialWeight: set.weight,
+                                        initialReps: set.reps,
+                                        isCompleted: set.isCompleted,
+                                        isIntervalActive: isIntervalActive,
+                                        onWeightChanged: (w) =>
+                                            notifier.updateSetWeight(
+                                              exerciseIndex,
+                                              setIndex,
+                                              w,
+                                            ),
+                                        onRepsChanged: (r) =>
+                                            notifier.updateSetReps(
+                                              exerciseIndex,
+                                              setIndex,
+                                              r,
+                                            ),
+                                        onToggleCompleted: () {
+                                          if (!set.isCompleted &&
+                                              set.intervalSeconds > 0) {
+                                            startIntervalTimer(
+                                              set.intervalSeconds,
+                                            );
+                                          }
+                                          notifier.toggleSetCompleted(
+                                            exerciseIndex,
+                                            setIndex,
+                                          );
+                                        },
                                       );
                                     },
                                   ),
-                                );
-                              }),
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -426,12 +436,8 @@ class _WorkoutSetRowState extends State<_WorkoutSetRow> {
   Widget build(BuildContext context) {
     return Opacity(
       opacity: widget.isCompleted ? 0.5 : 1.0,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        decoration: BoxDecoration(
-          color: AppColors.darkSurface,
-          borderRadius: BorderRadius.circular(10),
-        ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         child: Row(
           children: [
             SizedBox(
@@ -461,11 +467,6 @@ class _WorkoutSetRowState extends State<_WorkoutSetRow> {
             const SizedBox(width: 6),
             const Text(
               'kg',
-              style: TextStyle(color: AppColors.grey, fontSize: 13),
-            ),
-            const SizedBox(width: 8),
-            const Text(
-              '×',
               style: TextStyle(color: AppColors.grey, fontSize: 13),
             ),
             const SizedBox(width: 8),
