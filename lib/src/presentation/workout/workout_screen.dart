@@ -136,7 +136,7 @@ class WorkoutScreen extends HookConsumerWidget {
                               const SizedBox(height: 8),
                               Container(
                                 decoration: BoxDecoration(
-                                 // color: AppColors.darkSurface,
+                                  //color: AppColors.darkSurface,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Column(
@@ -182,6 +182,47 @@ class WorkoutScreen extends HookConsumerWidget {
                                     },
                                   ),
                                 ),
+                              ),
+                              const SizedBox(height: 8),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: exercise.sets.length > 1
+                                          ? () => notifier.removeSet(
+                                                exerciseIndex,
+                                              )
+                                          : null,
+                                      child: Text(
+                                        '-セット消去',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: exercise.sets.length > 1
+                                              ? AppColors.monoWhite
+                                              : AppColors.monoWhite.withValues(alpha: 0.3),
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: exercise.sets.length < 10
+                                          ? () => notifier.addSet(exerciseIndex)
+                                          : null,
+                                      child: Text(
+                                        '+セット追加',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: exercise.sets.length < 10
+                                              ? AppColors.monoWhite
+                                              : AppColors.monoWhite.withValues(alpha: 0.3),
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
