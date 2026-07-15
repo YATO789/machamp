@@ -19,9 +19,9 @@ class LoginScreen extends HookConsumerWidget {
         await notifier.signInAnonymously();
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.loginFailed(e))),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.loginFailed(e))));
         }
       }
     }
@@ -31,9 +31,9 @@ class LoginScreen extends HookConsumerWidget {
         await notifier.signInWithGoogle();
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.loginFailed(e))),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.loginFailed(e))));
         }
       }
     }
@@ -70,7 +70,8 @@ class LoginScreen extends HookConsumerWidget {
                           const SizedBox(height: 20),
                           Text(
                             'Machamp',
-                            style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                            style: Theme.of(context).textTheme.displaySmall
+                                ?.copyWith(
                                   color: AppColors.monoWhite,
                                   fontWeight: FontWeight.w700,
                                   letterSpacing: -0.5,
@@ -89,7 +90,9 @@ class LoginScreen extends HookConsumerWidget {
                           width: double.infinity,
                           height: 52,
                           child: ElevatedButton(
-                            onPressed: state.isLoading ? null : signInWithGoogle,
+                            onPressed: state.isLoading
+                                ? null
+                                : signInWithGoogle,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.white,
                               foregroundColor: const Color(0xFF1F1F1F),
@@ -137,9 +140,7 @@ class LoginScreen extends HookConsumerWidget {
                 child: ColoredBox(
                   color: const Color(0x80000000),
                   child: const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.purple,
-                    ),
+                    child: CircularProgressIndicator(color: AppColors.purple),
                   ),
                 ),
               ),
