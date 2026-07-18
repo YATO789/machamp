@@ -112,13 +112,13 @@ class ExerciseItem extends StatelessWidget {
                             count: menuExercise.sets.length,
                             onDecrement: menuExercise.sets.length > 1
                                 ? () => onSetCountChanged?.call(
-                                      menuExercise.sets.length - 1,
-                                    )
+                                    menuExercise.sets.length - 1,
+                                  )
                                 : null,
                             onIncrement: menuExercise.sets.length < 10
                                 ? () => onSetCountChanged?.call(
-                                      menuExercise.sets.length + 1,
-                                    )
+                                    menuExercise.sets.length + 1,
+                                  )
                                 : null,
                           ),
                         ],

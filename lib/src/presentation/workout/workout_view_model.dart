@@ -127,9 +127,7 @@ class WorkoutViewModel extends _$WorkoutViewModel {
         sets: [const WorkoutSetState(weight: 0, reps: 10)],
       ),
     );
-    state = state.copyWith(
-      exercises: [...state.exercises, ...newExercises],
-    );
+    state = state.copyWith(exercises: [...state.exercises, ...newExercises]);
   }
 
   void toggleExerciseCompleted(int exerciseIndex) {

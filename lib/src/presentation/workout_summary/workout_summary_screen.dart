@@ -210,7 +210,9 @@ class WorkoutSummaryScreen extends HookConsumerWidget {
                           value: shouldReflect.value,
                           onChanged: (v) => shouldReflect.value = v,
                           activeThumbColor: AppColors.purple,
-                          activeTrackColor: AppColors.purple.withValues(alpha: 0.5),
+                          activeTrackColor: AppColors.purple.withValues(
+                            alpha: 0.5,
+                          ),
                         ),
                       ],
                     ),
@@ -246,8 +248,8 @@ class WorkoutSummaryScreen extends HookConsumerWidget {
                             : () async {
                                 if (shouldReflect.value) {
                                   isReflecting.value = true;
-                                  final menuExercises =
-                                      workoutState.exercises.map((ex) {
+                                  final menuExercises = workoutState.exercises
+                                      .map((ex) {
                                         final completedSets = ex.sets
                                             .where((s) => s.isCompleted)
                                             .toList();
@@ -268,7 +270,8 @@ class WorkoutSummaryScreen extends HookConsumerWidget {
                                               )
                                               .toList(),
                                         );
-                                      }).toList();
+                                      })
+                                      .toList();
                                   await ref
                                       .read(menuRepositoryProvider)
                                       .updateMenu(

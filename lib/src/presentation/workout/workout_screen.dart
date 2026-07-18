@@ -177,12 +177,11 @@ class WorkoutScreen extends HookConsumerWidget {
                                       count: exercise.sets.length,
                                       onDecrement: exercise.sets.length > 1
                                           ? () => notifier.removeSet(
-                                                exerciseIndex,
-                                              )
+                                              exerciseIndex,
+                                            )
                                           : null,
                                       onIncrement: exercise.sets.length < 10
-                                          ? () =>
-                                                notifier.addSet(exerciseIndex)
+                                          ? () => notifier.addSet(exerciseIndex)
                                           : null,
                                     ),
                                   ],
