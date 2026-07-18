@@ -4,19 +4,32 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
+import 'package:machamp/src/domain/entity/exercise_set.dart';
+import 'package:machamp/src/domain/entity/menu_exercise.dart';
+import 'package:machamp/src/infrastructures/repository/menu_repository.dart';
 import 'package:machamp/src/localization/app_assets.dart';
+import 'package:machamp/src/presentation/menu/menu_view_model.dart';
 import 'package:machamp/src/presentation/share_preview/share_preview_args.dart';
 import 'package:machamp/src/presentation/workout/workout_view_model.dart';
 
-class WorkoutSummaryScreen extends HookWidget {
-  const WorkoutSummaryScreen({super.key, required this.workoutState});
+class WorkoutSummaryScreen extends HookConsumerWidget {
+  const WorkoutSummaryScreen({
+    super.key,
+    required this.workoutState,
+    required this.menuId,
+  });
 
   final WorkoutState workoutState;
+  final String menuId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final shouldReflect = useState(true);
+    final isReflecting = useState(false);
+
     final completedExercises = workoutState.exercises
         .map(
           (ex) =>
@@ -181,6 +194,27 @@ class WorkoutSummaryScreen extends HookWidget {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                 child: Column(
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            AppAssets.of(context)!.reflectToMenu,
+                            style: const TextStyle(
+                              color: AppColors.monoWhite,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                        Switch(
+                          value: shouldReflect.value,
+                          onChanged: (v) => shouldReflect.value = v,
+                          activeThumbColor: AppColors.purple,
+                          activeTrackColor: AppColors.purple.withValues(alpha: 0.5),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
                     SizedBox(
                       width: double.infinity,
                       height: 52,
@@ -207,21 +241,69 @@ class WorkoutSummaryScreen extends HookWidget {
                       width: double.infinity,
                       height: 52,
                       child: ElevatedButton(
-                        onPressed: () => context.go('/home'),
+                        onPressed: isReflecting.value
+                            ? null
+                            : () async {
+                                if (shouldReflect.value) {
+                                  isReflecting.value = true;
+                                  final menuExercises =
+                                      workoutState.exercises.map((ex) {
+                                        final completedSets = ex.sets
+                                            .where((s) => s.isCompleted)
+                                            .toList();
+                                        final setsToUse =
+                                            completedSets.isNotEmpty
+                                            ? completedSets
+                                            : ex.sets;
+                                        return MenuExercise(
+                                          exercise: ex.exercise,
+                                          sets: setsToUse
+                                              .map(
+                                                (s) => ExerciseSet(
+                                                  weight: s.weight,
+                                                  reps: s.reps,
+                                                  intervalSeconds:
+                                                      s.intervalSeconds,
+                                                ),
+                                              )
+                                              .toList(),
+                                        );
+                                      }).toList();
+                                  await ref
+                                      .read(menuRepositoryProvider)
+                                      .updateMenu(
+                                        id: menuId,
+                                        name: workoutState.menuName,
+                                        exercises: menuExercises,
+                                      );
+                                  ref.invalidate(menuViewModelProvider);
+                                  isReflecting.value = false;
+                                }
+                                if (context.mounted) context.go('/home');
+                              },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.darkSurface,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(14),
                           ),
                         ),
-                        child: Text(
-                          AppAssets.of(context)!.close,
-                          style: const TextStyle(
-                            color: AppColors.monoWhite,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        child: isReflecting.value
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: AppColors.monoWhite,
+                                ),
+                              )
+                            : Text(
+                                AppAssets.of(context)!.close,
+                                style: const TextStyle(
+                                  color: AppColors.monoWhite,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                       ),
                     ),
                   ],
