@@ -8,7 +8,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
+import 'package:machamp/src/presentation/00_components/set_count_control.dart';
 import 'package:machamp/src/presentation/activity_log/activity_log_view_model.dart';
+import 'package:machamp/src/presentation/menu_editor/exercise_selection/exercise_selection_sheet.dart';
 import 'package:machamp/src/presentation/workout/workout_view_model.dart';
 import 'package:machamp/src/router/router.dart';
 
@@ -124,8 +126,30 @@ class WorkoutScreen extends HookConsumerWidget {
                   Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.all(16),
-                      itemCount: state.exercises.length,
+                      itemCount: state.exercises.length + 1,
                       itemBuilder: (context, exerciseIndex) {
+                        if (exerciseIndex == state.exercises.length) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: PrimaryButton(
+                              label: AppAssets.of(context)!.addExercise,
+                              onPressed: () {
+                                unawaited(
+                                  showModalBottomSheet<void>(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (_) => ExerciseSelectionSheet(
+                                      onAdd: notifier.addExercises,
+                                    ),
+                                  ),
+                                );
+                              },
+                              variant: PrimaryButtonVariant.ghost,
+                              icon: Icons.add,
+                            ),
+                          );
+                        }
                         final exercise = state.exercises[exerciseIndex];
                         return Opacity(
                           opacity: exercise.isCompleted ? 0.5 : 1.0,
@@ -144,7 +168,21 @@ class WorkoutScreen extends HookConsumerWidget {
                                           fontSize: 17,
                                           fontWeight: FontWeight.w600,
                                         ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    SetCountControl(
+                                      count: exercise.sets.length,
+                                      onDecrement: exercise.sets.length > 1
+                                          ? () => notifier.removeSet(
+                                              exerciseIndex,
+                                            )
+                                          : null,
+                                      onIncrement: exercise.sets.length < 10
+                                          ? () => notifier.addSet(exerciseIndex)
+                                          : null,
                                     ),
                                   ],
                                 ),
@@ -197,50 +235,6 @@ class WorkoutScreen extends HookConsumerWidget {
                                       },
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: exercise.sets.length > 1
-                                            ? () => notifier.removeSet(
-                                                exerciseIndex,
-                                              )
-                                            : null,
-                                        child: Text(
-                                          '-セット消去',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: exercise.sets.length > 1
-                                                ? AppColors.monoWhite
-                                                : AppColors.monoWhite
-                                                      .withValues(alpha: 0.3),
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: exercise.sets.length < 10
-                                            ? () =>
-                                                  notifier.addSet(exerciseIndex)
-                                            : null,
-                                        child: Text(
-                                          '+セット追加',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: exercise.sets.length < 10
-                                                ? AppColors.monoWhite
-                                                : AppColors.monoWhite
-                                                      .withValues(alpha: 0.3),
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
                                 ),
                               ],
                             ),

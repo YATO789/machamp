@@ -143,5 +143,6 @@
 
   "settingsTitle": "Settings",
   "helpTitle": "Help",
-  "profileDetailTitle": "Profile"
+  "profileDetailTitle": "Profile",
+  "reflectToMenu": "Reflect this workout to menu"
 }

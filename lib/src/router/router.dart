@@ -134,6 +134,7 @@ GoRouter router(Ref ref) {
                 path: 'summary',
                 builder: (context, state) => WorkoutSummaryScreen(
                   workoutState: state.extra! as WorkoutState,
+                  menuId: state.pathParameters['id']!,
                 ),
                 routes: [
                   GoRoute(

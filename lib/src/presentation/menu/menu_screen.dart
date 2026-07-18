@@ -14,7 +14,41 @@ class MenuScreen extends HookConsumerWidget {
     final menusAsync = ref.watch(menuViewModelProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(AppAssets.of(context)!.menuTitle)),
+      appBar: AppBar(
+        title: Text(AppAssets.of(context)!.menuTitle),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: GestureDetector(
+              onTap: () => context.push('/menu/create'),
+              child: Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.lerp(Colors.white, AppColors.purple, 0.35)!,
+                      AppColors.purple,
+                      Color.lerp(Colors.black, AppColors.purple, 0.65)!,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColors.purple.withValues(alpha: 0.45),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: const Icon(Icons.add, color: AppColors.white, size: 22),
+              ),
+            ),
+          ),
+        ],
+      ),
       body: menusAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, __) => Center(
@@ -43,13 +77,6 @@ class MenuScreen extends HookConsumerWidget {
                   );
                 },
               ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/menu/create'),
-        backgroundColor: AppColors.purple,
-        foregroundColor: AppColors.white,
-        icon: const Icon(Icons.add),
-        label: Text(AppAssets.of(context)!.createNew),
       ),
     );
   }

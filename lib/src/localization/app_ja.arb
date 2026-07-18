@@ -143,5 +143,6 @@
 
   "settingsTitle": "設定",
   "helpTitle": "ヘルプ",
-  "profileDetailTitle": "プロフィール"
+  "profileDetailTitle": "プロフィール",
+  "reflectToMenu": "今回の記録をメニューに反映する"
 }
