@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/domain/entity/exercise_set.dart';
 import 'package:machamp/src/domain/entity/menu_exercise.dart';
+import 'package:machamp/src/presentation/00_components/set_count_control.dart';
 
 class ExerciseItem extends StatelessWidget {
   const ExerciseItem({
@@ -107,28 +108,18 @@ class ExerciseItem extends StatelessWidget {
                             style: TextStyle(color: Colors.white, fontSize: 13),
                           ),
                           const Spacer(),
-                          _CounterButton(
-                            icon: Icons.remove,
-                            onPressed: () => onSetCountChanged?.call(
-                              menuExercise.sets.length - 1,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              '${menuExercise.sets.length}',
-                              style: const TextStyle(
-                                color: AppColors.monoWhite,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          _CounterButton(
-                            icon: Icons.add,
-                            onPressed: () => onSetCountChanged?.call(
-                              menuExercise.sets.length + 1,
-                            ),
+                          SetCountControl(
+                            count: menuExercise.sets.length,
+                            onDecrement: menuExercise.sets.length > 1
+                                ? () => onSetCountChanged?.call(
+                                      menuExercise.sets.length - 1,
+                                    )
+                                : null,
+                            onIncrement: menuExercise.sets.length < 10
+                                ? () => onSetCountChanged?.call(
+                                      menuExercise.sets.length + 1,
+                                    )
+                                : null,
                           ),
                         ],
                       ),
@@ -153,29 +144,6 @@ class ExerciseItem extends StatelessWidget {
             ],
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _CounterButton extends StatelessWidget {
-  const _CounterButton({required this.icon, required this.onPressed});
-
-  final IconData icon;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        width: 28,
-        height: 28,
-        decoration: BoxDecoration(
-          color: Colors.white10,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Icon(icon, color: AppColors.monoWhite, size: 18),
       ),
     );
   }

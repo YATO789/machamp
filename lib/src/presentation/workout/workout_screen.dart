@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:machamp/src/core/constants/app_color.dart';
 import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
+import 'package:machamp/src/presentation/00_components/set_count_control.dart';
 import 'package:machamp/src/presentation/activity_log/activity_log_view_model.dart';
 import 'package:machamp/src/presentation/workout/workout_view_model.dart';
 import 'package:machamp/src/router/router.dart';
@@ -144,7 +145,22 @@ class WorkoutScreen extends HookConsumerWidget {
                                           fontSize: 17,
                                           fontWeight: FontWeight.w600,
                                         ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    SetCountControl(
+                                      count: exercise.sets.length,
+                                      onDecrement: exercise.sets.length > 1
+                                          ? () => notifier.removeSet(
+                                                exerciseIndex,
+                                              )
+                                          : null,
+                                      onIncrement: exercise.sets.length < 10
+                                          ? () =>
+                                                notifier.addSet(exerciseIndex)
+                                          : null,
                                     ),
                                   ],
                                 ),
@@ -197,50 +213,6 @@ class WorkoutScreen extends HookConsumerWidget {
                                       },
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: exercise.sets.length > 1
-                                            ? () => notifier.removeSet(
-                                                exerciseIndex,
-                                              )
-                                            : null,
-                                        child: Text(
-                                          '-セット消去',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: exercise.sets.length > 1
-                                                ? AppColors.monoWhite
-                                                : AppColors.monoWhite
-                                                      .withValues(alpha: 0.3),
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: exercise.sets.length < 10
-                                            ? () =>
-                                                  notifier.addSet(exerciseIndex)
-                                            : null,
-                                        child: Text(
-                                          '+セット追加',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            color: exercise.sets.length < 10
-                                                ? AppColors.monoWhite
-                                                : AppColors.monoWhite
-                                                      .withValues(alpha: 0.3),
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
                                 ),
                               ],
                             ),
