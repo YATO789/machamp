@@ -10,6 +10,7 @@ import 'package:machamp/src/localization/app_assets.dart';
 import 'package:machamp/src/presentation/00_components/primary_button.dart';
 import 'package:machamp/src/presentation/00_components/set_count_control.dart';
 import 'package:machamp/src/presentation/activity_log/activity_log_view_model.dart';
+import 'package:machamp/src/presentation/menu_editor/exercise_selection/exercise_selection_sheet.dart';
 import 'package:machamp/src/presentation/workout/workout_view_model.dart';
 import 'package:machamp/src/router/router.dart';
 
@@ -125,8 +126,30 @@ class WorkoutScreen extends HookConsumerWidget {
                   Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.all(16),
-                      itemCount: state.exercises.length,
+                      itemCount: state.exercises.length + 1,
                       itemBuilder: (context, exerciseIndex) {
+                        if (exerciseIndex == state.exercises.length) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: PrimaryButton(
+                              label: AppAssets.of(context)!.addExercise,
+                              onPressed: () {
+                                unawaited(
+                                  showModalBottomSheet<void>(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (_) => ExerciseSelectionSheet(
+                                      onAdd: notifier.addExercises,
+                                    ),
+                                  ),
+                                );
+                              },
+                              variant: PrimaryButtonVariant.ghost,
+                              icon: Icons.add,
+                            ),
+                          );
+                        }
                         final exercise = state.exercises[exerciseIndex];
                         return Opacity(
                           opacity: exercise.isCompleted ? 0.5 : 1.0,

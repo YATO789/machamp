@@ -120,6 +120,18 @@ class WorkoutViewModel extends _$WorkoutViewModel {
     state = state.copyWith(exercises: exercises);
   }
 
+  void addExercises(List<Exercise> exercises) {
+    final newExercises = exercises.map(
+      (e) => WorkoutExerciseState(
+        exercise: e,
+        sets: [const WorkoutSetState(weight: 0, reps: 10)],
+      ),
+    );
+    state = state.copyWith(
+      exercises: [...state.exercises, ...newExercises],
+    );
+  }
+
   void toggleExerciseCompleted(int exerciseIndex) {
     final exercises = [...state.exercises];
     exercises[exerciseIndex] = exercises[exerciseIndex].copyWith(
