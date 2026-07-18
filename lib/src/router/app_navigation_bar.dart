@@ -10,6 +10,7 @@ class AppNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBody: true,
       body: navigationShell,
       bottomNavigationBar: _FloatingNavBar(
         selectedIndex: navigationShell.currentIndex,
@@ -24,7 +25,7 @@ class AppNavigationBar extends StatelessWidget {
   }
 }
 
-class _FloatingNavBar extends StatelessWidget {
+class _FloatingNavBar extends StatefulWidget {
   const _FloatingNavBar({
     required this.selectedIndex,
     required this.onDestinationSelected,
@@ -34,11 +35,27 @@ class _FloatingNavBar extends StatelessWidget {
   final ValueChanged<int> onDestinationSelected;
 
   static const _items = [
-    (icon: Icons.home_outlined, activeIcon: Icons.home, label: 'Home'),
+    (icon: Icons.home, activeIcon: Icons.home, label: 'Home'),
     (icon: Icons.list_outlined, activeIcon: Icons.list, label: 'Menu'),
     (icon: Icons.history_outlined, activeIcon: Icons.history, label: 'Log'),
-    (icon: Icons.person_outline, activeIcon: Icons.person, label: 'Profile'),
+    (icon: Icons.person, activeIcon: Icons.person, label: 'Profile'),
   ];
+
+  @override
+  State<_FloatingNavBar> createState() => _FloatingNavBarState();
+}
+
+class _FloatingNavBarState extends State<_FloatingNavBar> {
+  double? _dragLeft;
+
+  void _onDragEnd(double itemWidth) {
+    final index = (_dragLeft! / itemWidth).round().clamp(
+      0,
+      _FloatingNavBar._items.length - 1,
+    );
+    setState(() => _dragLeft = null);
+    widget.onDestinationSelected(index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,19 +81,71 @@ class _FloatingNavBar extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: List.generate(_items.length, (index) {
-            final item = _items[index];
-            final isSelected = index == selectedIndex;
-            return _NavItem(
-              icon: item.icon,
-              activeIcon: item.activeIcon,
-              label: item.label,
-              isSelected: isSelected,
-              onTap: () => onDestinationSelected(index),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final itemWidth =
+                constraints.maxWidth / _FloatingNavBar._items.length;
+            final maxLeft = constraints.maxWidth - itemWidth;
+            final pillLeft = _dragLeft ?? itemWidth * widget.selectedIndex;
+            final isDragging = _dragLeft != null;
+
+            return GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onHorizontalDragStart: (_) {
+                setState(() => _dragLeft = itemWidth * widget.selectedIndex);
+              },
+              onHorizontalDragUpdate: (details) {
+                setState(
+                  () => _dragLeft = (_dragLeft! + details.delta.dx).clamp(
+                    0.0,
+                    maxLeft,
+                  ),
+                );
+              },
+              onHorizontalDragEnd: (_) => _onDragEnd(itemWidth),
+              onHorizontalDragCancel: () => setState(() => _dragLeft = null),
+              child: Stack(
+                children: [
+                  AnimatedPositioned(
+                    duration: isDragging
+                        ? Duration.zero
+                        : const Duration(milliseconds: 200),
+                    curve: Curves.easeOut,
+                    left: pillLeft,
+                    top: 4,
+                    bottom: 4,
+                    width: itemWidth,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: AppColors.white10,
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: List.generate(_FloatingNavBar._items.length, (
+                      index,
+                    ) {
+                      final item = _FloatingNavBar._items[index];
+                      final isSelected = index == widget.selectedIndex;
+                      return Expanded(
+                        child: _NavItem(
+                          icon: item.icon,
+                          activeIcon: item.activeIcon,
+                          label: item.label,
+                          isSelected: isSelected,
+                          onTap: () => widget.onDestinationSelected(index),
+                        ),
+                      );
+                    }),
+                  ),
+                ],
+              ),
             );
-          }),
+          },
         ),
       ),
     );
@@ -100,16 +169,14 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isSelected ? AppColors.purple : AppColors.monoWhite;
+    const color = AppColors.monoWhite;
 
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: SizedBox.expand(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(isSelected ? activeIcon : icon, color: color, size: 26),
             const SizedBox(height: 2),
