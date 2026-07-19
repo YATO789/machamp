@@ -36,6 +36,13 @@ class AuthRepository {
     return AppUser(id: user.id, isAnonymous: user.isAnonymous);
   }
 
+  Future<AppUser> linkGoogleIdentity() async {
+    final response = await _dataSource.linkGoogleIdentity();
+    final user = response.user;
+    if (user == null) throw Exception('linkGoogleIdentity: user is null');
+    return AppUser(id: user.id, isAnonymous: user.isAnonymous);
+  }
+
   AppUser? currentUser() {
     final user = _dataSource.currentUser();
     if (user == null) return null;

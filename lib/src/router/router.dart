@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:machamp/src/core/extensions/string_extensions.dart';
 import 'package:machamp/src/infrastructures/repository/auth_repository.dart';
+import 'package:machamp/src/presentation/account_link/account_link_screen.dart';
 import 'package:machamp/src/presentation/activity_log/activity_log_screen.dart';
 import 'package:machamp/src/presentation/help/help_screen.dart';
 import 'package:machamp/src/presentation/home/home_screen.dart';
@@ -105,6 +106,12 @@ GoRouter router(Ref ref) {
                   GoRoute(
                     path: 'settings',
                     builder: (context, state) => const SettingsScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'account_link',
+                        builder: (context, state) => const AccountLinkScreen(),
+                      ),
+                    ],
                   ),
                   GoRoute(
                     path: 'help',
