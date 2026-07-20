@@ -86,6 +86,13 @@ class WorkoutScreen extends HookConsumerWidget {
     }
 
     final isIntervalActive = intervalRemaining.value != null;
+    // Captured once (before the keyboard can appear) so the end button's
+    // padding doesn't shift when Android hides the nav bar behind the
+    // keyboard and briefly reports a smaller viewPadding.bottom.
+    final bottomSafePadding = useMemoized(
+      () => MediaQuery.of(context).padding.bottom,
+      const [],
+    );
 
     return PopScope(
       canPop: false,
@@ -247,111 +254,112 @@ class WorkoutScreen extends HookConsumerWidget {
                         },
                       ),
                     ),
-                    SafeArea(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                        child: PrimaryButton(
-                          label: isSaving.value
-                              ? AppAssets.of(context)!.saving
-                              : AppAssets.of(context)!.end,
-                          onPressed: isSaving.value
-                              ? null
-                              : () async {
-                                  final hasIncomplete = state.exercises.any(
-                                    (ex) => ex.sets.any((s) => !s.isCompleted),
-                                  );
-                                  final confirmed = await showDialog<bool>(
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        16,
+                        8,
+                        16,
+                        16 + bottomSafePadding,
+                      ),
+                      child: PrimaryButton(
+                        label: isSaving.value
+                            ? AppAssets.of(context)!.saving
+                            : AppAssets.of(context)!.end,
+                        onPressed: isSaving.value
+                            ? null
+                            : () async {
+                                final hasIncomplete = state.exercises.any(
+                                  (ex) => ex.sets.any((s) => !s.isCompleted),
+                                );
+                                final confirmed = await showDialog<bool>(
+                                  context: context,
+                                  builder: (ctx) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        AppAssets.of(ctx)!.endWorkoutTitle,
+                                      ),
+                                      content: hasIncomplete
+                                          ? Text(
+                                              AppAssets.of(
+                                                ctx,
+                                              )!.uncheckedSetsWarning,
+                                            )
+                                          : null,
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(ctx).pop(false),
+                                          child: Text(
+                                            AppAssets.of(ctx)!.cancel,
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(ctx).pop(true),
+                                          child: Text(AppAssets.of(ctx)!.end),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                                if (confirmed != true || !context.mounted) {
+                                  return;
+                                }
+
+                                final anyCompleted = state.exercises.any(
+                                  (ex) => ex.sets.any((s) => s.isCompleted),
+                                );
+                                if (!anyCompleted) {
+                                  context.go(AppRoutes.home.path);
+                                  return;
+                                }
+
+                                isSaving.value = true;
+                                try {
+                                  await notifier.saveWorkout(menuId);
+                                  ref.invalidate(activityLogProvider);
+                                } catch (e, st) {
+                                  debugPrint('saveWorkout error: $e\n$st');
+                                  isSaving.value = false;
+                                  if (!context.mounted) return;
+                                  await showDialog<void>(
                                     context: context,
                                     builder: (ctx) {
                                       return AlertDialog(
                                         title: Text(
-                                          AppAssets.of(ctx)!.endWorkoutTitle,
+                                          AppAssets.of(ctx)!.saveFailed,
                                         ),
-                                        content: hasIncomplete
-                                            ? Text(
-                                                AppAssets.of(
-                                                  ctx,
-                                                )!.uncheckedSetsWarning,
-                                              )
-                                            : null,
+                                        content: Text('$e'),
                                         actions: [
                                           TextButton(
                                             onPressed: () =>
-                                                Navigator.of(ctx).pop(false),
-                                            child: Text(
-                                              AppAssets.of(ctx)!.cancel,
-                                            ),
-                                          ),
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.of(ctx).pop(true),
-                                            child: Text(AppAssets.of(ctx)!.end),
+                                                Navigator.of(ctx).pop(),
+                                            child: Text(AppAssets.of(ctx)!.ok),
                                           ),
                                         ],
                                       );
                                     },
                                   );
-                                  if (confirmed != true || !context.mounted) {
-                                    return;
-                                  }
+                                  return;
+                                }
+                                isSaving.value = false;
 
-                                  final anyCompleted = state.exercises.any(
-                                    (ex) => ex.sets.any((s) => s.isCompleted),
+                                if (!context.mounted) return;
+                                final savedState = ref.read(
+                                  workoutViewModelProvider(menuId),
+                                );
+                                final hasCompleted = savedState.exercises.any(
+                                  (ex) => ex.sets.any((s) => s.isCompleted),
+                                );
+                                if (hasCompleted) {
+                                  await context.push(
+                                    '/menu/$menuId/workout/summary',
+                                    extra: savedState,
                                   );
-                                  if (!anyCompleted) {
-                                    context.go(AppRoutes.home.path);
-                                    return;
-                                  }
-
-                                  isSaving.value = true;
-                                  try {
-                                    await notifier.saveWorkout(menuId);
-                                    ref.invalidate(activityLogProvider);
-                                  } catch (e, st) {
-                                    debugPrint('saveWorkout error: $e\n$st');
-                                    isSaving.value = false;
-                                    if (!context.mounted) return;
-                                    await showDialog<void>(
-                                      context: context,
-                                      builder: (ctx) {
-                                        return AlertDialog(
-                                          title: Text(
-                                            AppAssets.of(ctx)!.saveFailed,
-                                          ),
-                                          content: Text('$e'),
-                                          actions: [
-                                            TextButton(
-                                              onPressed: () =>
-                                                  Navigator.of(ctx).pop(),
-                                              child: Text(
-                                                AppAssets.of(ctx)!.ok,
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    );
-                                    return;
-                                  }
-                                  isSaving.value = false;
-
-                                  if (!context.mounted) return;
-                                  final savedState = ref.read(
-                                    workoutViewModelProvider(menuId),
-                                  );
-                                  final hasCompleted = savedState.exercises.any(
-                                    (ex) => ex.sets.any((s) => s.isCompleted),
-                                  );
-                                  if (hasCompleted) {
-                                    await context.push(
-                                      '/menu/$menuId/workout/summary',
-                                      extra: savedState,
-                                    );
-                                  } else {
-                                    context.go('/home');
-                                  }
-                                },
-                        ),
+                                } else {
+                                  context.go('/home');
+                                }
+                              },
                       ),
                     ),
                   ],
