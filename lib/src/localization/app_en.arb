@@ -5,6 +5,7 @@
   "delete": "Delete",
   "ok": "OK",
   "close": "Close",
+  "done": "Done",
   "end": "End",
   "irreversibleWarning": "This action cannot be undone.",
   "deleteFailed": "Failed to delete",
