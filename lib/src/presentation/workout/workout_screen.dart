@@ -129,258 +129,347 @@ class WorkoutScreen extends HookConsumerWidget {
           onTap: () => FocusScope.of(context).unfocus(),
           behavior: HitTestBehavior.opaque,
           child: KeyboardDoneBar(
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.all(16),
-                        itemCount: state.exercises.length + 1,
-                        itemBuilder: (context, exerciseIndex) {
-                          if (exerciseIndex == state.exercises.length) {
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 8),
-                              child: PrimaryButton(
-                                label: AppAssets.of(context)!.addExercise,
-                                onPressed: () {
-                                  unawaited(
-                                    showModalBottomSheet<void>(
-                                      context: context,
-                                      isScrollControlled: true,
-                                      backgroundColor: Colors.transparent,
-                                      builder: (_) => ExerciseSelectionSheet(
-                                        onAdd: notifier.addExercises,
-                                      ),
-                                    ),
-                                  );
-                                },
-                                variant: PrimaryButtonVariant.ghost,
-                                icon: Icons.add,
-                              ),
-                            );
-                          }
-                          final exercise = state.exercises[exerciseIndex];
-                          return Opacity(
-                            opacity: exercise.isCompleted ? 0.5 : 1.0,
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 24),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          exercise.exercise.name,
-                                          style: const TextStyle(
-                                            color: AppColors.monoWhite,
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w600,
+            child: Builder(
+              builder: (context) {
+                final fixedHeight =
+                    MediaQuery.of(context).size.height -
+                    (Scaffold.of(context).appBarMaxHeight ?? 0);
+                final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+                return SizedBox(
+                  height: fixedHeight,
+                  child: Stack(
+                    children: [
+                      SizedBox(
+                        height: fixedHeight - keyboardHeight,
+                        child: SingleChildScrollView(
+                          child: SizedBox(
+                            height: fixedHeight,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: ListView.builder(
+                                    padding: const EdgeInsets.all(16),
+                                    itemCount: state.exercises.length + 1,
+                                    itemBuilder: (context, exerciseIndex) {
+                                      if (exerciseIndex ==
+                                          state.exercises.length) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: 8,
                                           ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      SetCountControl(
-                                        count: exercise.sets.length,
-                                        onDecrement: exercise.sets.length > 1
-                                            ? () => notifier.removeSet(
-                                                exerciseIndex,
-                                              )
-                                            : null,
-                                        onIncrement: exercise.sets.length < 10
-                                            ? () =>
-                                                  notifier.addSet(exerciseIndex)
-                                            : null,
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Container(
-                                    decoration: BoxDecoration(
-                                      //color: AppColors.darkSurface,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Column(
-                                      children: List.generate(
-                                        exercise.sets.length,
-                                        (setIndex) {
-                                          final set = exercise.sets[setIndex];
-                                          return _WorkoutSetRow(
-                                            key: ValueKey(
-                                              '$exerciseIndex-$setIndex',
-                                            ),
-                                            setNumber: setIndex + 1,
-                                            isCurrent: false,
-                                            initialWeight: set.weight,
-                                            initialReps: set.reps,
-                                            isCompleted: set.isCompleted,
-                                            isIntervalActive: isIntervalActive,
-                                            onWeightChanged: (w) =>
-                                                notifier.updateSetWeight(
-                                                  exerciseIndex,
-                                                  setIndex,
-                                                  w,
+                                          child: PrimaryButton(
+                                            label: AppAssets.of(
+                                              context,
+                                            )!.addExercise,
+                                            onPressed: () {
+                                              unawaited(
+                                                showModalBottomSheet<void>(
+                                                  context: context,
+                                                  isScrollControlled: true,
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  builder: (_) =>
+                                                      ExerciseSelectionSheet(
+                                                        onAdd: notifier
+                                                            .addExercises,
+                                                      ),
                                                 ),
-                                            onRepsChanged: (r) =>
-                                                notifier.updateSetReps(
-                                                  exerciseIndex,
-                                                  setIndex,
-                                                  r,
-                                                ),
-                                            onToggleCompleted: () {
-                                              if (!set.isCompleted &&
-                                                  set.intervalSeconds > 0) {
-                                                startIntervalTimer(
-                                                  set.intervalSeconds,
-                                                );
-                                              }
-                                              notifier.toggleSetCompleted(
-                                                exerciseIndex,
-                                                setIndex,
                                               );
                                             },
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        16,
-                        8,
-                        16,
-                        16 + bottomSafePadding,
-                      ),
-                      child: PrimaryButton(
-                        label: isSaving.value
-                            ? AppAssets.of(context)!.saving
-                            : AppAssets.of(context)!.end,
-                        onPressed: isSaving.value
-                            ? null
-                            : () async {
-                                final hasIncomplete = state.exercises.any(
-                                  (ex) => ex.sets.any((s) => !s.isCompleted),
-                                );
-                                final confirmed = await showDialog<bool>(
-                                  context: context,
-                                  builder: (ctx) {
-                                    return AlertDialog(
-                                      title: Text(
-                                        AppAssets.of(ctx)!.endWorkoutTitle,
-                                      ),
-                                      content: hasIncomplete
-                                          ? Text(
-                                              AppAssets.of(
-                                                ctx,
-                                              )!.uncheckedSetsWarning,
-                                            )
-                                          : null,
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(ctx).pop(false),
-                                          child: Text(
-                                            AppAssets.of(ctx)!.cancel,
+                                            variant: PrimaryButtonVariant.ghost,
+                                            icon: Icons.add,
+                                          ),
+                                        );
+                                      }
+                                      final exercise =
+                                          state.exercises[exerciseIndex];
+                                      return Opacity(
+                                        opacity: exercise.isCompleted
+                                            ? 0.5
+                                            : 1.0,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            bottom: 24,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Expanded(
+                                                    child: Text(
+                                                      exercise.exercise.name,
+                                                      style: const TextStyle(
+                                                        color:
+                                                            AppColors.monoWhite,
+                                                        fontSize: 17,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  SetCountControl(
+                                                    count: exercise.sets.length,
+                                                    onDecrement:
+                                                        exercise.sets.length > 1
+                                                        ? () => notifier
+                                                              .removeSet(
+                                                                exerciseIndex,
+                                                              )
+                                                        : null,
+                                                    onIncrement:
+                                                        exercise.sets.length <
+                                                            10
+                                                        ? () => notifier.addSet(
+                                                            exerciseIndex,
+                                                          )
+                                                        : null,
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 8),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  //color: AppColors.darkSurface,
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                child: Column(
+                                                  children: List.generate(
+                                                    exercise.sets.length,
+                                                    (setIndex) {
+                                                      final set = exercise
+                                                          .sets[setIndex];
+                                                      return _WorkoutSetRow(
+                                                        key: ValueKey(
+                                                          '$exerciseIndex-$setIndex',
+                                                        ),
+                                                        setNumber: setIndex + 1,
+                                                        isCurrent: false,
+                                                        initialWeight:
+                                                            set.weight,
+                                                        initialReps: set.reps,
+                                                        isCompleted:
+                                                            set.isCompleted,
+                                                        isIntervalActive:
+                                                            isIntervalActive,
+                                                        onWeightChanged: (w) =>
+                                                            notifier
+                                                                .updateSetWeight(
+                                                                  exerciseIndex,
+                                                                  setIndex,
+                                                                  w,
+                                                                ),
+                                                        onRepsChanged: (r) =>
+                                                            notifier
+                                                                .updateSetReps(
+                                                                  exerciseIndex,
+                                                                  setIndex,
+                                                                  r,
+                                                                ),
+                                                        onToggleCompleted: () {
+                                                          if (!set.isCompleted &&
+                                                              set.intervalSeconds >
+                                                                  0) {
+                                                            startIntervalTimer(
+                                                              set.intervalSeconds,
+                                                            );
+                                                          }
+                                                          notifier
+                                                              .toggleSetCompleted(
+                                                                exerciseIndex,
+                                                                setIndex,
+                                                              );
+                                                        },
+                                                      );
+                                                    },
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(ctx).pop(true),
-                                          child: Text(AppAssets.of(ctx)!.end),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                                if (confirmed != true || !context.mounted) {
-                                  return;
-                                }
-
-                                final anyCompleted = state.exercises.any(
-                                  (ex) => ex.sets.any((s) => s.isCompleted),
-                                );
-                                if (!anyCompleted) {
-                                  context.go(AppRoutes.home.path);
-                                  return;
-                                }
-
-                                isSaving.value = true;
-                                try {
-                                  await notifier.saveWorkout(menuId);
-                                  ref.invalidate(activityLogProvider);
-                                } catch (e, st) {
-                                  debugPrint('saveWorkout error: $e\n$st');
-                                  isSaving.value = false;
-                                  if (!context.mounted) return;
-                                  await showDialog<void>(
-                                    context: context,
-                                    builder: (ctx) {
-                                      return AlertDialog(
-                                        title: Text(
-                                          AppAssets.of(ctx)!.saveFailed,
-                                        ),
-                                        content: Text('$e'),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.of(ctx).pop(),
-                                            child: Text(AppAssets.of(ctx)!.ok),
-                                          ),
-                                        ],
                                       );
                                     },
-                                  );
-                                  return;
-                                }
-                                isSaving.value = false;
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                    16,
+                                    8,
+                                    16,
+                                    16 + bottomSafePadding,
+                                  ),
+                                  child: PrimaryButton(
+                                    label: isSaving.value
+                                        ? AppAssets.of(context)!.saving
+                                        : AppAssets.of(context)!.end,
+                                    onPressed: isSaving.value
+                                        ? null
+                                        : () async {
+                                            final hasIncomplete = state
+                                                .exercises
+                                                .any(
+                                                  (ex) => ex.sets.any(
+                                                    (s) => !s.isCompleted,
+                                                  ),
+                                                );
+                                            final confirmed =
+                                                await showDialog<bool>(
+                                                  context: context,
+                                                  builder: (ctx) {
+                                                    return AlertDialog(
+                                                      title: Text(
+                                                        AppAssets.of(
+                                                          ctx,
+                                                        )!.endWorkoutTitle,
+                                                      ),
+                                                      content: hasIncomplete
+                                                          ? Text(
+                                                              AppAssets.of(
+                                                                ctx,
+                                                              )!.uncheckedSetsWarning,
+                                                            )
+                                                          : null,
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () =>
+                                                              Navigator.of(
+                                                                ctx,
+                                                              ).pop(false),
+                                                          child: Text(
+                                                            AppAssets.of(
+                                                              ctx,
+                                                            )!.cancel,
+                                                          ),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed: () =>
+                                                              Navigator.of(
+                                                                ctx,
+                                                              ).pop(true),
+                                                          child: Text(
+                                                            AppAssets.of(
+                                                              ctx,
+                                                            )!.end,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
+                                            if (confirmed != true ||
+                                                !context.mounted) {
+                                              return;
+                                            }
 
-                                if (!context.mounted) return;
-                                final savedState = ref.read(
-                                  workoutViewModelProvider(menuId),
-                                );
-                                final hasCompleted = savedState.exercises.any(
-                                  (ex) => ex.sets.any((s) => s.isCompleted),
-                                );
-                                if (hasCompleted) {
-                                  await context.push(
-                                    '/menu/$menuId/workout/summary',
-                                    extra: savedState,
-                                  );
-                                } else {
-                                  context.go('/home');
-                                }
-                              },
+                                            final anyCompleted = state.exercises
+                                                .any(
+                                                  (ex) => ex.sets.any(
+                                                    (s) => s.isCompleted,
+                                                  ),
+                                                );
+                                            if (!anyCompleted) {
+                                              context.go(AppRoutes.home.path);
+                                              return;
+                                            }
+
+                                            isSaving.value = true;
+                                            try {
+                                              await notifier.saveWorkout(
+                                                menuId,
+                                              );
+                                              ref.invalidate(
+                                                activityLogProvider,
+                                              );
+                                            } catch (e, st) {
+                                              debugPrint(
+                                                'saveWorkout error: $e\n$st',
+                                              );
+                                              isSaving.value = false;
+                                              if (!context.mounted) return;
+                                              await showDialog<void>(
+                                                context: context,
+                                                builder: (ctx) {
+                                                  return AlertDialog(
+                                                    title: Text(
+                                                      AppAssets.of(
+                                                        ctx,
+                                                      )!.saveFailed,
+                                                    ),
+                                                    content: Text('$e'),
+                                                    actions: [
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.of(
+                                                              ctx,
+                                                            ).pop(),
+                                                        child: Text(
+                                                          AppAssets.of(ctx)!.ok,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                              return;
+                                            }
+                                            isSaving.value = false;
+
+                                            if (!context.mounted) return;
+                                            final savedState = ref.read(
+                                              workoutViewModelProvider(menuId),
+                                            );
+                                            final hasCompleted = savedState
+                                                .exercises
+                                                .any(
+                                                  (ex) => ex.sets.any(
+                                                    (s) => s.isCompleted,
+                                                  ),
+                                                );
+                                            if (hasCompleted) {
+                                              await context.push(
+                                                '/menu/$menuId/workout/summary',
+                                                extra: savedState,
+                                              );
+                                            } else {
+                                              context.go('/home');
+                                            }
+                                          },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: AnimatedSlide(
-                    offset: isIntervalActive ? Offset.zero : const Offset(0, 1),
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                    child: _IntervalTimerBar(
-                      remaining: intervalRemaining.value ?? 0,
-                      total: intervalTotal.value,
-                      onDismiss: dismissTimer,
-                      onAdjust: adjustIntervalTimer,
-                    ),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: AnimatedSlide(
+                          offset: isIntervalActive
+                              ? Offset.zero
+                              : const Offset(0, 1),
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeInOut,
+                          child: _IntervalTimerBar(
+                            remaining: intervalRemaining.value ?? 0,
+                            total: intervalTotal.value,
+                            onDismiss: dismissTimer,
+                            onAdjust: adjustIntervalTimer,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                );
+              },
             ),
           ),
         ),
