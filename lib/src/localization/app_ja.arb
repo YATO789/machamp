@@ -5,6 +5,7 @@
   "delete": "削除",
   "ok": "OK",
   "close": "閉じる",
+  "done": "完了",
   "end": "終了",
   "irreversibleWarning": "この操作は取り消せません。",
   "deleteFailed": "削除に失敗しました",
