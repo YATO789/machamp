@@ -33,6 +33,21 @@ class AuthDataSource {
     );
   }
 
+  Future<AuthResponse> linkGoogleIdentity() async {
+    final account = await GoogleSignIn.instance.authenticate();
+    final idToken = account.authentication.idToken;
+    if (idToken == null) {
+      throw const GoogleSignInException(
+        code: GoogleSignInExceptionCode.unknownError,
+        description: 'linkGoogleIdentity: idToken is null',
+      );
+    }
+    return _client.auth.linkIdentityWithIdToken(
+      provider: OAuthProvider.google,
+      idToken: idToken,
+    );
+  }
+
   User? currentUser() {
     return _client.auth.currentUser;
   }

@@ -145,5 +145,10 @@
   "settingsTitle": "Settings",
   "helpTitle": "Help",
   "profileDetailTitle": "Profile",
-  "reflectToMenu": "Reflect this workout to menu"
+  "reflectToMenu": "Reflect this workout to menu",
+
+  "settingsLoginTitle": "Login",
+  "accountLinkTitle": "Link Account",
+  "accountLinkDescription": "Linking your Google account lets you keep your data even after switching devices or reinstalling the app.",
+  "accountLinkSuccess": "Linked your Google account"
 }

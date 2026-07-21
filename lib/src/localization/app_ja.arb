@@ -145,5 +145,10 @@
   "settingsTitle": "設定",
   "helpTitle": "ヘルプ",
   "profileDetailTitle": "プロフィール",
-  "reflectToMenu": "今回の記録をメニューに反映する"
+  "reflectToMenu": "今回の記録をメニューに反映する",
+
+  "settingsLoginTitle": "ログイン",
+  "accountLinkTitle": "アカウント連携",
+  "accountLinkDescription": "Googleアカウントと連携すると、機種変更やアプリの再インストール後もデータを引き継ぐことができます。",
+  "accountLinkSuccess": "Googleアカウントと連携しました"
 }
