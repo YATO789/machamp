@@ -233,6 +233,24 @@ class WorkoutScreen extends HookConsumerWidget {
                                                 ],
                                               ),
                                               const SizedBox(height: 8),
+                                              _WorkoutSetHeaderRow(
+                                                weightLabel: AppAssets.of(
+                                                  context,
+                                                )!.weightHeader,
+                                                repsLabel: AppAssets.of(
+                                                  context,
+                                                )!.repsHeader,
+                                                restLabel: AppAssets.of(
+                                                  context,
+                                                )!.intervalHeader,
+                                                setLabel: AppAssets.of(
+                                                  context,
+                                                )!.setHeader,
+                                                doneLabel: AppAssets.of(
+                                                  context,
+                                                )!.done,
+                                              ),
+                                              const SizedBox(height: 4),
                                               Container(
                                                 decoration: BoxDecoration(
                                                   //color: AppColors.darkSurface,
@@ -254,6 +272,8 @@ class WorkoutScreen extends HookConsumerWidget {
                                                         initialWeight:
                                                             set.weight,
                                                         initialReps: set.reps,
+                                                        initialInterval:
+                                                            set.intervalSeconds,
                                                         isCompleted:
                                                             set.isCompleted,
                                                         isIntervalActive:
@@ -271,6 +291,13 @@ class WorkoutScreen extends HookConsumerWidget {
                                                                   exerciseIndex,
                                                                   setIndex,
                                                                   r,
+                                                                ),
+                                                        onIntervalChanged:
+                                                            (i) => notifier
+                                                                .updateSetInterval(
+                                                                  exerciseIndex,
+                                                                  setIndex,
+                                                                  i,
                                                                 ),
                                                         onToggleCompleted: () {
                                                           if (!set.isCompleted &&
@@ -569,6 +596,47 @@ class _IntervalTimerBar extends StatelessWidget {
   }
 }
 
+class _WorkoutSetHeaderRow extends StatelessWidget {
+  const _WorkoutSetHeaderRow({
+    required this.setLabel,
+    required this.weightLabel,
+    required this.repsLabel,
+    required this.restLabel,
+    required this.doneLabel,
+  });
+
+  final String setLabel;
+  final String weightLabel;
+  final String repsLabel;
+  final String restLabel;
+  final String doneLabel;
+
+  static const _headerStyle = TextStyle(color: AppColors.grey, fontSize: 10);
+
+  static Widget _text(String label) {
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(label, maxLines: 1, softWrap: false, style: _headerStyle),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: Row(
+        children: [
+          SizedBox(width: 28, child: Center(child: _text(setLabel))),
+          Expanded(child: Center(child: _text(weightLabel))),
+          Expanded(child: Center(child: _text(repsLabel))),
+          Expanded(child: Center(child: _text(restLabel))),
+          SizedBox(width: 28, child: Center(child: _text(doneLabel))),
+        ],
+      ),
+    );
+  }
+}
+
 class _WorkoutSetRow extends StatefulWidget {
   const _WorkoutSetRow({
     super.key,
@@ -576,10 +644,12 @@ class _WorkoutSetRow extends StatefulWidget {
     required this.isCurrent,
     required this.initialWeight,
     required this.initialReps,
+    required this.initialInterval,
     required this.isCompleted,
     required this.isIntervalActive,
     required this.onWeightChanged,
     required this.onRepsChanged,
+    required this.onIntervalChanged,
     required this.onToggleCompleted,
   });
 
@@ -587,10 +657,12 @@ class _WorkoutSetRow extends StatefulWidget {
   final bool isCurrent;
   final double initialWeight;
   final int initialReps;
+  final int initialInterval;
   final bool isCompleted;
   final bool isIntervalActive;
   final ValueChanged<double> onWeightChanged;
   final ValueChanged<int> onRepsChanged;
+  final ValueChanged<int> onIntervalChanged;
   final VoidCallback onToggleCompleted;
 
   @override
@@ -600,6 +672,7 @@ class _WorkoutSetRow extends StatefulWidget {
 class _WorkoutSetRowState extends State<_WorkoutSetRow> {
   late TextEditingController _weightController;
   late TextEditingController _repsController;
+  late TextEditingController _intervalController;
 
   @override
   void initState() {
@@ -610,12 +683,16 @@ class _WorkoutSetRowState extends State<_WorkoutSetRow> {
     _repsController = TextEditingController(
       text: widget.initialReps.toString(),
     );
+    _intervalController = TextEditingController(
+      text: widget.initialInterval.toString(),
+    );
   }
 
   @override
   void dispose() {
     _weightController.dispose();
     _repsController.dispose();
+    _intervalController.dispose();
     super.dispose();
   }
 
@@ -631,73 +708,89 @@ class _WorkoutSetRowState extends State<_WorkoutSetRow> {
         child: Row(
           children: [
             SizedBox(
-              width: 24,
-              child: Text(
-                '${widget.setNumber}',
-                style: TextStyle(
-                  color: widget.isCurrent
-                      ? AppColors.purple
-                      : AppColors.monoWhite,
-                  fontSize: 14,
-                  fontWeight: widget.isCurrent
-                      ? FontWeight.w600
-                      : FontWeight.normal,
+              width: 28,
+              child: Center(
+                child: Text(
+                  '${widget.setNumber}',
+                  style: TextStyle(
+                    color: widget.isCurrent
+                        ? AppColors.purple
+                        : AppColors.monoWhite,
+                    fontSize: 14,
+                    fontWeight: widget.isCurrent
+                        ? FontWeight.w600
+                        : FontWeight.normal,
+                  ),
                 ),
               ),
             ),
-            const SizedBox(width: 8),
-            _NumberInputField(
-              controller: _weightController,
-              allowDecimal: true,
-              onChanged: (v) {
-                final w = double.tryParse(v);
-                if (w != null) widget.onWeightChanged(w);
-              },
-            ),
-            const SizedBox(width: 6),
-            const Text(
-              'kg',
-              style: TextStyle(color: AppColors.grey, fontSize: 13),
-            ),
-            const SizedBox(width: 8),
-            _NumberInputField(
-              controller: _repsController,
-              allowDecimal: false,
-              onChanged: (v) {
-                final r = int.tryParse(v);
-                if (r != null) widget.onRepsChanged(r);
-              },
-            ),
-            const SizedBox(width: 6),
-            const Text(
-              'rep',
-              style: TextStyle(color: AppColors.grey, fontSize: 13),
-            ),
-            const Spacer(),
-            GestureDetector(
-              onTap: widget.isIntervalActive ? null : widget.onToggleCompleted,
-              child: Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  color: widget.isCompleted
-                      ? AppColors.purple
-                      : Colors.transparent,
-                  border: Border.all(
-                    color: widget.isCompleted
-                        ? AppColors.purple
-                        : Colors.white30,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(6),
+            Expanded(
+              child: Center(
+                child: _NumberInputField(
+                  controller: _weightController,
+                  allowDecimal: true,
+                  onChanged: (v) {
+                    final w = double.tryParse(v);
+                    if (w != null) widget.onWeightChanged(w);
+                  },
                 ),
-                child: widget.isCompleted
-                    ? const Icon(
-                        Icons.check,
-                        color: AppColors.monoWhite,
-                        size: 16,
-                      )
-                    : null,
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: _NumberInputField(
+                  controller: _repsController,
+                  allowDecimal: false,
+                  onChanged: (v) {
+                    final r = int.tryParse(v);
+                    if (r != null) widget.onRepsChanged(r);
+                  },
+                ),
+              ),
+            ),
+            Expanded(
+              child: Center(
+                child: _NumberInputField(
+                  controller: _intervalController,
+                  allowDecimal: false,
+                  onChanged: (v) {
+                    final i = int.tryParse(v);
+                    if (i != null) widget.onIntervalChanged(i);
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 28,
+              child: Center(
+                child: GestureDetector(
+                  onTap: widget.isIntervalActive
+                      ? null
+                      : widget.onToggleCompleted,
+                  child: Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      color: widget.isCompleted
+                          ? AppColors.purple
+                          : Colors.transparent,
+                      border: Border.all(
+                        color: widget.isCompleted
+                            ? AppColors.purple
+                            : Colors.white30,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: widget.isCompleted
+                        ? const Icon(
+                            Icons.check,
+                            color: AppColors.monoWhite,
+                            size: 16,
+                          )
+                        : null,
+                  ),
+                ),
               ),
             ),
           ],
