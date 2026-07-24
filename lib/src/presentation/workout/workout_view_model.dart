@@ -94,6 +94,15 @@ class WorkoutViewModel extends _$WorkoutViewModel {
     state = state.copyWith(exercises: exercises);
   }
 
+  void updateSetInterval(int exerciseIndex, int setIndex, int intervalSeconds) {
+    final exercises = [...state.exercises];
+    final exercise = exercises[exerciseIndex];
+    final sets = List<WorkoutSetState>.from(exercise.sets);
+    sets[setIndex] = sets[setIndex].copyWith(intervalSeconds: intervalSeconds);
+    exercises[exerciseIndex] = exercise.copyWith(sets: sets);
+    state = state.copyWith(exercises: exercises);
+  }
+
   void addSet(int exerciseIndex) {
     final exercises = [...state.exercises];
     final exercise = exercises[exerciseIndex];
@@ -160,6 +169,7 @@ class WorkoutViewModel extends _$WorkoutViewModel {
                       'set_order': setEntry.key + 1,
                       'reps': setEntry.value.reps,
                       'weight': setEntry.value.weight,
+                      'interval_seconds': setEntry.value.intervalSeconds,
                     },
                   )
                   .toList(),
