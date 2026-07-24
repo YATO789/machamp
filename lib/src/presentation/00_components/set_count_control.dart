@@ -19,17 +19,7 @@ class SetCountControl extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         _CountButton(icon: Icons.remove, onTap: onDecrement),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Text(
-            '$count',
-            style: const TextStyle(
-              color: AppColors.monoWhite,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+        const SizedBox(width: 8),
         _CountButton(icon: Icons.add, onTap: onIncrement),
       ],
     );
