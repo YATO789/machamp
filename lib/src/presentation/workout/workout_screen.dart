@@ -24,6 +24,9 @@ class WorkoutScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(workoutViewModelProvider(menuId));
     final notifier = ref.read(workoutViewModelProvider(menuId).notifier);
+    final currentExerciseIndex = state.exercises.indexWhere(
+      (ex) => ex.sets.any((s) => !s.isCompleted),
+    );
     final isSaving = useState(false);
     final elapsed = useState(Duration.zero);
     final timerVisible = useState(true);
@@ -275,6 +278,12 @@ class WorkoutScreen extends HookConsumerWidget {
                                       }
                                       final exercise =
                                           state.exercises[exerciseIndex];
+                                      final currentSetIndex =
+                                          exerciseIndex == currentExerciseIndex
+                                          ? exercise.sets.indexWhere(
+                                              (s) => !s.isCompleted,
+                                            )
+                                          : -1;
                                       return Opacity(
                                         opacity: exercise.isCompleted
                                             ? 0.5
@@ -360,7 +369,9 @@ class WorkoutScreen extends HookConsumerWidget {
                                                           '$exerciseIndex-$setIndex',
                                                         ),
                                                         setNumber: setIndex + 1,
-                                                        isCurrent: false,
+                                                        isCurrent:
+                                                            setIndex ==
+                                                            currentSetIndex,
                                                         initialWeight:
                                                             set.weight,
                                                         initialReps: set.reps,
@@ -651,23 +662,46 @@ class _WorkoutSetRowState extends State<_WorkoutSetRow> {
     return Opacity(
       opacity: widget.isCompleted ? 0.5 : 1.0,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 6),
         child: Row(
           children: [
+            if (widget.isCurrent)
+              Container(
+                width: 3,
+                height: 40,
+                margin: const EdgeInsets.only(right: 4),
+                decoration: BoxDecoration(
+                  color: AppColors.purple,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              )
+            else
+              const SizedBox(width: 7, height: 40),
+
             SizedBox(
               width: 28,
+              height: 40,
               child: Center(
-                child: Text(
-                  '${widget.setNumber}',
-                  style: TextStyle(
-                    color: widget.isCurrent
-                        ? AppColors.purple
-                        : AppColors.monoWhite,
-                    fontSize: 14,
-                    fontWeight: widget.isCurrent
-                        ? FontWeight.w600
-                        : FontWeight.normal,
-                  ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${widget.setNumber}',
+                      strutStyle: const StrutStyle(
+                        fontSize: 14,
+                        forceStrutHeight: true,
+                      ),
+                      style: TextStyle(
+                        color: widget.isCurrent
+                            ? AppColors.purple
+                            : AppColors.monoWhite,
+                        fontSize: 14,
+                        fontWeight: widget.isCurrent
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
