@@ -208,7 +208,7 @@ return $default(_that.reps,_that.weight,_that.intervalSeconds);case _:
 
 
 class _ExerciseSet implements ExerciseSet {
-  const _ExerciseSet({this.reps = 10, this.weight = 0.0, this.intervalSeconds = 60});
+  const _ExerciseSet({this.reps = 10, this.weight = 0.0, this.intervalSeconds = 180});
   
 
 @override@JsonKey() final  int reps;
