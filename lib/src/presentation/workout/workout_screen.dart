@@ -747,7 +747,10 @@ class _WorkoutSetRowState extends State<_WorkoutSetRow> {
                 child: GestureDetector(
                   onTap: widget.isIntervalActive
                       ? null
-                      : widget.onToggleCompleted,
+                      : () {
+                          FocusScope.of(context).unfocus();
+                          widget.onToggleCompleted();
+                        },
                   child: Container(
                     width: 28,
                     height: 28,
